@@ -27,8 +27,6 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
         }}
       >
         <Box
-          // component={NextLink}
-          // href="/"
           sx={{
             cursor: "pointer",
             display: "inline-flex",
@@ -53,8 +51,6 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           />
         </Box>
         <Box
-          // component={NextLink}
-
           sx={{
             cursor: "pointer",
             display: "block",
@@ -72,7 +68,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
         sx={{
           flexGrow: 1,
           px: 2,
-          py: 10,
+          py: 12,
         }}
       >
         <Stack
@@ -166,8 +162,6 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
       PaperProps={{
         sx: {
           backgroundColor: "#F1F1F1",
-          // color: "common.white",
-          width: "100%",
           height: "100%",
         },
       }}
