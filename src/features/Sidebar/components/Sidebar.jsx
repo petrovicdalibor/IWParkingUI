@@ -124,7 +124,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
         PaperProps={{
           sx: {
             backgroundColor: "#F1F1F1",
-            width: 280,
+            width: 255,
           },
         }}
         variant="permanent"
@@ -143,7 +143,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
         PaperProps={{
           sx: {
             backgroundColor: "#F1F1F1",
-            width: open ? "280px" : "80px",
+            width: open ? "255px" : "80px",
             transition: (theme) =>
               theme.transitions.create("width", {
                 duration: theme.transitions.duration.shorter,
