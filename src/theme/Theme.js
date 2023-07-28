@@ -8,6 +8,16 @@ let theme = createTheme({
       textTransform: "none",
     },
   },
+
+  input: {
+    borderRadius: "10px",
+    background: "#FFF",
+    boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
+    width: "332px",
+    height: "45px",
+    flexShrink: 0
+  },
+
   palette: {
     background: {
       default: "#FFFFFF",
