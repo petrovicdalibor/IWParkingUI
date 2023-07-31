@@ -1,15 +1,31 @@
 import PropTypes from "prop-types";
-import { Box, Drawer, Stack, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Drawer,
+  Hidden,
+  IconButton,
+  Stack,
+  styled,
+  useMediaQuery,
+} from "@mui/material";
 import { SidebarItem } from "./SidebarItem";
 
 import { LuParkingCircle, LuAlignJustify } from "react-icons/lu";
 import { BsCalendarEvent, BsStar } from "react-icons/bs";
+import { GrClose } from "react-icons/gr";
+
+const LogoImage = styled("img")(() => ({
+  height: "32px",
+  padding: "5px",
+}));
 
 export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const lgDown = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+
+  const hamburger = open ? <GrClose size={24} /> : <LuAlignJustify size={26} />;
 
   const content = (
     <Box
@@ -24,43 +40,47 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           p: 5,
           display: "flex",
           justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <Box
           sx={{
             cursor: "pointer",
             display: "inline-flex",
-            opacity:
-              smUp === true && lgDown === true && open === false
-                ? 0
-                : open === false && smUp === true && lgDown === true
-                ? 1
-                : 1,
-            justifyContent: "center",
-            height: 32,
-            width: 32,
-            transition: (theme) =>
-              theme.transitions.create("visibility", {
-                duration: theme.transitions.duration.short,
-              }),
-          }}
-        >
-          <img
-            src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
-            alt=""
-          />
-        </Box>
-        <Box
-          sx={{
-            cursor: "pointer",
-            display: "block",
-            position: "absolute",
-            right: "25px",
-            visibility: smUp === true && lgDown === true ? "visible" : "hidden",
             justifyContent: "center",
           }}
         >
-          <LuAlignJustify size={26} onClick={onHamburgerClick} />
+          <Hidden smDown>
+            <LogoImage
+              src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
+              alt=""
+              sx={{
+                opacity:
+                  smUp === true && lgDown === true && open === false
+                    ? 0
+                    : open === false && smUp === true && lgDown === true
+                    ? 1
+                    : 1,
+                transition: (theme) =>
+                  theme.transitions.create("opacity", {
+                    duration: theme.transitions.duration.short,
+                  }),
+              }}
+            />
+          </Hidden>
+
+          <IconButton
+            sx={{
+              display: "block",
+              position: "absolute",
+              right: "16px",
+              visibility:
+                smUp === true && lgDown === true ? "visible" : "hidden",
+            }}
+            onClick={onHamburgerClick}
+          >
+            {hamburger}
+          </IconButton>
         </Box>
       </Box>
       <Box
