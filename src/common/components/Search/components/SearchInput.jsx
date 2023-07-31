@@ -6,6 +6,7 @@ import {
   Select,
   TextField,
   styled,
+  useMediaQuery,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -28,6 +29,8 @@ const SearchInput = () => {
   const [searchCondition, setSearchCondition] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
+  const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
+
   const handleSelectChange = (e) => {
     setSelectedCity(e.target.value);
   };
@@ -48,6 +51,7 @@ const SearchInput = () => {
             label="Search"
             onChange={handleSearchConditionChange}
             variant="filled"
+            size={isXs ? "small" : "normal"}
             InputProps={{ disableUnderline: true }}
             type="text"
             value={searchCondition}
@@ -55,12 +59,17 @@ const SearchInput = () => {
           />
         </Grid>
         <Grid item xs={3} md={4} lg={4} xl={4}>
-          <FormControl variant="filled" fullWidth>
+          <FormControl
+            variant="filled"
+            size={isXs ? "small" : "normal"}
+            fullWidth
+          >
             <InputLabel id="city-select-label">City</InputLabel>
             <Select
               labelId="city-select-label"
               id="city-select"
               variant="filled"
+              size={isXs ? "small" : "normal"}
               disableUnderline={true}
               value={selectedCity}
               onChange={handleSelectChange}
