@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import { Sidebar } from "../features/Sidebar/components/Sidebar";
 import { useCallback, useEffect, useState } from "react";
-import TopBar from "../features/TopBar/TopBar";
+import TopBar from "../features/TopBar/components/TopBar";
 
 const SIDE_NAV_WIDTH = 255;
 const TABLET_SIDE_NAV_WIDTH = 80;

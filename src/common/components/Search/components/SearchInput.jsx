@@ -7,8 +7,10 @@ import {
   TextField,
   styled,
 } from "@mui/material";
+import { useState } from "react";
 
 const SearchGrid = styled(Grid)(({ theme }) => ({
+  padding: "0 !important",
   [theme.breakpoints.down("sm")]: {
     marginTop: "8px",
   },
@@ -23,45 +25,52 @@ const SearchGrid = styled(Grid)(({ theme }) => ({
 }));
 
 const SearchInput = () => {
+  const [searchCondition, setSearchCondition] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+
+  const handleSelectChange = (event) => {
+    setSelectedCity(event.target.value);
+  };
+
   return (
     <form
       autoComplete="off"
       // onSubmit={handleSubmit}
     >
-      <SearchGrid container sx={{ width: "100%", padding: "0" }} spacing={1}>
+      <SearchGrid
+        container
+        sx={{ width: "100%", paddingRight: "10px !important", marginLeft: 0 }}
+        spacing={1}
+      >
         <Grid item xs={9} md={8} lg={8} xl={8}>
           <TextField
             label="Search"
-            // onChange={(e) => setEmail(e.target.value)}
-            variant="outlined"
-            color="secondary"
+            onChange={(e) => setSearchCondition(e.target.value)}
+            variant="filled"
+            InputProps={{ disableUnderline: true }}
             type="text"
-            // value={email}
-            // error={emailError}
+            value={searchCondition}
             fullWidth
           />
         </Grid>
         <Grid item xs={3} md={4} lg={4} xl={4}>
-          <FormControl
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            // sx={{ minWidth: 120 }}
-          >
+          <FormControl variant="filled" fullWidth>
             <InputLabel id="demo-simple-select-standard-label">City</InputLabel>
             <Select
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
-              //   value={age}
-              //   onChange={handleChange}
+              variant="filled"
+              disableUnderline={true}
+              value={selectedCity}
+              onChange={handleSelectChange}
               label="City"
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              <MenuItem value={"10"}>Ten</MenuItem>
+              <MenuItem value={"20"}>Twenty</MenuItem>
+              <MenuItem value={"30"}>Thirty</MenuItem>
             </Select>
           </FormControl>
         </Grid>

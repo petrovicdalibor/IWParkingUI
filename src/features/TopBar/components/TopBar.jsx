@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-import SearchInput from "../../common/components/Search/SearchInput";
+import SearchInput from "../../../common/components/Search/components/SearchInput";
 
 import {
   Avatar,
