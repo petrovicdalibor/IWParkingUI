@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-import { getGridTheme } from "./Grid";
+import { getGridTheme } from "./GridTheme";
 
 let theme = createTheme({
   typography: {
@@ -80,13 +80,19 @@ theme = createTheme(theme, {
     },
   },
   components: {
-    // Name of the component
     MuiGrid: getGridTheme(theme),
     MuiInputBase: {
       styleOverrides: {
         root: {
           boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
           borderRadius: "10px !important",
+          border: "1px solid #ECECEC",
+          "&:hover": {
+            border: "1px solid #C5C5C5",
+          },
+          transition: theme.transitions.create("border", {
+            duration: theme.transitions.duration.shorter,
+          }),
         },
       },
     },
@@ -97,46 +103,30 @@ theme = createTheme(theme, {
         },
       },
     },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          background: "none",
+          borderRadius: "10px",
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
+          "&.Mui-focused": {
+            backgroundColor: "transparent",
+            border: "1px solid #B1B1B1",
+          },
+          transition: theme.transitions.create("border", {
+            duration: theme.transitions.duration.shorter,
+          }),
+        },
+        input: {
+          "&:focus": {
+            backgroundColor: "transparent",
+          },
+        },
+      },
+    },
   },
-  // components: {
-  //   // Name of the component
-  //   MuiGrid: {
-  //     styleOverrides: {
-  //       // Name of the slot
-  //       container: {
-  //         // paddingTop: "40px",
-  //         [theme.breakpoints.down("sm")]: {
-  //           padding: "0 10px 0 10px",
-  //         },
-  //         [theme.breakpoints.up("sm")]: {
-  //           padding: "0 13px 0 13px",
-  //           maxWidth: "845px",
-  //           margin: "0 auto",
-  //         },
-  //         [theme.breakpoints.up("lg")]: {
-  //           padding: "0",
-  //           maxWidth: "1076px",
-  //           margin: "0 auto",
-  //         },
-  //       },
-  //     },
-  //   },
-  //   MuiInputBase: {
-  //     styleOverrides: {
-  //       root: {
-  //         boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
-  //         borderRadius: "10px !important",
-  //       },
-  //     },
-  //   },
-  //   MuiButton: {
-  //     styleOverrides: {
-  //       root: {
-  //         borderRadius: "10px !important",
-  //       },
-  //     },
-  //   },
-  // },
 });
 
 export default theme;
