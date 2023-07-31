@@ -19,8 +19,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import { RadioButtonUnchecked, RadioButtonChecked } from '@mui/icons-material';
 
-import loginimage from "./features/Login/components/loginimg.svg";
-
 const LogoImage = styled("img")(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     marginTop: "20px",
@@ -48,9 +46,6 @@ const SignUpNow = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
     lineHeight: "150%",
     letterSpacing: "-0.342px"
-  // display: inlineBlock, 
-    // textAlign: center, 
-    // float: left,
   },
 }));
 
@@ -76,12 +71,8 @@ fontSize: "12px",
 fontWeight: "400",
 lineHeight: "150%",
 letterSpacing: "-0.228px",
-marginLeft: "-75px",
+marginLeft: "-70px",
 marginRight: "15px",
-//position: "absolute",
-//top:"60px"
-// Left: "20px",
- //marginTop: "-40px",
 }
 ));
 
@@ -91,8 +82,6 @@ const NameInput = styled(TextField)(({ theme }) => ({
     height: "45px",
     marginLeft:"-15px",
     marginRight:"10px",
-    
-    //boxshadow:"0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     boxShadow: theme.input.boxShadow,
 
   },
@@ -103,8 +92,6 @@ const SurnameInput = styled(TextField)(({ theme }) => ({
     width: "160px",
     height: "45px",
     marginRight: "-15px",
-    
-    //boxshadow:"0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     boxShadow: theme.input.boxShadow,
 
   },
@@ -114,18 +101,13 @@ const LoginInput = styled(TextField)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     width: "332px",
     height: "45px",
-    //boxshadow:"0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     boxShadow: theme.input.boxShadow,
 
   },
 }));
 
 const styles = makeStyles({
-  inputClass: {
-    '.MuiOutlinedInput-notchedOutline': {
-      borderStyle: 'none',
-    }
-  }
+ 
 });
 
 const SignUpButton = styled(Button)(({ theme }) => ({
@@ -140,8 +122,6 @@ const SignUpButton = styled(Button)(({ theme }) => ({
 
 const Or = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
-    // width: "130px",
-    //height: '15px',
     color: "#9C9C9C",
     fontFamily: "Montserrat",
     fontSize: "12px",
@@ -276,10 +256,12 @@ function Login() {
                   autoComplete="name"
                   autoFocus
                   sx={{width: "160px"}}
+                  InputProps={{ disableUnderline: "true" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px" }, 
                   }}
                   className={classes.inputClass}
+                  variant="standard"
                 />
                 <SurnameInput
                   margin="normal"
@@ -289,30 +271,32 @@ function Login() {
                   id="surname"
                   autoComplete="surname"
                   autoFocus 
-                  sx={{borderStyle:"none", width: "160px"}}
+                  sx={{width: "160px"}}
+                  InputProps={{ disableUnderline: "true" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px"}, 
+                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px" }, 
                   }}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
                   border="none"
                   required
-                  fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  InputProps={{ disableUnderline: "true" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
                   }}
                   className={classes.inputClass}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
                   required
-                  fullWidth
                   name="password"
                   label="Password"
                   type="password"
@@ -320,9 +304,11 @@ function Login() {
                   autoComplete="current-password"
                   autoFocus 
                   sx={{borderStyle:"none"}}
+                  InputProps={{ disableUnderline: "true" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
                   }}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
@@ -334,9 +320,11 @@ function Login() {
                   id="cpassword"
                   autoFocus 
                   sx={{borderStyle:"none"}}
+                  InputProps={{ disableUnderline: "true" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
                   }}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
@@ -349,9 +337,12 @@ function Login() {
                   autoComplete="off"
                   pattern="07[0-9]-[0-9]{3}-[0-9]{3}"
                   sx={{borderStyle:"none"}}
+                  InputProps={{ disableUnderline: "true", position:"absolute", bottom:"30px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
                   }}
+                  variant="standard"
+
                 />
                 <SignUpButton type="submit" variant="contained">
                   Sign up
