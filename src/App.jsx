@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@emotion/react";
-import { Button, Typography } from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 
 import Theme from "./theme/Theme";
 import { Layout } from "./layouts/Layout";
@@ -56,6 +56,28 @@ function App() {
           >
             Success
           </Button>
+          <Grid container spacing={2}>
+            <Grid item>
+              <TextField
+                label="Test 1"
+                variant="filled"
+                InputProps={{ disableUnderline: true }}
+                color="secondary"
+                type="text"
+                fullWidth
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="Test 2"
+                variant="filled"
+                InputProps={{ disableUnderline: true }}
+                color="primary"
+                type="text"
+                fullWidth
+              />
+            </Grid>
+          </Grid>
         </div>
       </Layout>
     </ThemeProvider>
