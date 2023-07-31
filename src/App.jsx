@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Button,
   Typography,
@@ -12,12 +11,10 @@ import {
 import { styled } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
 import Theme from "./theme/Theme";
-import { makeStyles } from '@mui/styles';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import { RadioButtonUnchecked, RadioButtonChecked } from '@mui/icons-material';
+import {makeStyles} from '@mui/styles';
+import loginimage from "./features/Login/components/loginimg.svg";
+import { BrowserRouter } from "react-router-dom";
+
 
 const LogoImage = styled("img")(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -26,7 +23,7 @@ const LogoImage = styled("img")(({ theme }) => ({
     height: "32px",
   },
 }));
-
+ 
 const LoginTitle = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     marginTop: "30px",
@@ -35,82 +32,63 @@ const LoginTitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const SignUpNow = styled(Typography)(({ theme }) => ({
+const LoginImage = styled("img")(({theme}) => ({
+  [theme.breakpoints.down("md")]: {
+    width: "296px",
+    height: "247px",
+    flexShrink: 0,
+    marginLeft:"-30px",
+ 
+  },
+}));
+
+const LoginToOurPage = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     marginTop: "30px",
     width: "169px",
     height: "34px",
     fontSize:"18px",
-    marginLeft:"-222px",
+    marginLeft:"-185px",
     fontStyle: "normal",
     fontWeight: 500,
     lineHeight: "150%",
     letterSpacing: "-0.342px"
+
   },
 }));
 
-const FillInText = styled(Typography)(({theme}) => ({
+const EnterCredentials = styled(Typography)(({theme}) => ({
   width: "194px",
 height:"22px",
 flexShrink: 0,
-color: "#9C9C9C",
+color: "#757575",
 fontSize: "12px",
 fontWeight: "400",
 lineHeight: "150%",
 letterSpacing: "-0.228px",
-marginLeft: "-75px",
-marginRight: "15px",
+marginLeft:"-153px"
 }));
-
-const SignUpAs = styled(Typography)(({theme}) => ({
-  width: "194px",
-height:"22px",
-flexShrink: 0,
-color: "#9C9C9C",
-fontSize: "12px",
-fontWeight: "400",
-lineHeight: "150%",
-letterSpacing: "-0.228px",
-marginLeft: "-70px",
-marginRight: "15px",
-}
-));
-
-const NameInput = styled(TextField)(({ theme }) => ({
-  [theme.breakpoints.down("md")]: {
-    width: "160px",
-    height: "45px",
-    marginLeft:"-15px",
-    marginRight:"10px",
-    boxShadow: theme.input.boxShadow,
-
-  },
-}));
-
-const SurnameInput = styled(TextField)(({ theme }) => ({
-  [theme.breakpoints.down("md")]: {
-    width: "160px",
-    height: "45px",
-    marginRight: "-15px",
-    boxShadow: theme.input.boxShadow,
-
-  },
-}));
-
+ 
 const LoginInput = styled(TextField)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     width: "332px",
     height: "45px",
+
     boxShadow: theme.input.boxShadow,
 
   },
 }));
-
-const styles = makeStyles({
  
+const styles = makeStyles({
+  inputClass: {
+    '.MuiOutlinedInput-notchedOutline': {
+      borderStyle: 'none',
+    }
+  }
 });
 
-const SignUpButton = styled(Button)(({ theme }) => ({
+
+const LoginButton = styled(Button)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     width: "332px",
     height: "45px",
@@ -119,32 +97,28 @@ const SignUpButton = styled(Button)(({ theme }) => ({
     marginBottom: "10px"
   },
 }));
-
-const Or = styled(Typography)(({ theme }) => ({
+ 
+const LoginLink = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
-    color: "#9C9C9C",
+
+    color: "#757575",
     fontFamily: "Montserrat",
     fontSize: "12px",
     fontStyle: "normal",
     fontWeight: 500,
     lineHeight: "150%",
     letterSpacing: "-0.264px",
-    width: "332px",
+    width: "158px",
     height: "8px",
     flexShrink: 0,
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center",
-    margin:"0 px",
-    marginLeft:"20px"
   },
 }));
-
-const LoginHereLink = styled(Link)(({ theme }) => ({
+ 
+const SignupLink = styled(Link)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
-    width: "332px",
+    width: "89px",
     height: "17px",
-    marginRight: "25px",
+    marginRight: "15px",
     fontSize: "12px",
     color: theme.palette.primary.main,
     fontWeight: 500,
@@ -154,8 +128,9 @@ const LoginHereLink = styled(Link)(({ theme }) => ({
     marginBottom: "-50px",
   },
 }));
-
+ 
 function Login() {
+  //   const classes = useStyles();
   const handleSubmit = (event) => {
     // Handling form submission logic
     event.preventDefault();
@@ -163,210 +138,116 @@ function Login() {
   };
 
   const classes = styles();
-  const [selectedValue, setSelectedValue] = useState('option1');
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
 
   return (
     <>
-      <ThemeProvider theme={Theme}>
-        <CssBaseline />
-        <Container component="main" maxWidth="xs">
+     <ThemeProvider theme={Theme}>
+      <CssBaseline />
+      <Container component="main" maxWidth="xs">
+        <Box
+         
+          sx={{
+            display: "flex",
+            marginTop: "30px",
+            justifyContent: "center",
+            alignItems: "baseline",
+          }}
+        >
+          <LogoImage
+            src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
+            alt="Login"
+          />
+ 
+          <LoginTitle variant="h6">Parking</LoginTitle>
+     
+        </Box>
+        <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
           <Box
             sx={{
               display: "flex",
-              marginTop: "30px",
-              justifyContent: "center",
-              alignItems: "baseline",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+              margin: "auto",
             }}
           >
-            <LogoImage
-              src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
-              alt="Login"
-            />
-            <LoginTitle variant="h6">Parking</LoginTitle>
-          </Box>
-          <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "100%",
-                margin: "auto",
-              }}
-            >
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
-                sx={{ mt: 1 }}
-              >
-                <SignUpNow variant="p">Sign up now</SignUpNow>
-                <br/>
-                <div>
-                  <FillInText variant="p">Fill in the form below to get instant access</FillInText>
-                </div>
-                <br/>
-                <br/>
-                <FormLabel component="legend" sx={{position:"absolute", left:"32px", marginTop:"-20px"}}>Sign up as:</FormLabel>
-                <RadioGroup
-                  aria-label="options"
-                  name="options"
-                  value={selectedValue}
-                  onChange={handleChange}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <FormControlLabel sx={{marginLeft:"8px"}}
-                    value="User"
-                    control={
-                      <Radio
-                        icon={<RadioButtonUnchecked sx={{ fontSize: '14px' }} />} 
-                        checkedIcon={<RadioButtonChecked sx={{ fontSize: '14px' }} />} 
-                        sx={{ color: '#9C9C9C' }} 
-                      />
-                    }
-                    label={
-                      <Typography sx={{ fontSize: '14px', color: '#9C9C9C' }}>User</Typography>
-                      }
-                  />
-                  <FormControlLabel sx={{marginLeft:"10px"}}
-                    value="Owner"
-                    control={<Radio icon={<RadioButtonUnchecked sx={{ fontSize: '14px' }} />} 
-                    checkedIcon={<RadioButtonChecked sx={{ fontSize: '14px' }} />} 
-                    sx={{ color: '#9C9C9C' }} />}
-                    label={
-                    <Typography sx={{ fontSize: '14px', color: '#9C9C9C' }}>Owner</Typography>
-                    }
-                    />
-                </RadioGroup>
-                <NameInput
-                  margin="normal"
-                  border="none"
-                  required
-                  id="name"
-                  label="Name"
-                  name="name"
-                  autoComplete="name"
-                  autoFocus
-                  sx={{width: "160px"}}
-                  InputProps={{ disableUnderline: "true" }}
-                  InputLabelProps={{
-                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px" }, 
-                  }}
-                  className={classes.inputClass}
-                  variant="standard"
-                />
-                <SurnameInput
-                  margin="normal"
-                  required
-                  name="surname"
-                  label="Surname"i
-                  id="surname"
-                  autoComplete="surname"
-                  autoFocus 
-                  sx={{width: "160px"}}
-                  InputProps={{ disableUnderline: "true" }}
-                  InputLabelProps={{
-                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px" }, 
-                  }}
-                  variant="standard"
-                />
-                <LoginInput
-                  margin="normal"
-                  border="none"
-                  required
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  InputProps={{ disableUnderline: "true" }}
-                  InputLabelProps={{
-                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
-                  }}
-                  className={classes.inputClass}
-                  variant="standard"
-                />
-                <LoginInput
-                  margin="normal"
-                  required
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  autoFocus 
-                  sx={{borderStyle:"none"}}
-                  InputProps={{ disableUnderline: "true" }}
-                  InputLabelProps={{
-                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
-                  }}
-                  variant="standard"
-                />
-                <LoginInput
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="cpassword"
-                  label="Confirm password"
-                  type="password"
-                  id="cpassword"
-                  autoFocus 
-                  sx={{borderStyle:"none"}}
-                  InputProps={{ disableUnderline: "true" }}
-                  InputLabelProps={{
-                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
-                  }}
-                  variant="standard"
-                />
-                <LoginInput
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="phone"
-                  label="Phone number"
-                  type="tel"
-                  id="phone" 
-                  autoComplete="off"
-                  pattern="07[0-9]-[0-9]{3}-[0-9]{3}"
-                  sx={{borderStyle:"none"}}
-                  InputProps={{ disableUnderline: "true", position:"absolute", bottom:"30px" }}
-                  InputLabelProps={{
-                    style: { fontSize: "12px", marginLeft:"10px", marginTop:"-5px"  }, 
-                  }}
-                  variant="standard"
+            <LoginImage
+            src={loginimage}
+            alt="Login"
+          />
 
-                />
-                <SignUpButton type="submit" variant="contained">
-                  Sign up
-                </SignUpButton>
-                <br/>
-                <Grid container>
-                  <Grid item xs>
-                    <Or variant="body2">
-                      or
-                    </Or>
-                  </Grid>
-                  <Grid item>
-                    <LoginHereLink href="#" variant="body2" sx={{position:"relative", top:"5px", left:"18px", display:"block"}}>
-                      Log in here
-                    </LoginHereLink>
-                  </Grid>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              
+              <LoginToOurPage variant="p">Login to our app</LoginToOurPage>
+              <br/>
+              <EnterCredentials variant="p">Enter username and password</EnterCredentials>
+              <LoginInput
+                margin="normal"
+                border="none"
+                required
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                sx={{ width: "160px" }}
+                InputProps={{ disableUnderline: "true" }}
+                InputLabelProps={{
+                  style: { fontSize: "12px" }, 
+                }}
+                className={classes.inputClass}
+                variant="standard"
+              />
+           
+
+              <LoginInput
+                margin="normal"
+                required
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                autoFocus 
+                sx={{ width: "160px" }}
+                InputProps={{ disableUnderline: "true" }}
+                InputLabelProps={{
+                  style: { fontSize: "12px" }, 
+                }}
+                variant="standard"
+              />
+ 
+
+              <LoginButton type="submit" variant="contained">
+                Log In
+              </LoginButton>
+  
+              <Grid container>
+                <Grid item xs>
+                  <LoginLink variant="body2">
+                    Don&apos;t have an account?
+                  </LoginLink>
+
                 </Grid>
-              </Box>
+                <Grid item>
+                  <SignupLink href="#" variant="body2" sx={{position:"relative", bottom:"6px"}}>
+                    Sign up here
+                  </SignupLink>
+
+                </Grid>
+              </Grid>
             </Box>
           </Box>
-        </Container>
+        </Box>
+      </Container>
       </ThemeProvider>
     </>
   );
 }
-
+ 
 export default Login;
