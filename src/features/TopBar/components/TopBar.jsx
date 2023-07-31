@@ -14,9 +14,11 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { LuAlignJustify, LuLogOut } from "react-icons/lu";
-import { GrClose } from "react-icons/gr";
-import { BsPersonGear } from "react-icons/bs";
+import { LuLogOut } from "react-icons/lu";
+import { BsPersonGear, BsXLg } from "react-icons/bs";
+// import { FaBars } from "react-icons/fa";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { stringAvatar } from "../../../common/utils/AvatarUtil";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -42,6 +44,25 @@ const UserAvatar = styled(Avatar)(() => ({
   height: "32px",
 }));
 
+const HamburgerBox = styled(Box)(() => ({
+  cursor: "pointer",
+  position: "relative",
+  justifyContent: "center",
+  zIndex: 9999,
+}));
+
+const UserInfoBox = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#F1F1F1",
+  paddingLeft: "16px",
+  paddingRight: "16px",
+  margin: 0,
+  borderRadius: "10px",
+  height: "63px",
+}));
+
 const TopBar = ({ onHamburgerClick, open }) => {
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -52,39 +73,10 @@ const TopBar = ({ onHamburgerClick, open }) => {
     setAnchorElUser(null);
   };
 
-  function stringToColor(string) {
-    let hash = 0;
-    let i;
-
-    /* eslint-disable no-bitwise */
-    for (i = 0; i < string.length; i += 1) {
-      hash = string.charCodeAt(i) + ((hash << 5) - hash);
-    }
-
-    let color = "#";
-
-    for (i = 0; i < 3; i += 1) {
-      const value = (hash >> (i * 8)) & 0xff;
-      color += `00${value.toString(16)}`.slice(-2);
-    }
-    /* eslint-enable no-bitwise */
-
-    return color;
-  }
-
-  function stringAvatar(name) {
-    return {
-      sx: {
-        bgcolor: stringToColor(name),
-      },
-      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
-    };
-  }
-
   const hamburger = open ? (
-    <GrClose size={24} onClick={onHamburgerClick} />
+    <BsXLg size={24} color="#6A6A6A" onClick={onHamburgerClick} />
   ) : (
-    <LuAlignJustify size={26} onClick={onHamburgerClick} />
+    <RxHamburgerMenu size={24} color="#6A6A6A" onClick={onHamburgerClick} />
   );
   return (
     <>
@@ -102,16 +94,9 @@ const TopBar = ({ onHamburgerClick, open }) => {
       >
         <Hidden smUp>
           <Grid item xs={"auto"}>
-            <Box
-              sx={{
-                cursor: "pointer",
-                position: "relative",
-                justifyContent: "center",
-                zIndex: 9999,
-              }}
-            >
+            <HamburgerBox justifyContent={"center"} alignContent={"center"}>
               {hamburger}
-            </Box>
+            </HamburgerBox>
           </Grid>
         </Hidden>
         <Hidden smDown>
@@ -130,45 +115,25 @@ const TopBar = ({ onHamburgerClick, open }) => {
               }}
               onClick={handleOpenUserMenu}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "#F1F1F1",
-                  px: 2,
-                  margin: 0,
-                  borderRadius: "10px",
-                  height: "63px",
-                }}
-              >
+              <UserInfoBox>
                 <UserAvatar {...stringAvatar("Jane Doe")} />
                 <Hidden mdDown>
                   <Box>
                     <Typography
                       px
                       py={0}
-                      //   margin="0"
                       color={"#424343"}
                       variant="subtitle2"
-                      sx={{
-                        lineHeight: "14px",
-                      }}
+                      lineHeight={"14px"}
                     >
                       Jane Doe
                     </Typography>
-                    <Typography
-                      px
-                      variant="caption"
-                      sx={{
-                        lineHeight: "14px",
-                      }}
-                    >
+                    <Typography px variant="caption" lineHeight={"14px"}>
                       jane@example.com
                     </Typography>
                   </Box>
                 </Hidden>
-              </Box>
+              </UserInfoBox>
             </IconButton>
             <Menu
               sx={{ mt: "60px" }}
