@@ -275,83 +275,100 @@ function Signup() {
                   name="name"
                   autoComplete="name"
                   autoFocus
-                  sx={{width: "160px"}}
+                  sx={{ width: "160px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px" },
                   }}
+                  InputProps={{ disableUnderline: "true" }}
                   className={classes.inputClass}
+                  variant="standard"
                 />
                 <SurnameInput
                   margin="normal"
+                  border = "none"
                   required
                   name="surname"
-                  label="Surname"i
+                  label="Surname"
                   id="surname"
                   autoComplete="surname"
                   autoFocus 
-                  sx={{borderStyle:"none", width: "160px"}}
+                  ssx={{ width: "160px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px"}, 
+                    style: { fontSize: "12px" },
                   }}
+                  InputProps={{ disableUnderline: "true" }}
+                  className={classes.inputClass}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
                   border="none"
                   required
-                  fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  sx={{ width: "160px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px" },
                   }}
+                  InputProps={{ disableUnderline: "true" }}
                   className={classes.inputClass}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
                   required
-                  fullWidth
+                  border= "none"
                   name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="current-password"
                   autoFocus 
-                  sx={{borderStyle:"none"}}
+                  sx={{ width: "160px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px" },
                   }}
+                  InputProps={{ disableUnderline: "true" }}
+                  className={classes.inputClass}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
                   required
-                  fullWidth
+                  border = "none"
                   name="cpassword"
                   label="Confirm password"
                   type="password"
                   id="cpassword"
                   autoFocus 
-                  sx={{borderStyle:"none"}}
+                  sx={{ width: "160px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px" },
                   }}
+                  InputProps={{ disableUnderline: "true" }}
+                  className={classes.inputClass}
+                  variant="standard"
                 />
                 <LoginInput
                   margin="normal"
                   required
-                  fullWidth
+                  border="none"
                   name="phone"
                   label="Phone number"
                   type="tel"
                   id="phone" 
                   autoComplete="off"
                   pattern="07[0-9]-[0-9]{3}-[0-9]{3}"
-                  sx={{borderStyle:"none"}}
+                  sx={{ width: "160px" }}
                   InputLabelProps={{
-                    style: { fontSize: "12px" }, 
+                    style: { fontSize: "12px" },
                   }}
+                  InputProps={{ disableUnderline: "true" }}
+                  className={classes.inputClass}
+                  variant="standard"
                 />
                 <SignUpButton type="submit" variant="contained">
                   Sign up
