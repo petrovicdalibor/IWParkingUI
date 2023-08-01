@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-import { getGridTheme } from "./GridTheme";
+// import { getGridTheme } from "./GridTheme";
 
 let theme = createTheme({
   typography: {
@@ -80,7 +80,7 @@ theme = createTheme(theme, {
     },
   },
   components: {
-    MuiGrid: getGridTheme(theme),
+    // MuiGrid: getGridTheme(theme),
     MuiInputBase: {
       styleOverrides: {
         root: {

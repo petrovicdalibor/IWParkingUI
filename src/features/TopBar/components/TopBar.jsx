@@ -58,7 +58,7 @@ const UserInfoBox = styled(Box)(() => ({
   backgroundColor: "#F1F1F1",
   paddingLeft: "12px",
   paddingRight: "12px",
-  margin: 0,
+  margin: "0",
   borderRadius: "10px",
   height: "58px",
 }));

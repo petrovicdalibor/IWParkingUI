@@ -20,6 +20,7 @@ const SearchGrid = styled(Grid)(({ theme }) => ({
   },
   [theme.breakpoints.only("sm")]: {
     width: "394px",
+    paddingRight: "10px !important",
   },
   [theme.breakpoints.up("md")]: {
     width: "400px !important",
@@ -52,10 +53,11 @@ const SearchInput = () => {
     <>
       <SearchGrid
         container
-        sx={{ width: "100%", paddingRight: "10px !important", marginLeft: 0 }}
-        spacing={1}
+        sx={{ width: "100%", marginLeft: 0 }}
+        // spacing={}
+        direction="row"
       >
-        <SearchGridItem item xs={8}>
+        <SearchGridItem item xs={8} sx={{ paddingLeft: "0 !important" }}>
           <TextField
             label="Search"
             onChange={handleSearchConditionChange}
@@ -67,7 +69,7 @@ const SearchInput = () => {
             fullWidth
           />
         </SearchGridItem>
-        <SearchGridItem item xs={4}>
+        <SearchGridItem item xs={4} pl={1}>
           <FormControl
             variant="filled"
             size={isXs ? "small" : "normal"}

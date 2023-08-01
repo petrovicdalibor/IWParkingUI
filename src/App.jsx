@@ -3,82 +3,13 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 
 import Theme from "./theme/Theme";
 import { Layout } from "./layouts/Layout";
+import MyProfile from "./pages/MyProfile";
 
 function App() {
   return (
     <ThemeProvider theme={Theme}>
       <Layout>
-        <Typography variant="h2">IWParking h2</Typography>
-        <Typography variant="h3">IWParking h3</Typography>
-        <Typography paragraph>IWParking</Typography>
-
-        <div>
-          <Button
-            sx={{ width: "200px", margin: "10px" }}
-            variant="contained"
-            color="primary"
-          >
-            Primary
-          </Button>
-          <Button
-            sx={{ width: "200px", margin: "10px" }}
-            variant="contained"
-            color="secondary"
-          >
-            Secondary
-          </Button>
-          <Button
-            sx={{ width: "200px", margin: "10px" }}
-            variant="contained"
-            color="error"
-          >
-            Error
-          </Button>
-          <br />
-          <Button
-            sx={{ width: "200px", margin: "10px" }}
-            variant="contained"
-            color="warning"
-          >
-            Warning
-          </Button>
-          <Button
-            sx={{ width: "200px", margin: "10px" }}
-            variant="contained"
-            color="info"
-          >
-            Info
-          </Button>
-          <Button
-            sx={{ width: "200px", margin: "10px" }}
-            variant="contained"
-            color="success"
-          >
-            Success
-          </Button>
-          <Grid container spacing={1}>
-            <Grid item>
-              <TextField
-                label="Test 1"
-                variant="filled"
-                InputProps={{ disableUnderline: true }}
-                color="secondary"
-                type="text"
-                fullWidth
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                label="Test 2"
-                variant="filled"
-                InputProps={{ disableUnderline: true }}
-                color="primary"
-                type="text"
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </div>
+        <MyProfile />
       </Layout>
     </ThemeProvider>
   );
