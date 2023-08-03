@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
 import Theme from "../theme/Theme";
 import { makeStyles } from '@mui/styles';
+
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -48,9 +49,7 @@ const SignUpNow = styled(Typography)(({ theme }) => ({
     fontWeight: 500,
     lineHeight: "150%",
     letterSpacing: "-0.342px"
-  // display: inlineBlock, 
-    // textAlign: center, 
-    // float: left,
+
   },
 }));
 
@@ -76,12 +75,8 @@ fontSize: "12px",
 fontWeight: "400",
 lineHeight: "150%",
 letterSpacing: "-0.228px",
-marginLeft: "-75px",
+marginLeft: "-105px",
 marginRight: "15px",
-//position: "absolute",
-//top:"60px"
-// Left: "20px",
- //marginTop: "-40px",
 }
 ));
 
@@ -91,8 +86,6 @@ const NameInput = styled(TextField)(({ theme }) => ({
     height: "45px",
     marginLeft:"-15px",
     marginRight:"10px",
-    
-    //boxshadow:"0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     boxShadow: theme.input.boxShadow,
 
   },
@@ -103,8 +96,6 @@ const SurnameInput = styled(TextField)(({ theme }) => ({
     width: "160px",
     height: "45px",
     marginRight: "-15px",
-    
-    //boxshadow:"0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     boxShadow: theme.input.boxShadow,
 
   },
@@ -114,7 +105,6 @@ const LoginInput = styled(TextField)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
     width: "332px",
     height: "45px",
-    //boxshadow:"0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     boxShadow: theme.input.boxShadow,
 
   },
@@ -140,8 +130,6 @@ const SignUpButton = styled(Button)(({ theme }) => ({
 
 const Or = styled(Typography)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
-    // width: "130px",
-    //height: '15px',
     color: "#9C9C9C",
     fontFamily: "Montserrat",
     fontSize: "12px",
