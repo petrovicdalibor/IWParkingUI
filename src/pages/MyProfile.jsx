@@ -8,7 +8,7 @@ import { useMediaQuery } from "@mui/material";
 import ProfileSettings from "../features/MyProfile/components/ProfileSettings";
 import Vehicles from "../features/MyProfile/components/Vehicles";
 
-function CustomTabPanel(props) {
+const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -19,14 +19,10 @@ function CustomTabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 1 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ px: 0 }}>{children}</Box>}
     </div>
   );
-}
+};
 
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
@@ -34,12 +30,12 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
+const a11yProps = (index) => {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-}
+};
 
 const MyProfile = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
@@ -78,9 +74,9 @@ const MyProfile = () => {
   return (
     <>
       <Typography variant="h2">My Profile</Typography>
-      <Box>
-        <ProfileSettings />
-      </Box>
+
+      <ProfileSettings />
+      <Vehicles />
     </>
   );
 };

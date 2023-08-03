@@ -1,7 +1,5 @@
 import { createTheme } from "@mui/material/styles";
 
-// import { getGridTheme } from "./GridTheme";
-
 let theme = createTheme({
   typography: {
     fontFamily: ['"Montserrat"', "sans-serif"].join(","),
@@ -35,25 +33,6 @@ let theme = createTheme({
       contrastText: "#FFFFFF",
     },
   },
-  // components: {
-  //   // Name of the component
-  //   MuiGrid: getGridTheme(theme),
-  //   MuiInputBase: {
-  //     styleOverrides: {
-  //       root: {
-  //         boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
-  //         borderRadius: "10px !important",
-  //       },
-  //     },
-  //   },
-  //   MuiButton: {
-  //     styleOverrides: {
-  //       root: {
-  //         borderRadius: "10px !important",
-  //       },
-  //     },
-  //   },
-  // },
 });
 
 theme = createTheme(theme, {
@@ -80,7 +59,6 @@ theme = createTheme(theme, {
     },
   },
   components: {
-    // MuiGrid: getGridTheme(theme),
     MuiInputBase: {
       styleOverrides: {
         root: {

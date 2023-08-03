@@ -22,33 +22,6 @@ const LayoutRoot = styled("div")(({ theme }) => ({
   },
 }));
 
-// const LayoutContainer = styled("div")({
-//   display: "flex",
-//   flex: "1 1 auto",
-//   flexDirection: "column",
-//   width: "100%",
-// });
-
-// const LayoutContainer = styled(Grid)(
-//   { theme },
-//   {
-//     marginTop: "16px !important",
-//     [theme.breakpoints.down("sm")]: {
-//       padding: "0 10px 0 10px",
-//     },
-//     [theme.breakpoints.up("sm")]: {
-//       padding: "0 13px 0 13px",
-//       maxWidth: "845px",
-//       margin: "0 auto",
-//     },
-//     [theme.breakpoints.up("lg")]: {
-//       padding: "0",
-//       maxWidth: "1076px",
-//       margin: "0 auto",
-//     },
-//   }
-// );
-
 const LayoutContainer = styled(Grid)(({ theme }) => ({
   marginTop: "16px !important",
   [theme.breakpoints.down("sm")]: {
@@ -72,14 +45,13 @@ export const Layout = ({ children }) => {
 
   const handlePathnameChange = useCallback(() => {
     if (openNav) {
-      setOpenNav(true);
+      setOpenNav(false);
     }
   }, [openNav]);
 
   useEffect(
     () => {
       handlePathnameChange();
-      console.log(pathname);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname]
