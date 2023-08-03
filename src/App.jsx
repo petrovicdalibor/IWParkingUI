@@ -4,9 +4,21 @@ import { Button, Grid, TextField, Typography } from "@mui/material";
 import Theme from "./theme/Theme";
 import { Layout } from "./layouts/Layout";
 
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import routes from './shared/constants/routes.js';
+
 function App() {
   return (
     <ThemeProvider theme={Theme}>
+ <Router>
+      <Routes>
+        {routes.map((route) => (
+          <Route key={route.path} path={route.path} element={<route.component />} />
+        ))}
+        <Route path="*" element={<div>Not found</div>} />
+      </Routes>
+    </Router>
+
       <Layout>
         <Typography variant="h2">IWParking h2</Typography>
         <Typography variant="h3">IWParking h3</Typography>
