@@ -19,6 +19,7 @@ import { BsPersonGear, BsXLg, BsChevronDown } from "react-icons/bs";
 // import { FaBars } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
+import { Link } from "react-router-dom";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -154,14 +155,16 @@ const TopBar = ({ onHamburgerClick, open }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Box>
-                  <BsPersonGear size={20} />
-                </Box>
-                <Typography px={2} textAlign="center">
-                  Profile
-                </Typography>
-              </MenuItem>
+              <Link to="/profile">
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Box>
+                    <BsPersonGear size={20} />
+                  </Box>
+                  <Typography px={2} textAlign="center">
+                    Profile
+                  </Typography>
+                </MenuItem>
+              </Link>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Box>
                   <LuLogOut size={20} />

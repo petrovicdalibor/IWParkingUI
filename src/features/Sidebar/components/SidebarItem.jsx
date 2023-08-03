@@ -1,5 +1,6 @@
 import { Box, ButtonBase } from "@mui/material";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 export const SidebarItem = ({
   active = false,
@@ -17,8 +18,8 @@ export const SidebarItem = ({
         }
       : {
           // TODO: Change to Link when implementing react-router
-          component: "a",
-          href: path,
+          component: Link,
+          to: path,
         }
     : {};
 

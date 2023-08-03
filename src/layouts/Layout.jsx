@@ -5,6 +5,7 @@ import { Sidebar } from "../features/Sidebar/components/Sidebar";
 import { useCallback, useEffect, useState } from "react";
 import TopBar from "../features/TopBar/components/TopBar";
 import { Grid } from "@mui/material";
+import { Outlet, useLocation } from "react-router";
 
 const SIDE_NAV_WIDTH = 255;
 const TABLET_SIDE_NAV_WIDTH = 80;
@@ -39,8 +40,8 @@ const LayoutContainer = styled(Grid)(({ theme }) => ({
   },
 }));
 
-export const Layout = ({ children }) => {
-  const pathname = window.location.pathname;
+export const Layout = () => {
+  const pathname = useLocation();
   const [openNav, setOpenNav] = useState(false);
 
   const handlePathnameChange = useCallback(() => {
@@ -73,13 +74,11 @@ export const Layout = ({ children }) => {
               open={openNav}
             />
           </Grid>
-          <Grid item>{children}</Grid>
+          <Grid item>
+            <Outlet />
+          </Grid>
         </LayoutContainer>
       </LayoutRoot>
     </>
   );
-};
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
 };

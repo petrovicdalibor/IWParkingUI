@@ -1,14 +1,26 @@
-import LoginMobile from '../../features/pages/LoginMobile.jsx';
-import SignupMobile from '../../features/pages/SignupMobile.jsx';
+import LoginMobile from "../../features/pages/LoginMobile.jsx";
+import SignupMobile from "../../features/pages/SignupMobile.jsx";
+import Favorites from "../../pages/Favorites.jsx";
+import Home from "../../pages/Home.jsx";
+import MyProfile from "../../pages/MyProfile.jsx";
+import Reservations from "../../pages/Reservations.jsx";
 
 const routes = [
   {
-    path: '/',
-    component: LoginMobile,
+    path: "/",
+    component: Home,
   },
   {
-    path: '/signup',
-    component: SignupMobile,
+    path: "/reservations",
+    component: Reservations,
+  },
+  {
+    path: "/favorites",
+    component: Favorites,
+  },
+  {
+    path: "/profile",
+    component: MyProfile,
   },
 ];
 
