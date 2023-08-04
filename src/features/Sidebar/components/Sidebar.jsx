@@ -13,7 +13,7 @@ import { SidebarItem } from "./SidebarItem";
 import { LuAlignJustify } from "react-icons/lu";
 import { GrClose } from "react-icons/gr";
 
-import { items } from "../../../shared/constants/navigation";
+import { items } from "../../../common/constants/navigation";
 
 const LogoImage = styled("img")(() => ({
   height: "32px",
