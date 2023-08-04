@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import { SidebarItem } from "./SidebarItem";
 
-import { LuParkingCircle, LuAlignJustify } from "react-icons/lu";
-import { BsCalendarEvent, BsStar } from "react-icons/bs";
+import { LuAlignJustify } from "react-icons/lu";
 import { GrClose } from "react-icons/gr";
+
+import { items } from "../../../shared/constants/navigation";
 
 const LogoImage = styled("img")(() => ({
   height: "32px",
@@ -24,6 +25,8 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
   const lgDown = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+
+  const pathname = window.location.pathname;
 
   const hamburger = open ? <GrClose size={24} /> : <LuAlignJustify size={26} />;
 
@@ -101,32 +104,20 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
             alignItems: smDown ? "center" : "left",
           }}
         >
-          <SidebarItem
-            active={true}
-            external={false}
-            icon={<LuParkingCircle size={24} />}
-            key={"Parking Lots"}
-            path={"/"}
-            title={"Parking Lots"}
-          />
-          <SidebarItem
-            active={false}
-            external={false}
-            icon={<BsCalendarEvent size={24} />}
-            key={"Reservations"}
-            path={"/reservations"}
-            title={"Reservations"}
-            open={open}
-          />
-          <SidebarItem
-            active={false}
-            external={false}
-            icon={<BsStar size={24} />}
-            key={"Favorites"}
-            path={"/favorites"}
-            title={"Favorites"}
-            open={open}
-          />
+          {items.map((item) => {
+            const active = item.path ? pathname === item.path : false;
+
+            return (
+              <SidebarItem
+                active={active}
+                external={item.external}
+                icon={item.icon}
+                key={item.title}
+                path={item.path}
+                title={item.title}
+              />
+            );
+          })}
         </Stack>
       </Box>
     </Box>

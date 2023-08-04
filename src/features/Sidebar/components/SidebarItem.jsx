@@ -1,6 +1,6 @@
 import { Box, ButtonBase } from "@mui/material";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const SidebarItem = ({
   active = false,
@@ -18,7 +18,7 @@ export const SidebarItem = ({
         }
       : {
           // TODO: Change to Link when implementing react-router
-          component: Link,
+          component: NavLink,
           to: path,
         }
     : {};
@@ -58,6 +58,9 @@ export const SidebarItem = ({
               display: "inline-flex",
               justifyContent: "center",
               mr: 3,
+              ...(active && {
+                color: "primary.main !important",
+              }),
             }}
           >
             {icon}
@@ -73,6 +76,9 @@ export const SidebarItem = ({
             fontWeight: 600,
             lineHeight: "24px",
             whiteSpace: "nowrap",
+            ...(active && {
+              color: "primary.main !important",
+            }),
             // visibility: open ? "visible" : "hidden",
           }}
         >
