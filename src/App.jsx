@@ -1,13 +1,12 @@
 import { ThemeProvider } from "@emotion/react";
-import { Button, Grid, TextField, Typography } from "@mui/material";
 
 import Theme from "./theme/Theme";
 import { Layout } from "./layouts/Layout";
 
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import routes from "./shared/constants/routes.js";
-import Login from "./features/pages/LoginMobile";
-import Signup from "./features/pages/SignupMobile";
+import routes from "./common/constants/routes.js";
+import Login from "./pages/LoginMobile";
+import Signup from "./pages/SignupMobile";
 
 function App() {
   return (

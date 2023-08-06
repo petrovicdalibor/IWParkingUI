@@ -1,5 +1,3 @@
-import LoginMobile from "../../features/pages/LoginMobile.jsx";
-import SignupMobile from "../../features/pages/SignupMobile.jsx";
 import Favorites from "../../pages/Favorites.jsx";
 import Home from "../../pages/Home.jsx";
 import MyProfile from "../../pages/MyProfile.jsx";
