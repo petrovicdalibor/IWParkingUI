@@ -15,22 +15,13 @@ const SearchGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
     marginTop: "8px",
   },
-  [theme.breakpoints.down("sm")]: {
-    marginTop: "8px",
+  [theme.breakpoints.up("sm")]: {
+    width: "400px",
   },
-  [theme.breakpoints.only("sm")]: {
-    width: "394px",
-  },
-  [theme.breakpoints.up("md")]: {
+  [theme.breakpoints.up("lg")]: {
     width: "400px !important",
     minWidth: "400px !important",
     maxWidth: "400px !important",
-  },
-}));
-
-const SearchGridItem = styled(Grid)(({ theme }) => ({
-  [theme.breakpoints.up("xs")]: {
-    paddingTop: "0 !important",
   },
 }));
 
@@ -55,7 +46,7 @@ const SearchInput = () => {
         sx={{ width: "100%", paddingRight: "10px !important", marginLeft: 0 }}
         spacing={1}
       >
-        <SearchGridItem item xs={8}>
+        <Grid item xs={9} md={8} lg={8} xl={8}>
           <TextField
             label="Search"
             onChange={handleSearchConditionChange}
@@ -66,8 +57,8 @@ const SearchInput = () => {
             value={searchCondition}
             fullWidth
           />
-        </SearchGridItem>
-        <SearchGridItem item xs={4}>
+        </Grid>
+        <Grid item xs={3} md={4} lg={4} xl={4}>
           <FormControl
             variant="filled"
             size={isXs ? "small" : "normal"}
@@ -92,7 +83,7 @@ const SearchInput = () => {
               <MenuItem value={30}>Prilep</MenuItem>
             </Select>
           </FormControl>
-        </SearchGridItem>
+        </Grid>
       </SearchGrid>
     </>
   );

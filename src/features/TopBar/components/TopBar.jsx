@@ -15,7 +15,7 @@ import {
   styled,
 } from "@mui/material";
 import { LuLogOut } from "react-icons/lu";
-import { BsPersonGear, BsXLg, BsChevronDown } from "react-icons/bs";
+import { BsPersonGear, BsXLg } from "react-icons/bs";
 // import { FaBars } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
@@ -56,11 +56,11 @@ const UserInfoBox = styled(Box)(() => ({
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#F1F1F1",
-  paddingLeft: "12px",
-  paddingRight: "12px",
+  paddingLeft: "16px",
+  paddingRight: "16px",
   margin: 0,
   borderRadius: "10px",
-  height: "58px",
+  height: "63px",
 }));
 
 const TopBar = ({ onHamburgerClick, open }) => {
@@ -108,7 +108,7 @@ const TopBar = ({ onHamburgerClick, open }) => {
           <Box>
             <IconButton
               sx={{
-                height: "58px",
+                height: "63px",
                 padding: 0,
                 fontSize: "0",
                 textAlign: "left",
@@ -133,9 +133,6 @@ const TopBar = ({ onHamburgerClick, open }) => {
                     </Typography>
                   </Box>
                 </Hidden>
-                <Box ml={1}>
-                  <BsChevronDown size={20} />
-                </Box>
               </UserInfoBox>
             </IconButton>
             <Menu
