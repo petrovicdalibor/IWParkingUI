@@ -10,8 +10,12 @@ export const emailValidator = (email) => {
 export const passwordValidator = (password) => {
   if (!password) {
     return "Password is required";
-  } else if (password.length < 6) {
-    return "Password must have a minimum 6 characters";
+  } else if (
+    !new RegExp(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{6,30}$/
+    ).test(password)
+  ) {
+    return "Password must have a minimum 6 characters, one uppercase letter one special character and one number";
   }
   return "";
 };

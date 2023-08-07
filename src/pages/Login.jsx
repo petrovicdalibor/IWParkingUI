@@ -19,7 +19,7 @@ import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
-import { emailValidator, passwordValidator } from "../common/utils/validators";
+import { emailValidator } from "../common/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -88,8 +88,7 @@ function Login() {
       setEmailError(true);
       return;
     }
-    if (passwordValidator(password) !== "") {
-      setError(passwordValidator(password));
+    if (password === "") {
       setPasswordError(true);
       return;
     }
