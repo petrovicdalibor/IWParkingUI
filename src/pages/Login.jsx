@@ -19,6 +19,7 @@ import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
+import { emailValidator } from "../common/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -65,17 +66,32 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const { login, user } = useAuth();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
-    // ...
+
+    setEmailError(false);
+    setPasswordError(false);
+    if (emailValidator(email) !== "") {
+      setError(emailValidator(email));
+      setEmailError(true);
+      return;
+    }
+    if (password === "") {
+      setPasswordError(true);
+      return;
+    }
     try {
       await login(email, password).then((res) => {
         const token = res.data.token;
@@ -156,6 +172,8 @@ function Login() {
               InputProps={{ disableUnderline: true }}
               type="text"
               value={email}
+              error={emailError ? true : false}
+              helperText={emailError ? error : ""}
               fullWidth
             />
             <TextField
@@ -167,6 +185,8 @@ function Login() {
               InputProps={{ disableUnderline: true }}
               type="password"
               value={password}
+              error={passwordError ? true : false}
+              helperText={passwordError ? "Password is required" : ""}
               fullWidth
             />
             <Button
