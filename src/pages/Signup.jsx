@@ -1,4 +1,5 @@
-import { Link as RouterLink } from "react-router-dom";
+import { useState } from "react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -9,9 +10,21 @@ import {
   useMediaQuery,
   Link,
   Hidden,
+  Collapse,
+  Alert,
+  IconButton,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SignupImage from "../assets/signup-illustration.svg";
+
+import useAuth from "../common/hooks/useAuth";
+
+import CloseIcon from "@mui/icons-material/Close";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -53,10 +66,40 @@ const LoginImage = styled("img")(({ theme }) => ({
 function Signup() {
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const { signUp } = useAuth();
+
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [role, setRole] = useState("User");
+
+  const [error, setError] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+
+  const handleSubmit = async (e) => {
     // Handling form submission logic
-    event.preventDefault();
-    // ...
+    e.preventDefault();
+
+    try {
+      await signUp(
+        name,
+        surname,
+        email,
+        password,
+        confirmPassword,
+        phone,
+        role
+      ).then(() => {
+        navigate("/login", { replace: true });
+      });
+    } catch (err) {
+      setError(err);
+      setErrorOpen(true);
+    }
   };
 
   return (
@@ -91,18 +134,61 @@ function Signup() {
           <Typography variant={mdDown ? "caption" : "body2"}>
             Fill in the form below to get instant access
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Collapse in={errorOpen}>
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setErrorOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mt: 1 }}
+            >
+              {error}
+            </Alert>
+          </Collapse>
+          <Box component="form" onSubmit={handleSubmit} noValidate mt={2}>
+            <FormControl>
+              <FormLabel id="demo-row-radio-buttons-group-label">
+                Sign up as
+              </FormLabel>
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="role"
+                onChange={(e) => setRole(e.target.value)}
+                value={role}
+              >
+                <FormControlLabel
+                  value="User"
+                  control={<Radio size="small" />}
+                  label="User"
+                />
+                <FormControlLabel
+                  value="Owner"
+                  control={<Radio size="small" />}
+                  label="Owner"
+                />
+              </RadioGroup>
+            </FormControl>
             <Box display={mdDown ? "block" : "flex"} gap={2}>
               <Grid item>
                 <TextField
                   sx={{ mt: 2 }}
                   label="Name"
-                  // onChange={handleUsernameChange}
+                  onChange={(e) => setName(e.target.value)}
                   variant="filled"
                   size={mdDown ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  // value={searchCondition}
+                  value={name}
                   fullWidth
                 />
               </Grid>
@@ -110,12 +196,12 @@ function Signup() {
                 <TextField
                   sx={{ mt: 2 }}
                   label="Surname"
-                  // onChange={handleUsernameChange}
+                  onChange={(e) => setSurname(e.target.value)}
                   variant="filled"
                   size={mdDown ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  // value={searchCondition}
+                  value={surname}
                   fullWidth
                 />
               </Grid>
@@ -123,45 +209,45 @@ function Signup() {
             <TextField
               sx={{ mt: 2 }}
               label="Email"
-              // onChange={handleUsernameChange}
+              onChange={(e) => setEmail(e.target.value)}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
-              type="text"
-              // value={searchCondition}
+              type="email"
+              value={email}
               fullWidth
             />
             <TextField
               sx={{ mt: 2 }}
               label="Password"
-              // onChange={handleUsernameChange}
+              onChange={(e) => setPassword(e.target.value)}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="password"
-              // value={searchCondition}
+              value={password}
               fullWidth
             />
             <TextField
               sx={{ mt: 2 }}
               label="Confirm password"
-              // onChange={handleUsernameChange}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="password"
-              // value={searchCondition}
+              value={confirmPassword}
               fullWidth
             />
             <TextField
               sx={{ mt: 2 }}
               label="Phone number"
-              // onChange={handleUsernameChange}
+              onChange={(e) => setPhone(e.target.value)}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="text"
-              // value={searchCondition}
+              value={phone}
               fullWidth
             />
             <Button
