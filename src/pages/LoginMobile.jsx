@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -8,9 +8,19 @@ import {
   TextField,
   useMediaQuery,
   Link,
+  Alert,
+  Collapse,
+  IconButton,
+  styled,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
+import { useState } from "react";
+import useAuth from "../common/hooks/useAuth";
+import axios from "../common/api/axios";
+
+import Cookies from "universal-cookie";
+// import { login } from "../services/authService";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -50,12 +60,39 @@ const LoginImage = styled("img")(({ theme }) => ({
 }));
 
 function Login() {
+  const cookies = new Cookies();
+
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const handleSubmit = (event) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  const { login, user } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+
+  const handleSubmit = async (e) => {
     // Handling form submission logic
-    event.preventDefault();
+    e.preventDefault();
     // ...
+    try {
+      await login(email, password).then((res) => {
+        const token = res.data.token;
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+
+        cookies.set("token", token, {
+          expires: new Date(decodedToken.exp * 1000),
+        });
+
+        navigate(from, { replace: true });
+      });
+    } catch (err) {
+      setError(err);
+      setErrorOpen(true);
+    }
   };
 
   return (
@@ -90,27 +127,48 @@ function Login() {
           <Typography variant={mdDown ? "caption" : "body2"}>
             Enter your email and password
           </Typography>
+
+          <Collapse in={errorOpen}>
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setErrorOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mt: 1 }}
+            >
+              {error}
+            </Alert>
+          </Collapse>
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <TextField
               sx={{ mt: 2 }}
               label="Email"
-              // onChange={handleUsernameChange}
+              onChange={(e) => setEmail(e.target.value)}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="text"
-              // value={searchCondition}
+              value={email}
               fullWidth
             />
             <TextField
               sx={{ mt: 2 }}
               label="Password"
-              // onChange={handleUsernameChange}
+              onChange={(e) => setPassword(e.target.value)}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="password"
-              // value={searchCondition}
+              value={password}
               fullWidth
             />
             <Button

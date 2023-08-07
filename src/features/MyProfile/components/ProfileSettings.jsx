@@ -1,3 +1,7 @@
+import { useState } from "react";
+import PropTypes from "prop-types";
+import Cookies from "universal-cookie";
+
 import {
   Avatar,
   Box,
@@ -9,6 +13,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
+import axios from "../../../common/api/axios";
+import useAuth from "../../../common/hooks/useAuth";
+import { useEffect } from "react";
 
 const SettingsBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -42,8 +49,36 @@ const UserAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const ProfileSettings = () => {
+  const cookies = new Cookies();
+
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
+
+  const [user, setUser] = useState();
+
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await axios
+        .get("/api/User/Get/2", {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        })
+        .then((res) => {
+          // console.log(res.data.user);
+          setUser(res.data.user);
+          setName(res.data.user.name);
+          setSurname(res.data.user.surname);
+          setEmail(res.data.user.email);
+        });
+      // console.log(auth);
+    };
+    fetchUser();
+  }, []);
 
   if (isXl) {
     return (
@@ -103,24 +138,24 @@ const ProfileSettings = () => {
               <Grid item xs={12} sm={12} xl={12} display={"flex"} gap={2}>
                 <TextField
                   label="Name"
-                  // onChange={handleSearchConditionChange}
+                  onChange={(e) => setName(e.target.value)}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  // value={searchCondition}
+                  value={name}
                   fullWidth
                 />
                 <TextField
                   label="Surname"
-                  // onChange={handleSearchConditionChange}
+                  onChange={(e) => setSurname(e.target.value)}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  // value={searchCondition}
+                  value={surname}
                   fullWidth
                 />
               </Grid>
@@ -135,13 +170,13 @@ const ProfileSettings = () => {
               >
                 <TextField
                   label="Email"
-                  // onChange={handleSearchConditionChange}
+                  onChange={(e) => setEmail(e.target.value)}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="email"
-                  // value={searchCondition}
+                  value={email}
                   fullWidth
                 />
                 <TextField
@@ -291,24 +326,24 @@ const ProfileSettings = () => {
             >
               <TextField
                 label="Name"
-                // onChange={handleSearchConditionChange}
+                onChange={(e) => setName(e.target.value)}
                 color="secondary"
                 variant="filled"
                 size={isXs ? "small" : "normal"}
                 InputProps={{ disableUnderline: true }}
                 type="text"
-                // value={searchCondition}
+                value={name}
                 fullWidth
               />
               <TextField
                 label="Surname"
-                // onChange={handleSearchConditionChange}
+                onChange={(e) => setSurname(e.target.value)}
                 color="secondary"
                 variant="filled"
                 size={isXs ? "small" : "normal"}
                 InputProps={{ disableUnderline: true }}
                 type="text"
-                // value={searchCondition}
+                value={surname}
                 fullWidth
               />
             </Grid>
@@ -323,13 +358,13 @@ const ProfileSettings = () => {
             >
               <TextField
                 label="Email"
-                // onChange={handleSearchConditionChange}
+                onChange={(e) => setEmail(e.target.value)}
                 color="secondary"
                 variant="filled"
                 size={isXs ? "small" : "normal"}
                 InputProps={{ disableUnderline: true }}
                 type="email"
-                // value={searchCondition}
+                value={email}
                 fullWidth
               />
               <TextField
@@ -411,6 +446,10 @@ const ProfileSettings = () => {
       </SettingsBox>
     </>
   );
+};
+
+ProfileSettings.propTypes = {
+  user: PropTypes.object,
 };
 
 export default ProfileSettings;

@@ -7,6 +7,10 @@ import Box from "@mui/material/Box";
 import { useMediaQuery } from "@mui/material";
 import ProfileSettings from "../features/MyProfile/components/ProfileSettings";
 import Vehicles from "../features/MyProfile/components/Vehicles";
+import useAuth from "../common/hooks/useAuth";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "../common/api/axios";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -39,8 +43,7 @@ const a11yProps = (index) => {
 
 const MyProfile = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
-
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
