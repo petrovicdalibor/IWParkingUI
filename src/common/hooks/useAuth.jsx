@@ -1,6 +1,3 @@
-import { useContext } from "react";
-import { AuthContext } from "../../context/authProvider";
-import { useState } from "react";
 import axios from "../api/axios";
 
 const useAuth = () => {
@@ -50,7 +47,7 @@ const useAuth = () => {
     return signUpResult;
   };
 
-  return { login };
+  return { login, signUp };
 };
 
 export default useAuth;

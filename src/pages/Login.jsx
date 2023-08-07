@@ -17,10 +17,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
 import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
-import axios from "../common/api/axios";
 
 import Cookies from "universal-cookie";
-// import { login } from "../services/authService";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
