@@ -15,10 +15,11 @@ import {
   styled,
 } from "@mui/material";
 import { LuLogOut } from "react-icons/lu";
-import { BsPersonGear, BsXLg } from "react-icons/bs";
+import { BsPersonGear, BsXLg, BsChevronDown } from "react-icons/bs";
 // import { FaBars } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
+import { Link } from "react-router-dom";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -56,11 +57,11 @@ const UserInfoBox = styled(Box)(() => ({
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "#F1F1F1",
-  paddingLeft: "16px",
-  paddingRight: "16px",
-  margin: 0,
+  paddingLeft: "12px",
+  paddingRight: "12px",
+  margin: "0",
   borderRadius: "10px",
-  height: "63px",
+  height: "58px",
 }));
 
 const TopBar = ({ onHamburgerClick, open }) => {
@@ -108,7 +109,7 @@ const TopBar = ({ onHamburgerClick, open }) => {
           <Box>
             <IconButton
               sx={{
-                height: "63px",
+                height: "58px",
                 padding: 0,
                 fontSize: "0",
                 textAlign: "left",
@@ -133,6 +134,9 @@ const TopBar = ({ onHamburgerClick, open }) => {
                     </Typography>
                   </Box>
                 </Hidden>
+                <Box ml={1}>
+                  <BsChevronDown size={20} />
+                </Box>
               </UserInfoBox>
             </IconButton>
             <Menu
@@ -151,14 +155,16 @@ const TopBar = ({ onHamburgerClick, open }) => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Box>
-                  <BsPersonGear size={20} />
-                </Box>
-                <Typography px={2} textAlign="center">
-                  Profile
-                </Typography>
-              </MenuItem>
+              <Link to="/profile">
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Box>
+                    <BsPersonGear size={20} />
+                  </Box>
+                  <Typography px={2} textAlign="center">
+                    Profile
+                  </Typography>
+                </MenuItem>
+              </Link>
               <MenuItem onClick={handleCloseUserMenu}>
                 <Box>
                   <LuLogOut size={20} />

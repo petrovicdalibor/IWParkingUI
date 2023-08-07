@@ -15,7 +15,7 @@ let theme = createTheme({
     boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
     width: "332px",
     height: "45px",
-    flexShrink: 0
+    flexShrink: 0,
   },
 
   palette: {
@@ -65,6 +65,53 @@ theme = createTheme(theme, {
       fontWeight: 500,
       [theme.breakpoints.down("sm")]: {
         fontSize: "1.125rem",
+      },
+    },
+  },
+  components: {
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
+          borderRadius: "10px !important",
+          border: "1px solid #ECECEC",
+          "&:hover": {
+            border: "1px solid #C5C5C5",
+          },
+          transition: theme.transitions.create("border", {
+            duration: theme.transitions.duration.shorter,
+          }),
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: "10px !important",
+        },
+      },
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          background: "none",
+          borderRadius: "10px",
+          "&:hover": {
+            backgroundColor: "transparent",
+          },
+          "&.Mui-focused": {
+            backgroundColor: "transparent",
+            border: "1px solid #B1B1B1",
+          },
+          transition: theme.transitions.create("border", {
+            duration: theme.transitions.duration.shorter,
+          }),
+        },
+        input: {
+          "&:focus": {
+            backgroundColor: "transparent",
+          },
+        },
       },
     },
   },
