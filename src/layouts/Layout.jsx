@@ -1,11 +1,10 @@
-import PropTypes from "prop-types";
-
 import { styled } from "@mui/material/styles";
 import { Sidebar } from "../features/Sidebar/components/Sidebar";
 import { useCallback, useEffect, useState } from "react";
 import TopBar from "../features/TopBar/components/TopBar";
 import { Grid } from "@mui/material";
 import { Outlet, useLocation } from "react-router";
+// import AuthVerify from "../common/utils/AuthVerify";
 
 const SIDE_NAV_WIDTH = 255;
 const TABLET_SIDE_NAV_WIDTH = 80;
@@ -60,6 +59,7 @@ export const Layout = () => {
 
   return (
     <>
+      {/* <AuthVerify /> */}
       <Sidebar
         onHamburgerClick={() => setOpenNav(!openNav)}
         onClose={() => setOpenNav(false)}

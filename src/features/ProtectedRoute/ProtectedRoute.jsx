@@ -1,19 +1,38 @@
-import { useContext } from "react";
-import { AuthContext } from "../../context/authProvider";
-import { Navigate, Outlet } from "react-router";
+import { useEffect } from "react";
+// import { AuthContext } from "../../context/authProvider";
+import { Outlet, useNavigate } from "react-router";
 
 import { Layout } from "../../layouts/Layout";
+// import AuthVerify from "../../common/utils/AuthVerify";
+import useAuth from "../../common/hooks/useAuth";
+
+import Cookies from "universal-cookie";
 
 const ProtectedRoute = () => {
-  const userContext = useContext(AuthContext);
+  // const userContext = useContext(AuthContext);
 
-  if (!userContext.isLoggedIn) {
-    return <Navigate to="/login" />;
-  }
+  const navigate = useNavigate();
+  const cookies = new Cookies();
+  const pathname = window.location;
+  const { verifyToken } = useAuth();
+
+  useEffect(() => {
+    if (!verifyToken(cookies.get("token"))) {
+      navigate("/login");
+    }
+  }, [pathname]);
+
+  // if (!userContext.isLoggedIn) {
+  //   return <Navigate to="/login" />;
+  // }
+
   return (
-    <Layout>
-      <Outlet />
-    </Layout>
+    <>
+      {/* <AuthVerify /> */}
+      <Layout>
+        <Outlet />
+      </Layout>
+    </>
   );
 };
 
