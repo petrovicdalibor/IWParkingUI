@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Button,
@@ -22,6 +22,7 @@ import {
 import { styled } from "@mui/material/styles";
 import SignupImage from "../assets/signup-illustration.svg";
 
+import Cookies from "universal-cookie";
 import useAuth from "../common/hooks/useAuth";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -64,10 +65,11 @@ const LoginImage = styled("img")(({ theme }) => ({
 }));
 
 function Signup() {
+  const cookies = new Cookies();
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  const { signUp, verifyToken } = useAuth();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -79,6 +81,15 @@ function Signup() {
 
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
+
+  const pathname = window.location;
+
+  useEffect(() => {
+    // if the token is valid, redirect to home page
+    if (verifyToken(cookies.get("token"))) {
+      navigate("/");
+    }
+  }, [pathname]);
 
   const handleSubmit = async (e) => {
     // Handling form submission logic

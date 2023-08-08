@@ -21,6 +21,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/authProvider";
+import useAuth from "../../../common/hooks/useAuth";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -67,6 +68,7 @@ const UserInfoBox = styled(Box)(() => ({
 
 const TopBar = ({ onHamburgerClick, open }) => {
   const userContext = useContext(AuthContext);
+  const { logout } = useAuth();
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -162,17 +164,24 @@ const TopBar = ({ onHamburgerClick, open }) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <Link to="/profile">
-                  <MenuItem onClick={handleCloseUserMenu}>
-                    <Box>
-                      <BsPersonGear size={20} />
-                    </Box>
-                    <Typography px={2} textAlign="center">
-                      Profile
-                    </Typography>
-                  </MenuItem>
-                </Link>
-                <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem
+                  component={Link}
+                  to="/profile"
+                  onClick={handleCloseUserMenu}
+                >
+                  <Box>
+                    <BsPersonGear size={20} />
+                  </Box>
+                  <Typography px={2} textAlign="center">
+                    Profile
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    logout();
+                  }}
+                >
                   <Box>
                     <LuLogOut size={20} />
                   </Box>

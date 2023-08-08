@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
@@ -69,7 +69,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
-  const { login } = useAuth();
+  const { login, verifyToken } = useAuth();
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
@@ -79,6 +79,15 @@ function Login() {
 
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
+
+  const pathname = window.location;
+
+  useEffect(() => {
+    // if the token is valid, redirect to home page
+    if (verifyToken(cookies.get("token"))) {
+      navigate("/");
+    }
+  }, [pathname]);
 
   const handleSubmit = async (e) => {
     // Handling form submission logic
@@ -100,16 +109,12 @@ function Login() {
         const token = res.data.token;
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
-        // console.log(decodedToken);
-
         cookies.set("token", token, {
           expires: new Date(decodedToken.exp * 1000),
         });
 
         userContext.setUser(decodedToken);
         userContext.setIsLoggedIn(true);
-
-        // console.log(userContext.user);
 
         navigate(from, { replace: true });
       });
