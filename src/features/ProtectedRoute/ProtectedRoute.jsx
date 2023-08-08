@@ -3,16 +3,15 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
 
 import { Layout } from "../../layouts/Layout";
-// import AuthVerify from "../../common/utils/AuthVerify";
-import useAuth from "../../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
+import useAuth from "../../common/hooks/useAuth";
 
 const ProtectedRoute = () => {
   // const userContext = useContext(AuthContext);
+  const cookies = new Cookies();
 
   const navigate = useNavigate();
-  const cookies = new Cookies();
   const pathname = window.location;
   const { verifyToken } = useAuth();
 
@@ -28,7 +27,6 @@ const ProtectedRoute = () => {
 
   return (
     <>
-      {/* <AuthVerify /> */}
       <Layout>
         <Outlet />
       </Layout>

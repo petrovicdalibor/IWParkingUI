@@ -95,7 +95,6 @@ const useAuth = () => {
     userContext.setIsLoggedIn(false);
     userContext.setUser({});
     navigate("/");
-    console.log("loggedout");
   };
 
   return { login, logout, signUp, fetchUser, verifyToken };
