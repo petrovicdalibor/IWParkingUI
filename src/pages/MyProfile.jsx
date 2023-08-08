@@ -1,4 +1,3 @@
-import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -7,10 +6,7 @@ import Box from "@mui/material/Box";
 import { useMediaQuery } from "@mui/material";
 import ProfileSettings from "../features/MyProfile/components/ProfileSettings";
 import Vehicles from "../features/MyProfile/components/Vehicles";
-import useAuth from "../common/hooks/useAuth";
 import { useState } from "react";
-import { useEffect } from "react";
-import axios from "../common/api/axios";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;

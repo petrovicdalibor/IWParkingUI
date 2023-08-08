@@ -1,4 +1,9 @@
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import {
+  Navigate,
+  Link as RouterLink,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import {
   Button,
   Typography,
@@ -15,12 +20,13 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
 import { emailValidator } from "../common/utils/validators";
 import { AuthContext } from "../context/authProvider";
+import AuthVerify from "../common/utils/AuthVerify";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -80,15 +86,6 @@ function Login() {
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
 
-  const pathname = window.location;
-
-  useEffect(() => {
-    // if the token is valid, redirect to home page
-    if (verifyToken(cookies.get("token"))) {
-      navigate("/");
-    }
-  }, [pathname]);
-
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
@@ -124,8 +121,12 @@ function Login() {
     }
   };
 
+  if (verifyToken(cookies.get("token"))) {
+    return <Navigate to="/" />;
+  }
   return (
     <>
+      <AuthVerify />
       <CssBaseline />
 
       {/* HEADER */}

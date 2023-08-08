@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Navigate, Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -24,6 +24,8 @@ import SignupImage from "../assets/signup-illustration.svg";
 
 import Cookies from "universal-cookie";
 import useAuth from "../common/hooks/useAuth";
+
+import AuthVerify from "../common/utils/AuthVerify";
 
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -82,15 +84,6 @@ function Signup() {
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
 
-  const pathname = window.location;
-
-  useEffect(() => {
-    // if the token is valid, redirect to home page
-    if (verifyToken(cookies.get("token"))) {
-      navigate("/");
-    }
-  }, [pathname]);
-
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
@@ -113,8 +106,13 @@ function Signup() {
     }
   };
 
+  if (verifyToken(cookies.get("token"))) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <>
+      <AuthVerify />
       <CssBaseline />
 
       {/* HEADER */}

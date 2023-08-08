@@ -55,29 +55,9 @@ const useAuth = () => {
     return signUpResult;
   };
 
-  const fetchUser = async (token) => {
-    const decodedToken = JSON.parse(atob(token.split(".")[1]));
-    const fetchUserResult = await axios
-      .get(`/api/User/Get/${decodedToken.Id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
-        return res;
-      });
-    return fetchUserResult;
-  };
-
   const verifyToken = (token) => {
     if (token != undefined) {
       const decodedJwt = JSON.parse(atob(token.split(".")[1]));
-
-      userContext.setUser(decodedJwt);
-      userContext.setIsLoggedIn(true);
 
       if (decodedJwt.exp * 1000 < Date.now()) {
         logout();
@@ -85,9 +65,13 @@ const useAuth = () => {
       }
       return true;
     } else {
-      userContext.setIsLoggedIn(false);
       return false;
     }
+  };
+
+  const fetchUser = (token) => {
+    const decodedJwt = JSON.parse(atob(token.split(".")[1]));
+    return decodedJwt;
   };
 
   const logout = () => {

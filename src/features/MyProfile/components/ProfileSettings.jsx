@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import PropTypes from "prop-types";
-import Cookies from "universal-cookie";
 
 import {
   Avatar,
@@ -13,9 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
-import axios from "../../../common/api/axios";
-import useAuth from "../../../common/hooks/useAuth";
-import { useEffect } from "react";
+import { AuthContext } from "../../../context/authProvider";
 
 const SettingsBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -49,36 +46,18 @@ const UserAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const ProfileSettings = () => {
-  const cookies = new Cookies();
-
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
+  const userContext = useContext(AuthContext);
 
-  const [user, setUser] = useState();
+  const [name, setName] = useState(userContext.user.Name);
+  const [surname, setSurname] = useState(userContext.user.Surname);
+  const [email, setEmail] = useState(userContext.user.Email);
+  const [phone, setPhone] = useState(userContext.user.phoneNumber);
 
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
-  const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axios
-        .get("/api/User/Get/2", {
-          headers: {
-            Authorization: `Bearer ${cookies.get("token")}`,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data.user);
-          setUser(res.data.user);
-          setName(res.data.user.name);
-          setSurname(res.data.user.surname);
-          setEmail(res.data.user.email);
-        });
-      // console.log(auth);
-    };
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   console.log(userContext);
+  // }, []);
 
   if (isXl) {
     return (
@@ -109,7 +88,11 @@ const ProfileSettings = () => {
                 alignContent={"center"}
                 justifyContent={"center"}
               >
-                <UserAvatar {...stringAvatar("Jane Doe")} />
+                <UserAvatar
+                  {...stringAvatar(
+                    `${userContext.user.Name} ${userContext.user.Surname}`
+                  )}
+                />
               </Grid>
               <Grid item xs={6} sm={12} display={"flex"} alignItems={"center"}>
                 <Button
@@ -181,13 +164,13 @@ const ProfileSettings = () => {
                 />
                 <TextField
                   label="Phone number"
-                  // onChange={handleSearchConditionChange}
+                  onChange={(e) => setPhone(e.target.value)}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  // value={searchCondition}
+                  value={phone}
                   fullWidth
                 />
                 <Button
