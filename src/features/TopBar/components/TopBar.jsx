@@ -1,11 +1,12 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import SearchInput from "../../../common/components/Search/components/SearchInput";
 
 import {
   Avatar,
   Box,
+  Button,
   Grid,
   Hidden,
   IconButton,
@@ -16,10 +17,10 @@ import {
 } from "@mui/material";
 import { LuLogOut } from "react-icons/lu";
 import { BsPersonGear, BsXLg, BsChevronDown } from "react-icons/bs";
-// import { FaBars } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../context/authProvider";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -65,6 +66,7 @@ const UserInfoBox = styled(Box)(() => ({
 }));
 
 const TopBar = ({ onHamburgerClick, open }) => {
+  const userContext = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
@@ -106,75 +108,98 @@ const TopBar = ({ onHamburgerClick, open }) => {
           </Grid>
         </Hidden>
         <Grid item xs={"auto"}>
-          <Box>
-            <IconButton
-              sx={{
-                height: "58px",
-                padding: 0,
-                fontSize: "0",
-                textAlign: "left",
-              }}
-              onClick={handleOpenUserMenu}
-            >
-              <UserInfoBox>
-                <UserAvatar {...stringAvatar("Jane Doe")} />
-                <Hidden mdDown>
-                  <Box>
-                    <Typography
-                      px
-                      py={0}
-                      color={"#424343"}
-                      variant="subtitle2"
-                      lineHeight={"14px"}
-                    >
-                      Jane Doe
-                    </Typography>
-                    <Typography px variant="caption" lineHeight={"14px"}>
-                      jane@example.com
-                    </Typography>
+          {userContext.isLoggedIn ? (
+            <Box>
+              <IconButton
+                sx={{
+                  height: "58px",
+                  padding: 0,
+                  fontSize: "0",
+                  textAlign: "left",
+                }}
+                onClick={handleOpenUserMenu}
+              >
+                <UserInfoBox>
+                  <UserAvatar
+                    {...stringAvatar(
+                      `${userContext.user.Name} ${userContext.user.Surname}`
+                    )}
+                  />
+                  <Hidden mdDown>
+                    <Box>
+                      <Typography
+                        px
+                        py={0}
+                        color={"#424343"}
+                        variant="subtitle2"
+                        lineHeight={"14px"}
+                      >
+                        {`${userContext.user.Name} ${userContext.user.Surname}`}
+                      </Typography>
+                      <Typography px variant="caption" lineHeight={"14px"}>
+                        {userContext.user.Email}
+                      </Typography>
+                    </Box>
+                  </Hidden>
+                  <Box ml={1}>
+                    <BsChevronDown size={20} />
                   </Box>
-                </Hidden>
-                <Box ml={1}>
-                  <BsChevronDown size={20} />
-                </Box>
-              </UserInfoBox>
-            </IconButton>
-            <Menu
-              sx={{ mt: "60px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <Link to="/profile">
+                </UserInfoBox>
+              </IconButton>
+              <Menu
+                sx={{ mt: "60px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <Link to="/profile">
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Box>
+                      <BsPersonGear size={20} />
+                    </Box>
+                    <Typography px={2} textAlign="center">
+                      Profile
+                    </Typography>
+                  </MenuItem>
+                </Link>
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Box>
-                    <BsPersonGear size={20} />
+                    <LuLogOut size={20} />
                   </Box>
                   <Typography px={2} textAlign="center">
-                    Profile
+                    Logout
                   </Typography>
                 </MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            <Grid item gap={1} display="flex">
+              <Link to="/signup">
+                <Grid item>
+                  <Button variant="outlined" color="secondary">
+                    Sign up
+                  </Button>
+                </Grid>
               </Link>
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Box>
-                  <LuLogOut size={20} />
-                </Box>
-                <Typography px={2} textAlign="center">
-                  Logout
-                </Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+              <Grid item>
+                <Link to="/login">
+                  <Button variant="contained" disableElevation>
+                    Login
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
       </CustomGrid>
       <Hidden smUp>
