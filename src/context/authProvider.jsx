@@ -1,13 +1,21 @@
 import { createContext, useState } from "react";
 import PropTypes from "prop-types";
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+  user: {},
+  isLoggedIn: false,
+  // eslint-disable-next-line no-unused-vars
+  setUser: (user) => {},
+  // eslint-disable-next-line no-unused-vars
+  setIsLoggedIn: (bool) => {},
+});
 
 const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({});
+  const [user, setUser] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, setUser, setIsLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

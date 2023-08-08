@@ -15,11 +15,12 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
 import { emailValidator } from "../common/utils/validators";
+import { AuthContext } from "../context/authProvider";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -61,6 +62,8 @@ const LoginImage = styled("img")(({ theme }) => ({
 function Login() {
   const cookies = new Cookies();
 
+  const userContext = useContext(AuthContext);
+
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
@@ -97,9 +100,16 @@ function Login() {
         const token = res.data.token;
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
+        // console.log(decodedToken);
+
         cookies.set("token", token, {
           expires: new Date(decodedToken.exp * 1000),
         });
+
+        userContext.setUser(decodedToken);
+        userContext.setIsLoggedIn(true);
+
+        // console.log(userContext.user);
 
         navigate(from, { replace: true });
       });
