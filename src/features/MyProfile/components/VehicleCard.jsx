@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 
 import styled from "@emotion/styled";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const VCard = styled(Card)(({ theme, isselected = false }) => ({
   display: "flex",
@@ -28,7 +29,7 @@ const VehicleCard = ({ plate, type, isselected }) => {
   return (
     <VCard
       variant="outlined"
-      sx={{ maxWidth: "154px" }}
+      // sx={{ maxWidth: "154px" }}
       isselected={isselected}
     >
       <CardContent
@@ -36,7 +37,7 @@ const VehicleCard = ({ plate, type, isselected }) => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "15px 25px 15px 25px",
+          padding: "15px 0px 15px 25px",
         }}
       >
         <Typography
@@ -58,6 +59,19 @@ const VehicleCard = ({ plate, type, isselected }) => {
           {type}
         </Typography>
       </CardContent>
+      <Box p={0.4}>
+        <IconButton
+          sx={{ position: "relative", p: "8px" }}
+          aria-label="close"
+          color="inherit"
+          size="small"
+          // onClick={() => {
+          //
+          // }}
+        >
+          <CloseIcon fontSize="inherit" />
+        </IconButton>
+      </Box>
     </VCard>
   );
 };
