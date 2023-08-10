@@ -46,7 +46,7 @@ const MyProfile = () => {
 
   useEffect(() => {
     // getUser();
-    console.log(userContext);
+    // console.log(userContext);
   }, []);
 
   const handleChange = (event, newValue) => {

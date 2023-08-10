@@ -84,7 +84,7 @@ const ProfileSettings = () => {
   };
 
   useEffect(() => {
-    if (userContext.user.name) {
+    if (Object.keys(userContext.user).length !== 0) {
       setName(userContext.user.name);
       setSurname(userContext.user.surname);
       setEmail(userContext.user.email);
@@ -253,9 +253,20 @@ const ProfileSettings = () => {
                 xs={12}
                 sm={12}
                 display={"flex"}
-                flexDirection={isXs ? "column" : "row"}
+                flexDirection="column"
                 gap={2}
               >
+                <TextField
+                  label="Current password"
+                  // onChange={handleSearchConditionChange}
+                  color="secondary"
+                  variant="filled"
+                  size={isXs ? "small" : "normal"}
+                  InputProps={{ disableUnderline: true }}
+                  type="text"
+                  // value={searchCondition}
+                  fullWidth
+                />
                 <TextField
                   label="New password"
                   // onChange={handleSearchConditionChange}

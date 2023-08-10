@@ -22,7 +22,6 @@ import { stringAvatar } from "../../../common/utils/AvatarUtil";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/authProvider";
 import useAuth from "../../../common/hooks/useAuth";
-import AuthVerify from "../../../common/utils/AuthVerify";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -86,7 +85,6 @@ const TopBar = ({ onHamburgerClick, open }) => {
   );
   return (
     <>
-      <AuthVerify />
       <Hidden smUp>
         <LogoBox>
           <LogoImage src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png" />

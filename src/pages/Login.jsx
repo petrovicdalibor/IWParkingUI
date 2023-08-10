@@ -1,9 +1,4 @@
-import {
-  Navigate,
-  Link as RouterLink,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Navigate, Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -20,12 +15,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
 import { emailValidator } from "../common/utils/validators";
-import { AuthContext } from "../context/authProvider";
 import AuthVerify from "../common/utils/AuthVerify";
 
 const Container = styled(Grid)(({ theme }) => ({
@@ -68,12 +62,9 @@ const LoginImage = styled("img")(({ theme }) => ({
 function Login() {
   const cookies = new Cookies();
 
-  const userContext = useContext(AuthContext);
-
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
-  const location = useLocation();
   const { login, verifyToken } = useAuth();
 
   const [email, setEmail] = useState("");

@@ -2,11 +2,11 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router";
+// import { useNavigate } from "react-router";
 
 const useAuth = () => {
   const cookies = new Cookies();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const userContext = useContext(AuthContext);
 
   const setUserInfo = async (id) => {
@@ -37,7 +37,6 @@ const useAuth = () => {
           expires: new Date(decodedToken.exp * 1000),
         });
 
-        // fetchUser(decodedToken.Id).then((res) => userContext.setUser(res));
         setUserInfo(decodedToken.Id);
         userContext.setIsLoggedIn(true);
         return res;
@@ -140,7 +139,6 @@ const useAuth = () => {
     cookies.remove("token");
     userContext.setIsLoggedIn(false);
     userContext.setUser({});
-    navigate("/");
   };
 
   return {
