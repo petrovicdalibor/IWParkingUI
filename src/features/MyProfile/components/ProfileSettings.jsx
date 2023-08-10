@@ -1,11 +1,14 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import {
+  Alert,
   Avatar,
   Box,
   Button,
+  Collapse,
   Grid,
+  IconButton,
   TextField,
   Typography,
   styled,
@@ -13,6 +16,9 @@ import {
 } from "@mui/material";
 import { stringAvatar } from "../../../common/utils/AvatarUtil";
 import { AuthContext } from "../../../context/authProvider";
+import useAuth from "../../../common/hooks/useAuth";
+
+import CloseIcon from "@mui/icons-material/Close";
 
 const SettingsBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -49,15 +55,42 @@ const ProfileSettings = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
   const userContext = useContext(AuthContext);
+  const { updateUserInfo } = useAuth();
 
-  const [name, setName] = useState(userContext.user.Name);
-  const [surname, setSurname] = useState(userContext.user.Surname);
-  const [email, setEmail] = useState(userContext.user.Email);
-  const [phone, setPhone] = useState(userContext.user.phoneNumber);
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
-  // useEffect(() => {
-  //   console.log(userContext);
-  // }, []);
+  const [error, setError] = useState("");
+  const [errorOpen, setErrorOpen] = useState(false);
+
+  const handlePersonalInfoSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      if (name === "" || surname === "" || email === "" || phone === "") {
+        throw "All field are required";
+      }
+      await updateUserInfo(userContext.user.id, name, surname, email, phone);
+    } catch (err) {
+      setError(err);
+      setErrorOpen(true);
+    }
+  };
+
+  const handleEmail = (value) => {
+    setEmail(value);
+  };
+
+  useEffect(() => {
+    if (userContext.user.name) {
+      setName(userContext.user.name);
+      setSurname(userContext.user.surname);
+      setEmail(userContext.user.email);
+      setPhone(userContext.user.phoneNumber);
+    }
+  }, [userContext.user]);
 
   if (isXl) {
     return (
@@ -90,7 +123,7 @@ const ProfileSettings = () => {
               >
                 <UserAvatar
                   {...stringAvatar(
-                    `${userContext.user.Name} ${userContext.user.Surname}`
+                    `${userContext.user.name} ${userContext.user.surname}`
                   )}
                 />
               </Grid>
@@ -113,76 +146,103 @@ const ProfileSettings = () => {
           </SettingsBox>
           <Grid item pl={isXs ? 0 : 2} xl={12}>
             <SettingsBox borderRadius={"10px"} px={4} py={2.5} mt={2}>
-              <Grid item py={1}>
+              <Grid item pt={1}>
                 <Typography variant="subtitle1" p>
                   Edit your personal info
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={12} xl={12} display={"flex"} gap={2}>
-                <TextField
-                  label="Name"
-                  onChange={(e) => setName(e.target.value)}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="text"
-                  value={name}
-                  fullWidth
-                />
-                <TextField
-                  label="Surname"
-                  onChange={(e) => setSurname(e.target.value)}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="text"
-                  value={surname}
-                  fullWidth
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                display={"flex"}
-                flexDirection={"column"}
-                mt={2}
-                gap={2}
-              >
-                <TextField
-                  label="Email"
-                  onChange={(e) => setEmail(e.target.value)}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="email"
-                  value={email}
-                  fullWidth
-                />
-                <TextField
-                  label="Phone number"
-                  onChange={(e) => setPhone(e.target.value)}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="text"
-                  value={phone}
-                  fullWidth
-                />
-                <Button
-                  sx={{ height: "50px", alignSelf: "end" }}
-                  variant="contained"
-                  color="secondary"
-                  size="normal"
-                  fullWidth={isXs ? true : false}
+              <Collapse in={errorOpen}>
+                <Alert
+                  severity="error"
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setErrorOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  sx={{ mb: 2 }}
                 >
-                  Save Changes
-                </Button>
-              </Grid>
+                  {error}
+                </Alert>
+              </Collapse>
+              <Box component="form" onSubmit={handlePersonalInfoSubmit}>
+                <Grid item xs={12} sm={12} xl={12} display={"flex"} gap={2}>
+                  <TextField
+                    label="Name"
+                    onChange={(e) => setName(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="text"
+                    value={name}
+                    focused={true}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Surname"
+                    onChange={(e) => setSurname(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="text"
+                    value={surname}
+                    focused={true}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  display={"flex"}
+                  flexDirection={"column"}
+                  mt={2}
+                  gap={2}
+                >
+                  <TextField
+                    label="Email"
+                    onChange={(e) => handleEmail(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="email"
+                    value={email}
+                    focused={true}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Phone number"
+                    onChange={(e) => setPhone(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="text"
+                    value={phone}
+                    focused={true}
+                    fullWidth
+                  />
+                  <Button
+                    sx={{ height: "50px", alignSelf: "end" }}
+                    variant="contained"
+                    color="secondary"
+                    size="normal"
+                    fullWidth={isXs ? true : false}
+                    type="submit"
+                  >
+                    Save Changes
+                  </Button>
+                </Grid>
+              </Box>
               <Grid item py={1}>
                 <Typography variant="subtitle1" p>
                   Change your password

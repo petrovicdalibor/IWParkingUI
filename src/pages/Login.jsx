@@ -74,7 +74,6 @@ function Login() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
   const { login, verifyToken } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -101,19 +100,10 @@ function Login() {
       setPasswordError(true);
       return;
     }
+
     try {
-      await login(email, password).then((res) => {
-        const token = res.data.token;
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-
-        cookies.set("token", token, {
-          expires: new Date(decodedToken.exp * 1000),
-        });
-
-        userContext.setUser(decodedToken);
-        userContext.setIsLoggedIn(true);
-
-        navigate(from, { replace: true });
+      await login(email, password).then(() => {
+        navigate("/", { replace: true });
       });
     } catch (err) {
       setError(err);

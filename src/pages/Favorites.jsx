@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/authProvider";
 
 const Favorites = () => {
-  return <div>Favorites</div>;
+  const userContext = useContext(AuthContext);
+  return <div>{console.log(userContext)}Favorites</div>;
 };
 
 export default Favorites;

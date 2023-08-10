@@ -31,27 +31,29 @@ const Routes = () => {
   const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      element: <Layout />,
       children: [
         {
-          path: "",
-          element: <Home />,
-        },
-        {
-          path: "/reservations",
-          element: <Reservations />,
-        },
-        {
-          path: "/favorites",
-          element: <Favorites />,
-        },
-        {
-          path: "/profile",
-          element: <MyProfile />,
-        },
-        {
-          path: "/logout",
-          element: <div>Logout Page</div>,
+          path: "/",
+          element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+          children: [
+            {
+              path: "/reservations",
+              element: <Reservations />,
+            },
+            {
+              path: "/favorites",
+              element: <Favorites />,
+            },
+            {
+              path: "/profile",
+              element: <MyProfile />,
+            },
+            {
+              path: "/logout",
+              element: <div>Logout Page</div>,
+            },
+          ],
         },
       ],
     },

@@ -22,6 +22,7 @@ import { stringAvatar } from "../../../common/utils/AvatarUtil";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/authProvider";
 import useAuth from "../../../common/hooks/useAuth";
+import AuthVerify from "../../../common/utils/AuthVerify";
 
 const CustomGrid = styled(Grid)(() => ({
   paddingTop: "30px !important",
@@ -85,6 +86,7 @@ const TopBar = ({ onHamburgerClick, open }) => {
   );
   return (
     <>
+      <AuthVerify />
       <Hidden smUp>
         <LogoBox>
           <LogoImage src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png" />
@@ -124,7 +126,7 @@ const TopBar = ({ onHamburgerClick, open }) => {
                 <UserInfoBox>
                   <UserAvatar
                     {...stringAvatar(
-                      `${userContext.user.Name} ${userContext.user.Surname}`
+                      `${userContext.user.name} ${userContext.user.surname}`
                     )}
                   />
                   <Hidden mdDown>
@@ -136,10 +138,10 @@ const TopBar = ({ onHamburgerClick, open }) => {
                         variant="subtitle2"
                         lineHeight={"14px"}
                       >
-                        {`${userContext.user.Name} ${userContext.user.Surname}`}
+                        {`${userContext.user.name} ${userContext.user.surname}`}
                       </Typography>
                       <Typography px variant="caption" lineHeight={"14px"}>
-                        {userContext.user.Email}
+                        {userContext.user.email}
                       </Typography>
                     </Box>
                   </Hidden>

@@ -10,20 +10,16 @@ const AuthVerify = () => {
   const userContext = useContext(AuthContext);
   let location = useLocation();
 
-  const { logout } = useAuth();
+  const { verifyToken, setUserInfo } = useAuth();
 
   useEffect(() => {
     const token = cookies.get("token");
 
-    if (token !== undefined) {
-      const decodedJwt = JSON.parse(atob(token.split(".")[1]));
+    if (verifyToken(token)) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
-      userContext.setUser(decodedJwt);
+      setUserInfo(decodedToken.Id);
       userContext.setIsLoggedIn(true);
-
-      if (decodedJwt.exp * 1000 < Date.now()) {
-        logout();
-      }
     }
   }, [location]);
 

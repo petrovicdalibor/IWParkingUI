@@ -6,7 +6,8 @@ import Box from "@mui/material/Box";
 import { useMediaQuery } from "@mui/material";
 import ProfileSettings from "../features/MyProfile/components/ProfileSettings";
 import Vehicles from "../features/MyProfile/components/Vehicles";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../context/authProvider";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -38,8 +39,15 @@ const a11yProps = (index) => {
 };
 
 const MyProfile = () => {
+  const userContext = useContext(AuthContext);
+  // const { fetchUser } = useAuth();
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    // getUser();
+    console.log(userContext);
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -61,7 +69,7 @@ const MyProfile = () => {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <ProfileSettings />
+          <ProfileSettings user={userContext.user} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <Vehicles />
@@ -74,7 +82,7 @@ const MyProfile = () => {
     <>
       <Typography variant="h2">My Profile</Typography>
 
-      <ProfileSettings />
+      <ProfileSettings user={userContext.user} />
       <Vehicles />
     </>
   );
