@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import { useMediaQuery } from "@mui/material";
 import ProfileSettings from "../features/MyProfile/components/ProfileSettings";
 import Vehicles from "../features/MyProfile/components/Vehicles";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/authProvider";
 
 const CustomTabPanel = (props) => {
@@ -40,16 +40,10 @@ const a11yProps = (index) => {
 
 const MyProfile = () => {
   const userContext = useContext(AuthContext);
-  // const { fetchUser } = useAuth();
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const [value, setValue] = useState(0);
 
-  useEffect(() => {
-    // getUser();
-    // console.log(userContext);
-  }, []);
-
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setValue(newValue);
   };
 

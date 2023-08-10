@@ -6,14 +6,12 @@ import Cookies from "universal-cookie";
 
 const useAuth = () => {
   const cookies = new Cookies();
-  // const navigate = useNavigate();
   const userContext = useContext(AuthContext);
 
   const setUserInfo = async (id) => {
     try {
       await fetchUser(id).then((res) => {
         userContext.setUser(res);
-        // console.log(res);
       });
     } catch (err) {
       console.log(err);
@@ -27,7 +25,6 @@ const useAuth = () => {
         password,
       })
       .then((res) => {
-        // console.log(res);
         if (res.data.statusCode !== 200) {
           throw res.data.message;
         }
@@ -114,8 +111,38 @@ const useAuth = () => {
           name: res.data.user.name,
           surname: res.data.user.surname,
           email: res.data.user.email,
-          phone: res.data.user.phone,
+          phoneNumber: res.data.user.phoneNumber,
         });
+        return res;
+      });
+    return updateUserInfoResult;
+  };
+
+  const changePassword = async (
+    email,
+    currentPassword,
+    newPassword,
+    confirmPassword
+  ) => {
+    const updateUserInfoResult = await axios
+      .post(
+        `/api/Auth/ChangePassword`,
+        {
+          email: email,
+          oldPassword: currentPassword,
+          newPassword: newPassword,
+          confirmNewPassword: confirmPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.data.statusCode !== 200) {
+          throw res.data.message;
+        }
         return res;
       });
     return updateUserInfoResult;
@@ -147,6 +174,7 @@ const useAuth = () => {
     signUp,
     fetchUser,
     updateUserInfo,
+    changePassword,
     setUserInfo,
     verifyToken,
   };

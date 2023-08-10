@@ -55,15 +55,24 @@ const ProfileSettings = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
   const userContext = useContext(AuthContext);
-  const { updateUserInfo } = useAuth();
+  const { updateUserInfo, changePassword } = useAuth();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [error, setError] = useState("");
-  const [errorOpen, setErrorOpen] = useState(false);
+  const [personalInfoError, setPersonalInfoError] = useState("");
+  const [personalInfoErrorType, setPersonalInfoErrorType] = useState("info");
+  const [personalInfoErrorOpen, setPersonalInfoErrorOpen] = useState(false);
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordErrorType, setPasswordErrorType] = useState("info");
+  const [passwordErrorOpen, setPasswordErrorOpen] = useState(false);
 
   const handlePersonalInfoSubmit = async (e) => {
     e.preventDefault();
@@ -72,15 +81,45 @@ const ProfileSettings = () => {
       if (name === "" || surname === "" || email === "" || phone === "") {
         throw "All field are required";
       }
-      await updateUserInfo(userContext.user.id, name, surname, email, phone);
+      await updateUserInfo(
+        userContext.user.id,
+        name,
+        surname,
+        email,
+        phone
+      ).then((res) => {
+        setPersonalInfoError(res.data.message);
+        setPersonalInfoErrorType("success");
+        setPersonalInfoErrorOpen(true);
+        console.log(res);
+      });
     } catch (err) {
-      setError(err);
-      setErrorOpen(true);
+      setPersonalInfoError(err);
+      setPersonalInfoErrorType("error");
+      setPersonalInfoErrorOpen(true);
     }
   };
 
-  const handleEmail = (value) => {
-    setEmail(value);
+  const handleChangePasswordSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await changePassword(
+        email,
+        currentPassword,
+        newPassword,
+        confirmPassword
+      ).then((res) => {
+        setPasswordError(res.data.message);
+        setPasswordErrorType("success");
+        setPasswordErrorOpen(true);
+        console.log(res.data);
+      });
+    } catch (err) {
+      setPasswordError(err);
+      setPasswordErrorType("error");
+      setPasswordErrorOpen(true);
+    }
   };
 
   useEffect(() => {
@@ -151,16 +190,16 @@ const ProfileSettings = () => {
                   Edit your personal info
                 </Typography>
               </Grid>
-              <Collapse in={errorOpen}>
+              <Collapse in={personalInfoErrorOpen}>
                 <Alert
-                  severity="error"
+                  severity={personalInfoErrorType}
                   action={
                     <IconButton
                       aria-label="close"
                       color="inherit"
                       size="small"
                       onClick={() => {
-                        setErrorOpen(false);
+                        setPersonalInfoErrorOpen(false);
                       }}
                     >
                       <CloseIcon fontSize="inherit" />
@@ -168,7 +207,7 @@ const ProfileSettings = () => {
                   }
                   sx={{ mb: 2 }}
                 >
-                  {error}
+                  {personalInfoError}
                 </Alert>
               </Collapse>
               <Box component="form" onSubmit={handlePersonalInfoSubmit}>
@@ -209,7 +248,7 @@ const ProfileSettings = () => {
                 >
                   <TextField
                     label="Email"
-                    onChange={(e) => handleEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     color="secondary"
                     variant="filled"
                     size={isXs ? "small" : "normal"}
@@ -243,64 +282,87 @@ const ProfileSettings = () => {
                   </Button>
                 </Grid>
               </Box>
-              <Grid item py={1}>
+              <Grid item pt={1}>
                 <Typography variant="subtitle1" p>
                   Change your password
                 </Typography>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                display={"flex"}
-                flexDirection="column"
-                gap={2}
-              >
-                <TextField
-                  label="Current password"
-                  // onChange={handleSearchConditionChange}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="text"
-                  // value={searchCondition}
-                  fullWidth
-                />
-                <TextField
-                  label="New password"
-                  // onChange={handleSearchConditionChange}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="text"
-                  // value={searchCondition}
-                  fullWidth
-                />
-                <TextField
-                  label="Confirm new password"
-                  // onChange={handleSearchConditionChange}
-                  color="secondary"
-                  variant="filled"
-                  size={isXs ? "small" : "normal"}
-                  InputProps={{ disableUnderline: true }}
-                  type="text"
-                  // value={searchCondition}
-                  fullWidth
-                />
-              </Grid>
-              <Grid item display={"flex"} flexDirection={"column"}>
-                <Button
-                  sx={{ height: "50px", alignSelf: "end", marginTop: "16px" }}
-                  variant="contained"
-                  color="secondary"
-                  size="normal"
-                  fullWidth={isXs ? true : false}
+              <Collapse in={passwordErrorOpen}>
+                <Alert
+                  severity={passwordErrorType}
+                  action={
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setPasswordErrorOpen(false);
+                      }}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                  }
+                  sx={{ mb: 2 }}
                 >
-                  Change Password
-                </Button>
-              </Grid>
+                  {passwordError}
+                </Alert>
+              </Collapse>
+              <Box component="form" onSubmit={handleChangePasswordSubmit}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  display={"flex"}
+                  flexDirection="column"
+                  gap={2}
+                >
+                  <TextField
+                    label="Current password"
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="password"
+                    value={currentPassword}
+                    fullWidth
+                  />
+                  <TextField
+                    label="New password"
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="password"
+                    value={newPassword}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Confirm new password"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    color="secondary"
+                    variant="filled"
+                    size={isXs ? "small" : "normal"}
+                    InputProps={{ disableUnderline: true }}
+                    type="password"
+                    value={confirmPassword}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item display={"flex"} flexDirection={"column"}>
+                  <Button
+                    sx={{ height: "50px", alignSelf: "end", marginTop: "16px" }}
+                    variant="contained"
+                    color="secondary"
+                    size="normal"
+                    type="submit"
+                    fullWidth={isXs ? true : false}
+                  >
+                    Change Password
+                  </Button>
+                </Grid>
+              </Box>
             </SettingsBox>
           </Grid>
         </Grid>
