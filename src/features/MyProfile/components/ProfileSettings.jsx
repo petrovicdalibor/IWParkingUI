@@ -19,6 +19,7 @@ import { AuthContext } from "../../../context/authProvider";
 import useAuth from "../../../common/hooks/useAuth";
 
 import CloseIcon from "@mui/icons-material/Close";
+import { confirmPasswordValidator } from "../../../common/utils/validators";
 
 const SettingsBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -74,6 +75,13 @@ const ProfileSettings = () => {
   const [passwordErrorType, setPasswordErrorType] = useState("info");
   const [passwordErrorOpen, setPasswordErrorOpen] = useState(false);
 
+  const handlePhoneChange = (e) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setPhone(e.target.value);
+    }
+  };
+
   const handlePersonalInfoSubmit = async (e) => {
     e.preventDefault();
 
@@ -103,22 +111,36 @@ const ProfileSettings = () => {
   const handleChangePasswordSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await changePassword(
-        email,
-        currentPassword,
-        newPassword,
-        confirmPassword
-      ).then((res) => {
-        setPasswordError(res.data.message);
-        setPasswordErrorType("success");
-        setPasswordErrorOpen(true);
-        console.log(res.data);
-      });
-    } catch (err) {
-      setPasswordError(err);
+    if (
+      currentPassword === "" ||
+      newPassword === "" ||
+      confirmPassword === ""
+    ) {
+      setPasswordError("All fields are required");
       setPasswordErrorType("error");
       setPasswordErrorOpen(true);
+    } else if (confirmPasswordValidator(newPassword, confirmPassword) !== "") {
+      setPasswordError(confirmPasswordValidator(newPassword, confirmPassword));
+      setPasswordErrorType("error");
+      setPasswordErrorOpen(true);
+    } else {
+      try {
+        await changePassword(
+          email,
+          currentPassword,
+          newPassword,
+          confirmPassword
+        ).then((res) => {
+          setPasswordError(res.data.message);
+          setPasswordErrorType("success");
+          setPasswordErrorOpen(true);
+          console.log(res.data);
+        });
+      } catch (err) {
+        setPasswordError(err);
+        setPasswordErrorType("error");
+        setPasswordErrorOpen(true);
+      }
     }
   };
 
@@ -260,7 +282,7 @@ const ProfileSettings = () => {
                   />
                   <TextField
                     label="Phone number"
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={handlePhoneChange}
                     color="secondary"
                     variant="filled"
                     size={isXs ? "small" : "normal"}

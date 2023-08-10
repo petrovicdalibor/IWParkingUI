@@ -19,7 +19,6 @@ import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
-import { emailValidator } from "../common/utils/validators";
 import AuthVerify from "../common/utils/AuthVerify";
 
 const Container = styled(Grid)(({ theme }) => ({
@@ -68,7 +67,7 @@ function Login() {
   const { login, verifyToken } = useAuth();
 
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -76,29 +75,28 @@ function Login() {
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
 
+  const handleEmailInput = (e) => {
+    setEmail(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
 
-    setEmailError(false);
-    setPasswordError(false);
-    if (emailValidator(email) !== "") {
-      setError(emailValidator(email));
-      setEmailError(true);
-      return;
-    }
-    if (password === "") {
-      setPasswordError(true);
-      return;
-    }
-
-    try {
-      await login(email, password).then(() => {
-        navigate("/", { replace: true });
-      });
-    } catch (err) {
-      setError(err);
-      setErrorOpen(true);
+    setEmailError("");
+    setPasswordError("");
+    if (email === "" || password === "") {
+      setEmailError(email === "" ? "Email field is required" : "");
+      setPasswordError(password === "" ? "Password field is required" : "");
+    } else {
+      try {
+        await login(email, password).then(() => {
+          navigate("/", { replace: true });
+        });
+      } catch (err) {
+        setError(err);
+        setErrorOpen(true);
+      }
     }
   };
 
@@ -163,14 +161,14 @@ function Login() {
             <TextField
               sx={{ mt: 2 }}
               label="Email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailInput}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="text"
               value={email}
               error={emailError ? true : false}
-              helperText={emailError ? error : ""}
+              helperText={emailError ?? ""}
               fullWidth
             />
             <TextField
@@ -183,7 +181,7 @@ function Login() {
               type="password"
               value={password}
               error={passwordError ? true : false}
-              helperText={passwordError ? "Password is required" : ""}
+              helperText={passwordError ?? ""}
               fullWidth
             />
             <Button
