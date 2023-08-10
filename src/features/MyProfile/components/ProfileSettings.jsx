@@ -134,7 +134,6 @@ const ProfileSettings = () => {
           setPasswordError(res.data.message);
           setPasswordErrorType("success");
           setPasswordErrorOpen(true);
-          console.log(res.data);
         });
       } catch (err) {
         setPasswordError(err);
@@ -188,7 +187,7 @@ const ProfileSettings = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6} sm={12} display={"flex"} alignItems={"center"}>
+              {/* <Grid item xs={6} sm={12} display={"flex"} alignItems={"center"}>
                 <Button
                   sx={{
                     width: "150px",
@@ -202,7 +201,7 @@ const ProfileSettings = () => {
                 >
                   Upload
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </SettingsBox>
           <Grid item pl={isXs ? 0 : 2} xl={12}>
@@ -423,9 +422,13 @@ const ProfileSettings = () => {
               alignContent={"center"}
               justifyContent={"center"}
             >
-              <UserAvatar {...stringAvatar("Jane Doe")} />
+              <UserAvatar
+                {...stringAvatar(
+                  `${userContext.user.name} ${userContext.user.surname}`
+                )}
+              />
             </Grid>
-            <Grid
+            {/* <Grid
               item
               xs={6}
               sm={12}
@@ -446,7 +449,7 @@ const ProfileSettings = () => {
               >
                 Upload
               </Button>
-            </Grid>
+            </Grid> */}
           </Grid>
           <Grid item pl={isXs ? 0 : 2} mt={isXs ? 4 : 0}>
             <Grid item py={1}>
@@ -454,78 +457,101 @@ const ProfileSettings = () => {
                 Edit your personal info
               </Typography>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              display={"flex"}
-              flexDirection={isXs ? "column" : "row"}
-              gap={2}
-            >
-              <TextField
-                label="Name"
-                onChange={(e) => setName(e.target.value)}
-                color="secondary"
-                variant="filled"
-                size={isXs ? "small" : "normal"}
-                InputProps={{ disableUnderline: true }}
-                type="text"
-                value={name}
-                fullWidth
-              />
-              <TextField
-                label="Surname"
-                onChange={(e) => setSurname(e.target.value)}
-                color="secondary"
-                variant="filled"
-                size={isXs ? "small" : "normal"}
-                InputProps={{ disableUnderline: true }}
-                type="text"
-                value={surname}
-                fullWidth
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              display={"flex"}
-              flexDirection={"column"}
-              mt={2}
-              gap={2}
-            >
-              <TextField
-                label="Email"
-                onChange={(e) => setEmail(e.target.value)}
-                color="secondary"
-                variant="filled"
-                size={isXs ? "small" : "normal"}
-                InputProps={{ disableUnderline: true }}
-                type="email"
-                value={email}
-                fullWidth
-              />
-              <TextField
-                label="Phone number"
-                // onChange={handleSearchConditionChange}
-                color="secondary"
-                variant="filled"
-                size={isXs ? "small" : "normal"}
-                InputProps={{ disableUnderline: true }}
-                type="text"
-                // value={searchCondition}
-                fullWidth
-              />
-              <Button
-                sx={{ height: "50px", alignSelf: "end" }}
-                variant="contained"
-                color="secondary"
-                size="normal"
-                fullWidth={isXs ? true : false}
+            <Collapse in={personalInfoErrorOpen}>
+              <Alert
+                severity={personalInfoErrorType}
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      setPersonalInfoErrorOpen(false);
+                    }}
+                  >
+                    <CloseIcon fontSize="inherit" />
+                  </IconButton>
+                }
+                sx={{ mb: 2 }}
               >
-                Save Changes
-              </Button>
-            </Grid>
+                {personalInfoError}
+              </Alert>
+            </Collapse>
+            <Box component="form" onSubmit={handlePersonalInfoSubmit}>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                display={"flex"}
+                flexDirection={isXs ? "column" : "row"}
+                gap={2}
+              >
+                <TextField
+                  label="Name"
+                  onChange={(e) => setName(e.target.value)}
+                  color="secondary"
+                  variant="filled"
+                  size={isXs ? "small" : "normal"}
+                  InputProps={{ disableUnderline: true }}
+                  type="text"
+                  value={name}
+                  fullWidth
+                />
+                <TextField
+                  label="Surname"
+                  onChange={(e) => setSurname(e.target.value)}
+                  color="secondary"
+                  variant="filled"
+                  size={isXs ? "small" : "normal"}
+                  InputProps={{ disableUnderline: true }}
+                  type="text"
+                  value={surname}
+                  fullWidth
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                display={"flex"}
+                flexDirection={"column"}
+                mt={2}
+                gap={2}
+              >
+                <TextField
+                  label="Email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  color="secondary"
+                  variant="filled"
+                  size={isXs ? "small" : "normal"}
+                  InputProps={{ disableUnderline: true }}
+                  type="email"
+                  value={email}
+                  fullWidth
+                />
+                <TextField
+                  label="Phone number"
+                  onChange={handlePhoneChange}
+                  color="secondary"
+                  variant="filled"
+                  size={isXs ? "small" : "normal"}
+                  InputProps={{ disableUnderline: true }}
+                  type="text"
+                  value={phone}
+                  fullWidth
+                />
+                <Button
+                  sx={{ height: "50px", alignSelf: "end" }}
+                  variant="contained"
+                  color="secondary"
+                  size="normal"
+                  type="submit"
+                  fullWidth={isXs ? true : false}
+                >
+                  Save Changes
+                </Button>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
         <Grid item mt={isXs ? 4 : 4}>
@@ -534,52 +560,86 @@ const ProfileSettings = () => {
               Change your password
             </Typography>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            display={"flex"}
-            flexDirection={isXs ? "column" : "row"}
-            gap={2}
-          >
-            <TextField
-              label="New password"
-              // onChange={handleSearchConditionChange}
-              color="secondary"
-              variant="filled"
-              size={isXs ? "small" : "normal"}
-              InputProps={{ disableUnderline: true }}
-              type="text"
-              // value={searchCondition}
-              fullWidth
-            />
-            <TextField
-              label="Confirm new password"
-              // onChange={handleSearchConditionChange}
-              color="secondary"
-              variant="filled"
-              size={isXs ? "small" : "normal"}
-              InputProps={{ disableUnderline: true }}
-              type="text"
-              // value={searchCondition}
-              fullWidth
-            />
-          </Grid>
-          <Grid item display={"flex"} flexDirection={"column"}>
-            <Button
-              sx={{
-                height: "50px",
-                alignSelf: "end",
-                marginTop: "16px",
-              }}
-              variant="contained"
-              color="secondary"
-              size="normal"
-              fullWidth={isXs ? true : false}
+          <Collapse in={passwordErrorOpen}>
+            <Alert
+              severity={passwordErrorType}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setPasswordErrorOpen(false);
+                  }}
+                >
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
             >
-              Change Password
-            </Button>
-          </Grid>
+              {passwordError}
+            </Alert>
+          </Collapse>
+          <Box component="form" onSubmit={handleChangePasswordSubmit}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              display="flex"
+              flexDirection="column"
+              gap={2}
+            >
+              <TextField
+                label="Current password"
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                color="secondary"
+                variant="filled"
+                size={isXs ? "small" : "normal"}
+                InputProps={{ disableUnderline: true }}
+                type="password"
+                value={currentPassword}
+                fullWidth
+              />
+              <TextField
+                label="New password"
+                onChange={(e) => setNewPassword(e.target.value)}
+                color="secondary"
+                variant="filled"
+                size={isXs ? "small" : "normal"}
+                InputProps={{ disableUnderline: true }}
+                type="text"
+                value={newPassword}
+                fullWidth
+              />
+              <TextField
+                label="Confirm new password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                color="secondary"
+                variant="filled"
+                size={isXs ? "small" : "normal"}
+                InputProps={{ disableUnderline: true }}
+                type="text"
+                value={confirmPassword}
+                fullWidth
+              />
+            </Grid>
+            <Grid item display={"flex"} flexDirection={"column"}>
+              <Button
+                sx={{
+                  height: "50px",
+                  alignSelf: "end",
+                  marginTop: "16px",
+                }}
+                variant="contained"
+                color="secondary"
+                size="normal"
+                type="submit"
+                fullWidth={isXs ? true : false}
+              >
+                Change Password
+              </Button>
+            </Grid>
+          </Box>
         </Grid>
       </SettingsBox>
     </>
