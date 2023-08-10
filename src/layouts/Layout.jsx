@@ -5,8 +5,7 @@ import TopBar from "../features/TopBar/components/TopBar";
 import { Grid } from "@mui/material";
 import { Outlet, useLocation } from "react-router";
 
-import Cookies from "universal-cookie";
-import useAuth from "../common/hooks/useAuth";
+// import AuthVerify from "../common/utils/AuthVerify";
 
 const SIDE_NAV_WIDTH = 255;
 const TABLET_SIDE_NAV_WIDTH = 80;
@@ -42,11 +41,8 @@ const LayoutContainer = styled(Grid)(({ theme }) => ({
 }));
 
 export const Layout = () => {
-  const cookies = new Cookies();
-
   const pathname = useLocation();
   const [openNav, setOpenNav] = useState(false);
-  const { verifyToken } = useAuth();
 
   const handlePathnameChange = useCallback(() => {
     if (openNav) {
@@ -61,10 +57,6 @@ export const Layout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname]
   );
-
-  useEffect(() => {
-    verifyToken(cookies.get("token"));
-  }, []);
 
   return (
     <>

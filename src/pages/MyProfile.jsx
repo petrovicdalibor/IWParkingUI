@@ -1,4 +1,3 @@
-import * as React from "react";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -7,10 +6,8 @@ import Box from "@mui/material/Box";
 import { useMediaQuery } from "@mui/material";
 import ProfileSettings from "../features/MyProfile/components/ProfileSettings";
 import Vehicles from "../features/MyProfile/components/Vehicles";
-import useAuth from "../common/hooks/useAuth";
-import { useState } from "react";
-import { useEffect } from "react";
-import axios from "../common/api/axios";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/authProvider";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -42,10 +39,11 @@ const a11yProps = (index) => {
 };
 
 const MyProfile = () => {
+  const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (newValue) => {
     setValue(newValue);
   };
 
@@ -65,7 +63,7 @@ const MyProfile = () => {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          <ProfileSettings />
+          <ProfileSettings user={userContext.user} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           <Vehicles />
@@ -78,7 +76,7 @@ const MyProfile = () => {
     <>
       <Typography variant="h2">My Profile</Typography>
 
-      <ProfileSettings />
+      <ProfileSettings user={userContext.user} />
       <Vehicles />
     </>
   );

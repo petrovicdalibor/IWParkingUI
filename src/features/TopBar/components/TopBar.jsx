@@ -124,7 +124,7 @@ const TopBar = ({ onHamburgerClick, open }) => {
                 <UserInfoBox>
                   <UserAvatar
                     {...stringAvatar(
-                      `${userContext.user.Name} ${userContext.user.Surname}`
+                      `${userContext.user.name} ${userContext.user.surname}`
                     )}
                   />
                   <Hidden mdDown>
@@ -136,10 +136,10 @@ const TopBar = ({ onHamburgerClick, open }) => {
                         variant="subtitle2"
                         lineHeight={"14px"}
                       >
-                        {`${userContext.user.Name} ${userContext.user.Surname}`}
+                        {`${userContext.user.name} ${userContext.user.surname}`}
                       </Typography>
                       <Typography px variant="caption" lineHeight={"14px"}>
-                        {userContext.user.Email}
+                        {userContext.user.email}
                       </Typography>
                     </Box>
                   </Hidden>

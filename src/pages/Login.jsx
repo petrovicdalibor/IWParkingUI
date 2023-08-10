@@ -1,4 +1,4 @@
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -15,12 +15,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import loginimage from "../assets/login-illustration.svg";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
-import { emailValidator } from "../common/utils/validators";
-import { AuthContext } from "../context/authProvider";
+import AuthVerify from "../common/utils/AuthVerify";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -62,17 +61,13 @@ const LoginImage = styled("img")(({ theme }) => ({
 function Login() {
   const cookies = new Cookies();
 
-  const userContext = useContext(AuthContext);
-
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
   const { login, verifyToken } = useAuth();
 
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
@@ -80,52 +75,37 @@ function Login() {
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
 
-  const pathname = window.location;
-
-  useEffect(() => {
-    // if the token is valid, redirect to home page
-    if (verifyToken(cookies.get("token"))) {
-      navigate("/");
-    }
-  }, [pathname]);
+  const handleEmailInput = (e) => {
+    setEmail(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
 
-    setEmailError(false);
-    setPasswordError(false);
-    if (emailValidator(email) !== "") {
-      setError(emailValidator(email));
-      setEmailError(true);
-      return;
-    }
-    if (password === "") {
-      setPasswordError(true);
-      return;
-    }
-    try {
-      await login(email, password).then((res) => {
-        const token = res.data.token;
-        const decodedToken = JSON.parse(atob(token.split(".")[1]));
-
-        cookies.set("token", token, {
-          expires: new Date(decodedToken.exp * 1000),
+    setEmailError("");
+    setPasswordError("");
+    if (email === "" || password === "") {
+      setEmailError(email === "" ? "Email field is required" : "");
+      setPasswordError(password === "" ? "Password field is required" : "");
+    } else {
+      try {
+        await login(email, password).then(() => {
+          navigate("/", { replace: true });
         });
-
-        userContext.setUser(decodedToken);
-        userContext.setIsLoggedIn(true);
-
-        navigate(from, { replace: true });
-      });
-    } catch (err) {
-      setError(err);
-      setErrorOpen(true);
+      } catch (err) {
+        setError(err);
+        setErrorOpen(true);
+      }
     }
   };
 
+  if (verifyToken(cookies.get("token"))) {
+    return <Navigate to="/" />;
+  }
   return (
     <>
+      <AuthVerify />
       <CssBaseline />
 
       {/* HEADER */}
@@ -181,14 +161,14 @@ function Login() {
             <TextField
               sx={{ mt: 2 }}
               label="Email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmailInput}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
               type="text"
               value={email}
               error={emailError ? true : false}
-              helperText={emailError ? error : ""}
+              helperText={emailError ?? ""}
               fullWidth
             />
             <TextField
@@ -201,7 +181,7 @@ function Login() {
               type="password"
               value={password}
               error={passwordError ? true : false}
-              helperText={passwordError ? "Password is required" : ""}
+              helperText={passwordError ?? ""}
               fullWidth
             />
             <Button

@@ -1,35 +1,20 @@
-import { useEffect } from "react";
-// import { AuthContext } from "../../context/authProvider";
-import { Outlet, useNavigate } from "react-router";
-
-import { Layout } from "../../layouts/Layout";
+import { Navigate, Outlet } from "react-router";
 
 import Cookies from "universal-cookie";
+
 import useAuth from "../../common/hooks/useAuth";
 
 const ProtectedRoute = () => {
-  // const userContext = useContext(AuthContext);
   const cookies = new Cookies();
-
-  const navigate = useNavigate();
-  const pathname = window.location;
+  const token = cookies.get("token");
   const { verifyToken } = useAuth();
 
-  useEffect(() => {
-    if (!verifyToken(cookies.get("token"))) {
-      navigate("/login");
-    }
-  }, [pathname]);
-
-  // if (!userContext.isLoggedIn) {
-  //   return <Navigate to="/login" />;
-  // }
-
+  if (!verifyToken(token)) {
+    return <Navigate to="/login" />;
+  }
   return (
     <>
-      <Layout>
-        <Outlet />
-      </Layout>
+      <Outlet />
     </>
   );
 };

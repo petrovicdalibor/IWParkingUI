@@ -15,18 +15,29 @@ export const passwordValidator = (password) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{6,30}$/
     ).test(password)
   ) {
-    return "Password must have a minimum 6 characters, one uppercase letter one special character and one number";
+    return "Password must have a minimum of 6 characters, one uppercase letter one special character and one number";
   }
   return "";
 };
 
-export const confirmPasswordValidator = (confirmPassword, form) => {
+export const confirmPasswordValidator = (password, confirmPassword) => {
   if (!confirmPassword) {
     return "Confirm password is required";
   } else if (confirmPassword.length < 8) {
     return "Confirm password must have a minimum of 6 characters";
-  } else if (confirmPassword !== form.password) {
+  } else if (confirmPassword !== password) {
     return "Passwords do not match";
   }
   return "";
 };
+
+// export const phoneValidator = (phone) => {
+//   // if (!confirmPassword) {
+//   //   return "Confirm password is required";
+//   // } else if (confirmPassword.length < 8) {
+//   //   return "Confirm password must have a minimum of 6 characters";
+//   // } else if (confirmPassword !== form.password) {
+//   //   return "Passwords do not match";
+//   // }
+//   return "";
+// };

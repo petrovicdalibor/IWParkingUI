@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/authProvider";
 import { Layout } from "../../layouts/Layout";
 import Home from "../../pages/Home";
@@ -9,9 +9,24 @@ import Signup from "../../pages/Signup";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Reservations from "../../pages/Reservations";
 import Favorites from "../../pages/Favorites";
+import useAuth from "../../common/hooks/useAuth";
+import Cookies from "universal-cookie";
 
 const Routes = () => {
+  const cookies = new Cookies();
   const userContext = useContext(AuthContext);
+  const { verifyToken, setUserInfo } = useAuth();
+
+  useEffect(() => {
+    const token = cookies.get("token");
+
+    if (verifyToken(token)) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+
+      setUserInfo(decodedToken.Id);
+      userContext.setIsLoggedIn(true);
+    }
+  }, []);
 
   // routes accessible to all users
   const routesForPublic = [
@@ -31,27 +46,29 @@ const Routes = () => {
   const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+      element: <Layout />,
       children: [
         {
-          path: "",
-          element: <Home />,
-        },
-        {
-          path: "/reservations",
-          element: <Reservations />,
-        },
-        {
-          path: "/favorites",
-          element: <Favorites />,
-        },
-        {
-          path: "/profile",
-          element: <MyProfile />,
-        },
-        {
-          path: "/logout",
-          element: <div>Logout Page</div>,
+          path: "/",
+          element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
+          children: [
+            {
+              path: "/reservations",
+              element: <Reservations />,
+            },
+            {
+              path: "/favorites",
+              element: <Favorites />,
+            },
+            {
+              path: "/profile",
+              element: <MyProfile />,
+            },
+            {
+              path: "/logout",
+              element: <div>Logout Page</div>,
+            },
+          ],
         },
       ],
     },

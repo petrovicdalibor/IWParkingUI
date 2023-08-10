@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Navigate, Link as RouterLink, useNavigate } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -25,7 +25,13 @@ import SignupImage from "../assets/signup-illustration.svg";
 import Cookies from "universal-cookie";
 import useAuth from "../common/hooks/useAuth";
 
+import AuthVerify from "../common/utils/AuthVerify";
+
 import CloseIcon from "@mui/icons-material/Close";
+import {
+  confirmPasswordValidator,
+  passwordValidator,
+} from "../common/utils/validators";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -82,39 +88,62 @@ function Signup() {
   const [error, setError] = useState("");
   const [errorOpen, setErrorOpen] = useState(false);
 
-  const pathname = window.location;
-
-  useEffect(() => {
-    // if the token is valid, redirect to home page
-    if (verifyToken(cookies.get("token"))) {
-      navigate("/");
+  const handlePhoneChange = (e) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setPhone(e.target.value);
     }
-  }, [pathname]);
+  };
 
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
+    console.log(name, surname, email);
 
-    try {
-      await signUp(
-        name,
-        surname,
-        email,
-        password,
-        confirmPassword,
-        phone,
-        role
-      ).then(() => {
-        navigate("/login", { replace: true });
-      });
-    } catch (err) {
-      setError(err);
+    if (
+      name === "" ||
+      surname === "" ||
+      email === "" ||
+      password === "" ||
+      confirmPassword === "" ||
+      phone === "" ||
+      role === ""
+    ) {
+      setError("All fields are required.");
       setErrorOpen(true);
+    } else if (passwordValidator(password)) {
+      setError(passwordValidator(password));
+      setErrorOpen(true);
+    } else if (confirmPasswordValidator(password, confirmPassword)) {
+      setError(confirmPasswordValidator(password, setPassword));
+      setErrorOpen(true);
+    } else {
+      try {
+        await signUp(
+          name,
+          surname,
+          email,
+          password,
+          confirmPassword,
+          phone,
+          role
+        ).then(() => {
+          navigate("/login", { replace: true });
+        });
+      } catch (err) {
+        setError(err);
+        setErrorOpen(true);
+      }
     }
   };
 
+  if (verifyToken(cookies.get("token"))) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <>
+      <AuthVerify />
       <CssBaseline />
 
       {/* HEADER */}
@@ -253,7 +282,7 @@ function Signup() {
             <TextField
               sx={{ mt: 2 }}
               label="Phone number"
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={handlePhoneChange}
               variant="filled"
               size={mdDown ? "small" : "normal"}
               InputProps={{ disableUnderline: true }}
