@@ -12,10 +12,40 @@ const useAuth = () => {
     try {
       await fetchUser(id).then((res) => {
         userContext.setUser(res);
+        // console.log(res);
+        userContext.setIsLoggedIn(true);
       });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const setUserVehicles = async (id) => {
+    try {
+      await fetchUserVehicles(id).then((res) => {
+        userContext.setVehicles(res);
+        // console.log(res);
+        // userContext.setIsLoggedIn(true);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchUserVehicles = async (id) => {
+    const fetchUserVehiclesResult = await axios
+      .get(`/api/Vehicle/UserVehicles/${id}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.statusCode !== 200) {
+          throw res.data.message;
+        }
+        return res.data.vehicles;
+      });
+    return fetchUserVehiclesResult;
   };
 
   const login = async (email, password) => {
@@ -173,9 +203,11 @@ const useAuth = () => {
     logout,
     signUp,
     fetchUser,
+    fetchUserVehicles,
     updateUserInfo,
     changePassword,
     setUserInfo,
+    setUserVehicles,
     verifyToken,
   };
 };

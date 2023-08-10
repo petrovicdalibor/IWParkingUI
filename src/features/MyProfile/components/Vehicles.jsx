@@ -13,6 +13,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import VehicleCard from "./VehicleCard";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../../../context/authProvider";
 
 const VehiclesGridItem = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("xl")]: {
@@ -31,8 +33,34 @@ const VehiclesBox = styled(Box)(({ theme }) => ({
   },
 }));
 
+const vehicleList = [
+  {
+    id: 1,
+    plate: "SK1234BB",
+    type: "Car",
+    isPrimary: false,
+  },
+  {
+    id: 2,
+    plate: "SK5678BB",
+    type: "Car",
+    isPrimary: false,
+  },
+  {
+    id: 3,
+    plate: "SK8110BB",
+    type: "Car",
+    isPrimary: true,
+  },
+];
+
 const Vehicles = () => {
+  const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
+
+  // useEffect(() => {
+  //   console.log("vehicles page", userContext);
+  // }, [userContext.vehicles]);
 
   return (
     <Grid
@@ -53,13 +81,15 @@ const Vehicles = () => {
             Select your default vehicle registration plate
           </Typography>
           <Grid item display={"flex"} flexWrap={"wrap"} gap={1.5}>
-            <VehicleCard plate="SK 1234 BB" type="Car" />
-            <VehicleCard
-              plate="SK 4321 BB"
-              type="Adapted Car"
-              isselected="true"
-            />
-            <VehicleCard plate="SK 5678 BB" type="Car" />
+            {console.log(userContext)}
+            {userContext.vehicles.map((vehicle) => (
+              <VehicleCard
+                plate={vehicle.plateNumber}
+                type={vehicle.type}
+                key={vehicle.id}
+                isprimary={vehicle.isPrimary.toString()}
+              />
+            ))}
           </Grid>
           <Typography variant="subtitle1" p py={2}>
             Add a vehicle registration plate
