@@ -56,16 +56,19 @@ const Vehicles = () => {
     if (plate === "" || type === "") {
       setVehicleError("All fields are required");
       setVehicleErrorType("error");
+    } else {
+      addVehicle(userContext.user.id, plate, type)
+        .then((res) => {
+          setVehicleError(res);
+          setVehicleErrorType("success");
+        })
+        .catch((res) => {
+          setVehicleError(res);
+          setVehicleErrorType("error");
+        });
+      setPlate("");
+      setType("");
     }
-    addVehicle(userContext.user.id, plate, type)
-      .then((res) => {
-        setVehicleError(res);
-        setVehicleErrorType("success");
-      })
-      .catch((res) => {
-        setVehicleError(res);
-        setVehicleErrorType("error");
-      });
   };
 
   return (
