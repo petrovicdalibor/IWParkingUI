@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -13,7 +14,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import VehicleCard from "./VehicleCard";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../context/authProvider";
 
 const VehiclesGridItem = styled(Grid)(({ theme }) => ({
@@ -33,34 +34,9 @@ const VehiclesBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const vehicleList = [
-  {
-    id: 1,
-    plate: "SK1234BB",
-    type: "Car",
-    isPrimary: false,
-  },
-  {
-    id: 2,
-    plate: "SK5678BB",
-    type: "Car",
-    isPrimary: false,
-  },
-  {
-    id: 3,
-    plate: "SK8110BB",
-    type: "Car",
-    isPrimary: true,
-  },
-];
-
 const Vehicles = () => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
-
-  // useEffect(() => {
-  //   console.log("vehicles page", userContext);
-  // }, [userContext.vehicles]);
 
   return (
     <Grid
@@ -81,15 +57,18 @@ const Vehicles = () => {
             Select your default vehicle registration plate
           </Typography>
           <Grid item display={"flex"} flexWrap={"wrap"} gap={1.5}>
-            {console.log(userContext)}
-            {userContext.vehicles.map((vehicle) => (
-              <VehicleCard
-                plate={vehicle.plateNumber}
-                type={vehicle.type}
-                key={vehicle.id}
-                isprimary={vehicle.isPrimary.toString()}
-              />
-            ))}
+            {userContext.vehicles.length > 0 ? (
+              userContext.vehicles?.map((vehicle) => (
+                <VehicleCard
+                  plate={vehicle.plateNumber}
+                  type={vehicle.type}
+                  key={vehicle.id}
+                  isprimary={vehicle.isPrimary.toString()}
+                />
+              ))
+            ) : (
+              <Alert severity="warning">Please add a vehicle</Alert>
+            )}
           </Grid>
           <Typography variant="subtitle1" p py={2}>
             Add a vehicle registration plate
