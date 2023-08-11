@@ -43,8 +43,9 @@ const MyProfile = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const [value, setValue] = useState(0);
 
-  const handleChange = (newValue) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
+    console.log(newValue);
   };
 
   if (isXs) {
