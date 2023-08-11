@@ -1,42 +1,55 @@
 import PropTypes from "prop-types";
 
 import styled from "@emotion/styled";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import useVehicles from "../../../common/hooks/useVehicles";
 
-const VCard = styled(Card)(({ theme, isselected = false }) => ({
+const VCard = styled(Card)(({ theme, isprimary = false }) => ({
   display: "flex",
   cursor: "pointer",
-  //   minWidth: "135px",
   width: "fit-content",
   borderRadius: "10px",
-  color: isselected ? "#2563EB" : "#2B2D2F",
-  border: isselected
-    ? "1px solid rgba(37, 99, 235, 0.35)"
-    : "1px solid #ECECEC",
-  boxShadow: isselected
-    ? "0px 0px 15px 0px rgba(37, 99, 235, 0.25)"
-    : "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
+  color: isprimary === "true" ? "#2563EB" : "#2B2D2F",
+  border:
+    isprimary === "true"
+      ? "1px solid rgba(37, 99, 235, 0.35)"
+      : "1px solid #ECECEC",
+  boxShadow:
+    isprimary === "true"
+      ? "0px 0px 15px 0px rgba(37, 99, 235, 0.25)"
+      : "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
   ":hover": {
-    border: isselected ? "" : "1px solid #C5C5C5",
+    border: isprimary === "true" ? "" : "1px solid #C5C5C5",
   },
   transition: theme.transitions.create("border", {
     duration: theme.transitions.duration.shorter,
   }),
 }));
 
-const VehicleCard = ({ plate, type, isselected }) => {
+const VehicleCard = ({ vehicle, isprimary }) => {
+  const { deleteVehicle, makePrimaryVehicle } = useVehicles();
+
+  const handleVehicleDelete = () => {
+    deleteVehicle(vehicle.id);
+  };
+
+  const handleVehiclePrimary = () => {
+    // console.log("PRIMARY", vehicle.id, vehicle.userId);
+    if (!vehicle.isPrimary) {
+      makePrimaryVehicle(vehicle.userId, vehicle.id);
+    }
+  };
+
   return (
-    <VCard
-      variant="outlined"
-      sx={{ maxWidth: "154px" }}
-      isselected={isselected}
-    >
+    <VCard variant="outlined" isprimary={isprimary}>
       <CardContent
+        onClick={handleVehiclePrimary}
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "15px 25px 15px 25px",
+          padding: "15px 0px 15px 25px",
         }}
       >
         <Typography
@@ -46,7 +59,7 @@ const VehicleCard = ({ plate, type, isselected }) => {
             fontWeight: 700,
           }}
         >
-          {plate}
+          {vehicle.plateNumber}
         </Typography>
         <Typography
           variant="body2"
@@ -55,17 +68,27 @@ const VehicleCard = ({ plate, type, isselected }) => {
             fontWeight: 400,
           }}
         >
-          {type}
+          {vehicle.type}
         </Typography>
       </CardContent>
+      <Box p={0.4} zIndex={9999}>
+        <IconButton
+          sx={{ position: "relative", p: "8px" }}
+          aria-label="close"
+          color="inherit"
+          size="small"
+          onClick={handleVehicleDelete}
+        >
+          <CloseIcon fontSize="inherit" />
+        </IconButton>
+      </Box>
     </VCard>
   );
 };
 
 VehicleCard.propTypes = {
-  plate: PropTypes.string,
-  type: PropTypes.string,
-  isselected: PropTypes.string,
+  vehicle: PropTypes.object,
+  isprimary: PropTypes.any,
 };
 
 export default VehicleCard;

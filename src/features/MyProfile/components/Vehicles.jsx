@@ -1,9 +1,12 @@
 import {
+  Alert,
   Box,
   Button,
+  Collapse,
   FormControl,
   Grid,
   Hidden,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -13,6 +16,11 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import VehicleCard from "./VehicleCard";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../../context/authProvider";
+import useVehicles from "../../../common/hooks/useVehicles";
+
+import CloseIcon from "@mui/icons-material/Close";
 
 const VehiclesGridItem = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("xl")]: {
@@ -32,7 +40,36 @@ const VehiclesBox = styled(Box)(({ theme }) => ({
 }));
 
 const Vehicles = () => {
+  const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
+
+  const { addVehicle } = useVehicles();
+
+  const [plate, setPlate] = useState("");
+  const [type, setType] = useState("");
+
+  const [vehicleError, setVehicleError] = useState("");
+  const [vehicleErrorType, setVehicleErrorType] = useState("info");
+
+  const handleVehicleAddSubmit = (e) => {
+    e.preventDefault();
+    if (plate === "" || type === "") {
+      setVehicleError("All fields are required");
+      setVehicleErrorType("error");
+    } else {
+      addVehicle(userContext.user.id, plate, type)
+        .then((res) => {
+          setVehicleError(res);
+          setVehicleErrorType("success");
+        })
+        .catch((res) => {
+          setVehicleError(res);
+          setVehicleErrorType("error");
+        });
+      setPlate("");
+      setType("");
+    }
+  };
 
   return (
     <Grid
@@ -52,69 +89,95 @@ const Vehicles = () => {
           <Typography variant="subtitle1" p>
             Select your default vehicle registration plate
           </Typography>
-          <Grid item display={"flex"} flexWrap={"wrap"} gap={1.5}>
-            <VehicleCard plate="SK 1234 BB" type="Car" />
-            <VehicleCard
-              plate="SK 4321 BB"
-              type="Adapted Car"
-              isselected="true"
-            />
-            <VehicleCard plate="SK 5678 BB" type="Car" />
+          <Grid item display="flex" flexWrap="wrap" mt={0.5} gap={1.5}>
+            {userContext.vehicles.length > 0 ? (
+              userContext.vehicles?.map((vehicle) => (
+                <VehicleCard
+                  vehicle={vehicle}
+                  key={vehicle.id}
+                  isprimary={vehicle.isPrimary.toString()}
+                />
+              ))
+            ) : (
+              <Alert severity="warning">Please add a vehicle</Alert>
+            )}
           </Grid>
           <Typography variant="subtitle1" p py={2}>
             Add a vehicle registration plate
           </Typography>
-          <Grid container direction={isXs ? "column" : "row"} gap={1.5}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Registration Plate"
-                // onChange={handleSearchConditionChange}
-                color="secondary"
-                variant="filled"
-                size={isXs ? "small" : "normal"}
-                InputProps={{ disableUnderline: true }}
-                type="text"
-                // value={searchCondition}
-                fullWidth
-              />
-            </Grid>
-            <Grid item display="flex" gap={1.5}>
-              <Grid item xs={"auto"}>
-                <FormControl variant="filled" sx={{ minWidth: "100px" }}>
-                  <InputLabel
-                    id="demo-simple-select-filled-label"
-                    color="secondary"
-                  >
-                    Type
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    disableUnderline={true}
-                    value={""}
-                    // onChange={handleChange}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={0}>Car</MenuItem>
-                    <MenuItem value={1}>Adapted Car</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  sx={{ height: "56px" }}
-                  variant="contained"
-                  color="secondary"
-                  size="normal"
-                  // fullWidth={isXs ? true : false}
+          <Collapse in={vehicleError ? true : false}>
+            <Alert
+              severity={vehicleErrorType}
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    setVehicleError("");
+                  }}
                 >
-                  Add
-                </Button>
+                  <CloseIcon fontSize="inherit" />
+                </IconButton>
+              }
+              sx={{ mb: 2 }}
+            >
+              {vehicleError}
+            </Alert>
+          </Collapse>
+          <Box component="form" gap onSubmit={handleVehicleAddSubmit}>
+            <Grid container direction={isXs ? "column" : "row"} gap={1.5}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Registration Plate"
+                  onChange={(e) => setPlate(e.target.value)}
+                  color="secondary"
+                  variant="filled"
+                  size={isXs ? "small" : "normal"}
+                  InputProps={{ disableUnderline: true }}
+                  type="text"
+                  value={plate}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item display="flex" gap={1.5}>
+                <Grid item xs={"auto"}>
+                  <FormControl variant="filled" sx={{ minWidth: "100px" }}>
+                    <InputLabel
+                      id="demo-simple-select-filled-label"
+                      color="secondary"
+                    >
+                      Type
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      disableUnderline={true}
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value="Car">Car</MenuItem>
+                      <MenuItem value="Adapted Car">Adapted Car</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={2}>
+                  <Button
+                    sx={{ height: "56px" }}
+                    variant="contained"
+                    color="secondary"
+                    size="normal"
+                    type="submit"
+                  >
+                    Add
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          </Box>
         </VehiclesBox>
       </VehiclesGridItem>
     </Grid>

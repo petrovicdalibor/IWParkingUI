@@ -15,7 +15,7 @@ import Cookies from "universal-cookie";
 const Routes = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
-  const { verifyToken, setUserInfo } = useAuth();
+  const { verifyToken, setUserInfo, setUserVehicles } = useAuth();
 
   useEffect(() => {
     const token = cookies.get("token");
@@ -23,8 +23,8 @@ const Routes = () => {
     if (verifyToken(token)) {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
+      setUserVehicles(decodedToken.Id);
       setUserInfo(decodedToken.Id);
-      userContext.setIsLoggedIn(true);
     }
   }, []);
 

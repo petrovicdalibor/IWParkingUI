@@ -12,10 +12,38 @@ const useAuth = () => {
     try {
       await fetchUser(id).then((res) => {
         userContext.setUser(res);
+        userContext.setIsLoggedIn(true);
       });
     } catch (err) {
-      console.log(err);
+      return err;
     }
+  };
+
+  const setUserVehicles = async (id) => {
+    console.log(id);
+    try {
+      await fetchUserVehicles(id).then((res) => {
+        userContext.setVehicles(res);
+      });
+    } catch (err) {
+      return err;
+    }
+  };
+
+  const fetchUserVehicles = async (id) => {
+    const fetchUserVehiclesResult = await axios
+      .get(`/api/Vehicle/UserVehicles/${id}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        if (res.data.statusCode !== 200) {
+          throw res.data.message;
+        }
+        return res.data.vehicles;
+      });
+    return fetchUserVehiclesResult;
   };
 
   const login = async (email, password) => {
@@ -28,12 +56,14 @@ const useAuth = () => {
         if (res.data.statusCode !== 200) {
           throw res.data.message;
         }
+        // const userId = decodedToken.id;
         const decodedToken = JSON.parse(atob(res.data.token.split(".")[1]));
 
         cookies.set("token", res.data.token, {
           expires: new Date(decodedToken.exp * 1000),
         });
 
+        setUserVehicles(decodedToken.Id);
         setUserInfo(decodedToken.Id);
         userContext.setIsLoggedIn(true);
         return res;
@@ -165,6 +195,7 @@ const useAuth = () => {
   const logout = () => {
     cookies.remove("token");
     userContext.setIsLoggedIn(false);
+    userContext.setVehicles([]);
     userContext.setUser({});
   };
 
@@ -173,9 +204,11 @@ const useAuth = () => {
     logout,
     signUp,
     fetchUser,
+    fetchUserVehicles,
     updateUserInfo,
     changePassword,
     setUserInfo,
+    setUserVehicles,
     verifyToken,
   };
 };
