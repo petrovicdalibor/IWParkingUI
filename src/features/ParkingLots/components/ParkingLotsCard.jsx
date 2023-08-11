@@ -1,4 +1,12 @@
-import { Box, Button, Card, Grid, Typography, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  Typography,
+  styled,
+  useMediaQuery,
+} from "@mui/material";
 
 import {
   BsGeoAltFill,
@@ -6,7 +14,6 @@ import {
   BsPlusCircleFill,
   BsStar,
 } from "react-icons/bs";
-import theme from "../../../theme/Theme";
 
 const FreeSpots = styled(Typography)(() => ({
   fontSize: "2rem",
@@ -24,6 +31,8 @@ const bull = (
 );
 
 const ParkingLotsCard = () => {
+  const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
+
   return (
     <Card
       sx={{
@@ -106,19 +115,27 @@ const ParkingLotsCard = () => {
         </Grid>
         <Grid
           item
+          width={isXs ? "100%" : "auto"}
           display="flex"
-          gap={2}
+          flexDirection={isXs ? "column" : "row"}
+          gap={isXs ? 1 : 2}
           alignItems="center"
           justifyItems={"center"}
         >
-          <Grid item>
-            <Button variant="contained" color="success" size="large">
+          <Grid item width={isXs ? "100%" : "auto"}>
+            <Button
+              variant="contained"
+              color="success"
+              size="large"
+              disableElevation
+              fullWidth
+            >
               <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
               Reserve
             </Button>
           </Grid>
-          <Grid item>
-            <Button variant="outlined" color="favorites" size="large">
+          <Grid item width={isXs ? "100%" : "auto"}>
+            <Button variant="outlined" color="favorites" size="large" fullWidth>
               <BsStar size={17} style={{ marginRight: "6px" }} />
               Add to Favorites
             </Button>
