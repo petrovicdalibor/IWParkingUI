@@ -42,6 +42,10 @@ let theme = createTheme({
       main: "#DC2626",
       contrastText: "#FFFFFF",
     },
+    favorites: {
+      main: "#393939",
+      accent: "#FF8F00",
+    },
   },
 });
 
