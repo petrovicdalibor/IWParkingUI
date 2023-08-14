@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Card,
+  Divider,
   Grid,
   Hidden,
   Typography,
@@ -66,160 +67,179 @@ const ParkingLotsCard = ({ parking }) => {
   };
 
   return (
-    <Card
-      sx={{
-        width: "100%",
-        borderRadius: "10px !important",
-        border: "1px solid #DCDCDC",
-        boxShadow: "none",
-        marginTop: 2,
-      }}
-    >
-      <Grid
-        container
-        sx={{ display: "flex" }}
-        p={4}
-        width="100%"
-        justifyContent="space-between"
+    <>
+      <Card
+        sx={{
+          width: "100%",
+          borderRadius: "10px !important",
+          border: isXs ? "none" : "1px solid #DCDCDC",
+          boxShadow: "none",
+          marginTop: 2,
+        }}
       >
-        <Grid item display="flex" gap={5} alignItems={"center"}>
-          <Grid
-            item
-            display={"flex"}
-            flexDirection={"column"}
-            textAlign={"center"}
-            justifyContent={"center"}
-          >
-            <FreeSpots variant="h5">
-              {parking.capacityCar - parking.reservations.length}
-            </FreeSpots>
-            <Typography
-              variant="subtitle2"
-              minWidth={"69px"}
-              sx={{ color: "#424343" }}
-            >
-              out of {parking.capacityCar}
-            </Typography>
-          </Grid>
-          <Grid item>
+        <Grid
+          container
+          sx={{ display: "flex" }}
+          p={isXs ? 2 : 4}
+          width="100%"
+          justifyContent="space-between"
+        >
+          <Grid item display="flex" gap={5} alignItems={"center"}>
             <Grid
               item
-              display="flex"
-              flexWrap="wrap"
-              alignItems="center"
-              columnGap={2}
+              display={"flex"}
+              flexDirection={"column"}
+              textAlign={"center"}
+              justifyContent={"center"}
             >
-              <ParkingName variant="h6" fontSize="1.25rem">
-                {parking.name}
-              </ParkingName>
+              <FreeSpots variant="h5">
+                {parking.capacityCar - parking.reservations.length}
+              </FreeSpots>
               <Typography
                 variant="subtitle2"
-                fontSize="1rem"
-                sx={{ background: "#E6E6E6", borderRadius: "5px" }}
-                px={1.5}
+                minWidth={"69px"}
+                sx={{ color: "#424343" }}
               >
-                {parking.price}&euro;/hr
+                out of {parking.capacityCar}
               </Typography>
             </Grid>
-            <Hidden smDown>
+            <Grid item>
               <Grid
                 item
                 display="flex"
-                flexDirection="column"
-                justifyContent={"center"}
+                flexWrap="wrap"
+                alignItems="center"
+                columnGap={2}
               >
-                <ParkingInfo
-                  variant="body2"
-                  display={"flex"}
-                  alignItems={"center"}
+                <ParkingName variant="h6" fontSize="1.25rem">
+                  {parking.name}
+                </ParkingName>
+                <Typography
+                  variant="subtitle2"
+                  fontSize="1rem"
+                  sx={{ background: "#E6E6E6", borderRadius: "5px" }}
+                  px={1.5}
                 >
-                  <BsGeoAltFill
-                    size={17}
-                    style={{ marginRight: "6px" }}
-                    color="#CF0018"
-                  />
-                  {parking.address} {bull} {parking.zone} {bull} Car
-                </ParkingInfo>
-                <ParkingInfo
-                  variant="body2"
-                  display={"flex"}
-                  alignItems={"center"}
-                >
-                  <BsClock
-                    size={17}
-                    style={{ marginRight: "6px" }}
-                    color="#CF0018"
-                  />
-                  {parking.workingHourFrom.slice(0, -3)} -{" "}
-                  {parking.workingHourTo.slice(0, -3)}
-                </ParkingInfo>
+                  {parking.price}&euro;/hr
+                </Typography>
               </Grid>
-            </Hidden>
+              <Hidden smDown>
+                <Grid
+                  item
+                  display="flex"
+                  flexDirection="column"
+                  justifyContent={"center"}
+                >
+                  <ParkingInfo
+                    variant="body2"
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
+                    <BsGeoAltFill
+                      size={17}
+                      style={{ marginRight: "6px" }}
+                      color="#CF0018"
+                    />
+                    {parking.address} {bull} {parking.zone} {bull} Car
+                  </ParkingInfo>
+                  <ParkingInfo
+                    variant="body2"
+                    display={"flex"}
+                    alignItems={"center"}
+                  >
+                    <BsClock
+                      size={17}
+                      style={{ marginRight: "6px" }}
+                      color="#CF0018"
+                    />
+                    {parking.workingHourFrom.slice(0, -3)} -{" "}
+                    {parking.workingHourTo.slice(0, -3)}
+                  </ParkingInfo>
+                </Grid>
+              </Hidden>
+            </Grid>
           </Grid>
-        </Grid>
-        <Hidden smUp>
+          <Hidden smUp>
+            <Grid
+              item
+              display="flex"
+              flexDirection="column"
+              justifyContent={"center"}
+              mt={2}
+            >
+              <ParkingInfo
+                variant="body2"
+                display={"flex"}
+                alignItems={"center"}
+              >
+                <BsGeoAltFill
+                  size={17}
+                  style={{ marginRight: "6px" }}
+                  color="#CF0018"
+                />
+                {parking.address} {bull} {parking.zone} {bull} Car
+              </ParkingInfo>
+              <ParkingInfo
+                variant="body2"
+                display={"flex"}
+                alignItems={"center"}
+              >
+                <BsClock
+                  size={17}
+                  style={{ marginRight: "6px" }}
+                  color="#CF0018"
+                />
+                06:00 - 00:00
+              </ParkingInfo>
+            </Grid>
+          </Hidden>
           <Grid
             item
+            width={mdDown ? "100%" : "auto"}
             display="flex"
-            flexDirection="column"
-            justifyContent={"center"}
-            mt={2}
+            flexDirection={isXs ? "column" : "row"}
+            gap={isXs ? 1 : 2}
+            alignItems="center"
+            justifyItems={"center"}
+            mt={mdDown ? 3 : 0}
           >
-            <ParkingInfo variant="body2" display={"flex"} alignItems={"center"}>
-              <BsGeoAltFill
-                size={17}
-                style={{ marginRight: "6px" }}
-                color="#CF0018"
-              />
-              {parking.address} {bull} {parking.zone} {bull} Car
-            </ParkingInfo>
-            <ParkingInfo variant="body2" display={"flex"} alignItems={"center"}>
-              <BsClock
-                size={17}
-                style={{ marginRight: "6px" }}
-                color="#CF0018"
-              />
-              06:00 - 00:00
-            </ParkingInfo>
-          </Grid>
-        </Hidden>
-        <Grid
-          item
-          width={mdDown ? "100%" : "auto"}
-          display="flex"
-          flexDirection={isXs ? "column" : "row"}
-          gap={isXs ? 1 : 2}
-          alignItems="center"
-          justifyItems={"center"}
-          mt={mdDown ? 3 : 0}
-        >
-          <Grid item width={mdDown ? "100%" : "auto"}>
-            <Button
-              variant="contained"
-              color="success"
-              size="large"
-              disableElevation
-              fullWidth
-            >
-              <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
-              Reserve
-            </Button>
-          </Grid>
-          <Grid item width={mdDown ? "100%" : "auto"}>
-            <Button
-              variant="outlined"
-              color="favorites"
-              size="large"
-              onClick={handleAddToFavorites}
-              fullWidth
-            >
-              <BsStar size={17} style={{ marginRight: "6px" }} />
-              Add to Favorites
-            </Button>
+            <Grid item width={mdDown ? "100%" : "auto"}>
+              <Button
+                variant="contained"
+                color="success"
+                size="large"
+                disableElevation
+                fullWidth
+              >
+                <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
+                Reserve
+              </Button>
+            </Grid>
+            <Grid item width={mdDown ? "100%" : "auto"}>
+              <Button
+                variant="outlined"
+                color="favorites"
+                size="large"
+                onClick={handleAddToFavorites}
+                fullWidth
+              >
+                <BsStar size={17} style={{ marginRight: "6px" }} />
+                Add to Favorites
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </Card>
+      </Card>
+      <Hidden smUp>
+        <Divider
+          sx={{
+            width: "100%",
+            marginTop: 2,
+            borderColor: "rgba(57, 57, 57, 0.4)",
+          }}
+        />
+      </Hidden>
+    </>
   );
 };
 
