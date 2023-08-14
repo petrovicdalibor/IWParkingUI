@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   Grid,
+  Hidden,
   Typography,
   styled,
   useMediaQuery,
@@ -15,10 +16,29 @@ import {
   BsStar,
 } from "react-icons/bs";
 
-const FreeSpots = styled(Typography)(() => ({
+const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
   color: "#059669",
   fontWeight: 500,
+  [theme.breakpoints.only("xs")]: {
+    fontSize: "1.4rem",
+  },
+}));
+
+const ParkingName = styled(Typography)(({ theme }) => ({
+  fontSize: "1.25rem",
+  fontWeight: 500,
+  [theme.breakpoints.only("xs")]: {
+    fontSize: "1.125rem",
+  },
+}));
+
+const ParkingInfo = styled(Typography)(({ theme }) => ({
+  fontSize: ".9rem",
+  fontWeight: 400,
+  [theme.breakpoints.only("xs")]: {
+    fontSize: ".9",
+  },
 }));
 
 const bull = (
@@ -32,6 +52,7 @@ const bull = (
 
 const ParkingLotsCard = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
+  const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   return (
     <Card
@@ -45,11 +66,18 @@ const ParkingLotsCard = () => {
       <Grid
         container
         sx={{ display: "flex" }}
-        p={4}
+        p={isXs ? 3 : 4}
         width="100%"
         justifyContent="space-between"
       >
-        <Grid item display="flex" gap={5}>
+        <Grid
+          item
+          display="flex"
+          gap={5}
+          alignItems={"center"}
+          // flexDirection={isXs ? "column" : "row"}
+          // width={isXs ? "100%" : "auto"}
+        >
           <Grid
             item
             display={"flex"}
@@ -58,15 +86,25 @@ const ParkingLotsCard = () => {
             justifyContent={"center"}
           >
             <FreeSpots variant="h5">29</FreeSpots>
-            <Typography variant="subtitle2" sx={{ color: "#424343" }}>
+            <Typography
+              variant="subtitle2"
+              minWidth={"69px"}
+              sx={{ color: "#424343" }}
+            >
               out of 150
             </Typography>
           </Grid>
           <Grid item>
-            <Grid item display="flex" alignItems="center" gap={2}>
-              <Typography variant="h6" fontSize="1.25rem">
+            <Grid
+              item
+              display="flex"
+              flexWrap="wrap"
+              alignItems="center"
+              columnGap={2}
+            >
+              <ParkingName variant="h6" fontSize="1.25rem">
                 Parking Lot 1
-              </Typography>
+              </ParkingName>
               <Typography
                 variant="subtitle2"
                 fontSize="1rem"
@@ -76,53 +114,80 @@ const ParkingLotsCard = () => {
                 1&euro;/hr
               </Typography>
             </Grid>
-            <Grid
-              item
-              display="flex"
-              flexDirection="column"
-              justifyContent={"center"}
-            >
-              <Typography
-                variant="body2"
-                display={"flex"}
-                alignItems={"center"}
-                fontSize={"1rem"}
-                fontWeight={400}
+            <Hidden smDown>
+              <Grid
+                item
+                display="flex"
+                flexDirection="column"
+                justifyContent={"center"}
               >
-                <BsGeoAltFill
-                  size={17}
-                  style={{ marginRight: "6px" }}
-                  color="#CF0018"
-                />
-                Dame Gruev 12 {bull} Zone 1 {bull} Car
-              </Typography>
-              <Typography
-                variant="body2"
-                display={"flex"}
-                alignItems={"center"}
-                fontSize={"1rem"}
-                fontWeight={400}
-              >
-                <BsClock
-                  size={17}
-                  style={{ marginRight: "6px" }}
-                  color="#CF0018"
-                />
-                06:00 - 00:00
-              </Typography>
-            </Grid>
+                <ParkingInfo
+                  variant="body2"
+                  display={"flex"}
+                  alignItems={"center"}
+                >
+                  <BsGeoAltFill
+                    size={17}
+                    style={{ marginRight: "6px" }}
+                    color="#CF0018"
+                  />
+                  Dame Gruev 12 {bull} Zone 1 {bull} Car
+                </ParkingInfo>
+                <ParkingInfo
+                  variant="body2"
+                  display={"flex"}
+                  alignItems={"center"}
+                >
+                  <BsClock
+                    size={17}
+                    style={{ marginRight: "6px" }}
+                    color="#CF0018"
+                  />
+                  06:00 - 00:00
+                </ParkingInfo>
+              </Grid>
+            </Hidden>
           </Grid>
         </Grid>
+        <Hidden smUp>
+          <Grid
+            item
+            display="flex"
+            flexDirection="column"
+            justifyContent={"center"}
+            mt={2}
+          >
+            <ParkingInfo variant="body2" display={"flex"} alignItems={"center"}>
+              <BsGeoAltFill
+                size={17}
+                style={{ marginRight: "6px" }}
+                color="#CF0018"
+              />
+              Dame Gruev 12 {bull} Zone 1 {bull} Car
+            </ParkingInfo>
+            <ParkingInfo variant="body2" display={"flex"} alignItems={"center"}>
+              <BsClock
+                size={17}
+                style={{ marginRight: "6px" }}
+                color="#CF0018"
+              />
+              06:00 - 00:00
+            </ParkingInfo>
+          </Grid>
+        </Hidden>
         <Grid
           item
-          width={isXs ? "100%" : "auto"}
+          // width={isXs ? "100%" : "auto"}
+          width={mdDown ? "100%" : "auto"}
           display="flex"
           flexDirection={isXs ? "column" : "row"}
           gap={isXs ? 1 : 2}
           alignItems="center"
           justifyItems={"center"}
+          mt={mdDown ? 3 : 0}
         >
-          <Grid item width={isXs ? "100%" : "auto"}>
+          {/* <Grid item width={isXs ? "100%" : "auto"}> */}
+          <Grid item width={mdDown ? "100%" : "auto"}>
             <Button
               variant="contained"
               color="success"
@@ -134,7 +199,8 @@ const ParkingLotsCard = () => {
               Reserve
             </Button>
           </Grid>
-          <Grid item width={isXs ? "100%" : "auto"}>
+          {/* <Grid item width={isXs ? "100%" : "auto"}> */}
+          <Grid item width={"100%"}>
             <Button variant="outlined" color="favorites" size="large" fullWidth>
               <BsStar size={17} style={{ marginRight: "6px" }} />
               Add to Favorites
