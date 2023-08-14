@@ -20,7 +20,6 @@ const useAuth = () => {
   };
 
   const setUserVehicles = async (id) => {
-    console.log(id);
     try {
       await fetchUserVehicles(id).then((res) => {
         userContext.setVehicles(res);
@@ -32,7 +31,7 @@ const useAuth = () => {
 
   const fetchUserVehicles = async (id) => {
     const fetchUserVehiclesResult = await axios
-      .get(`/api/Vehicle/UserVehicles/${id}`, {
+      .get(`/api/Vehicle/GetByUserId/${id}`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
@@ -56,7 +55,6 @@ const useAuth = () => {
         if (res.data.statusCode !== 200) {
           throw res.data.message;
         }
-        // const userId = decodedToken.id;
         const decodedToken = JSON.parse(atob(res.data.token.split(".")[1]));
 
         cookies.set("token", res.data.token, {

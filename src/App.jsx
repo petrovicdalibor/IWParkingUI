@@ -4,13 +4,16 @@ import Theme from "./theme/Theme";
 
 import { AuthProvider } from "./context/authProvider";
 import Routes from "./features/ProtectedRoute";
+import { ParkingProvider } from "./context/parkingProvider";
 
 function App() {
   return (
     <AuthProvider>
-      <ThemeProvider theme={Theme}>
-        <Routes />
-      </ThemeProvider>
+      <ParkingProvider>
+        <ThemeProvider theme={Theme}>
+          <Routes />
+        </ThemeProvider>
+      </ParkingProvider>
     </AuthProvider>
   );
 }

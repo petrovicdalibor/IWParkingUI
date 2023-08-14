@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+import Cookies from "universal-cookie";
 import {
   Box,
   Button,
@@ -15,6 +17,9 @@ import {
   BsPlusCircleFill,
   BsStar,
 } from "react-icons/bs";
+import useParkingLots from "../../../common/hooks/useParkingLots";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/authProvider";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -50,9 +55,17 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = () => {
+const ParkingLotsCard = ({ parking }) => {
+  const cookies = new Cookies();
+  const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+  const { addToFavorites } = useParkingLots();
+
+  const handleAddToFavorites = () => {
+    addToFavorites(userContext.user.id, parking.id);
+  };
 
   return (
     <Card
@@ -61,23 +74,17 @@ const ParkingLotsCard = () => {
         borderRadius: "10px !important",
         border: "1px solid #DCDCDC",
         boxShadow: "none",
+        marginTop: 2,
       }}
     >
       <Grid
         container
         sx={{ display: "flex" }}
-        p={isXs ? 3 : 4}
+        p={4}
         width="100%"
         justifyContent="space-between"
       >
-        <Grid
-          item
-          display="flex"
-          gap={5}
-          alignItems={"center"}
-          // flexDirection={isXs ? "column" : "row"}
-          // width={isXs ? "100%" : "auto"}
-        >
+        <Grid item display="flex" gap={5} alignItems={"center"}>
           <Grid
             item
             display={"flex"}
@@ -85,13 +92,15 @@ const ParkingLotsCard = () => {
             textAlign={"center"}
             justifyContent={"center"}
           >
-            <FreeSpots variant="h5">29</FreeSpots>
+            <FreeSpots variant="h5">
+              {parking.capacityCar - parking.reservations.length}
+            </FreeSpots>
             <Typography
               variant="subtitle2"
               minWidth={"69px"}
               sx={{ color: "#424343" }}
             >
-              out of 150
+              out of {parking.capacityCar}
             </Typography>
           </Grid>
           <Grid item>
@@ -103,7 +112,7 @@ const ParkingLotsCard = () => {
               columnGap={2}
             >
               <ParkingName variant="h6" fontSize="1.25rem">
-                Parking Lot 1
+                {parking.name}
               </ParkingName>
               <Typography
                 variant="subtitle2"
@@ -111,7 +120,7 @@ const ParkingLotsCard = () => {
                 sx={{ background: "#E6E6E6", borderRadius: "5px" }}
                 px={1.5}
               >
-                1&euro;/hr
+                {parking.price}&euro;/hr
               </Typography>
             </Grid>
             <Hidden smDown>
@@ -131,7 +140,7 @@ const ParkingLotsCard = () => {
                     style={{ marginRight: "6px" }}
                     color="#CF0018"
                   />
-                  Dame Gruev 12 {bull} Zone 1 {bull} Car
+                  {parking.address} {bull} {parking.zone} {bull} Car
                 </ParkingInfo>
                 <ParkingInfo
                   variant="body2"
@@ -143,7 +152,8 @@ const ParkingLotsCard = () => {
                     style={{ marginRight: "6px" }}
                     color="#CF0018"
                   />
-                  06:00 - 00:00
+                  {parking.workingHourFrom.slice(0, -3)} -{" "}
+                  {parking.workingHourTo.slice(0, -3)}
                 </ParkingInfo>
               </Grid>
             </Hidden>
@@ -163,7 +173,7 @@ const ParkingLotsCard = () => {
                 style={{ marginRight: "6px" }}
                 color="#CF0018"
               />
-              Dame Gruev 12 {bull} Zone 1 {bull} Car
+              {parking.address} {bull} {parking.zone} {bull} Car
             </ParkingInfo>
             <ParkingInfo variant="body2" display={"flex"} alignItems={"center"}>
               <BsClock
@@ -177,7 +187,6 @@ const ParkingLotsCard = () => {
         </Hidden>
         <Grid
           item
-          // width={isXs ? "100%" : "auto"}
           width={mdDown ? "100%" : "auto"}
           display="flex"
           flexDirection={isXs ? "column" : "row"}
@@ -186,7 +195,6 @@ const ParkingLotsCard = () => {
           justifyItems={"center"}
           mt={mdDown ? 3 : 0}
         >
-          {/* <Grid item width={isXs ? "100%" : "auto"}> */}
           <Grid item width={mdDown ? "100%" : "auto"}>
             <Button
               variant="contained"
@@ -199,9 +207,14 @@ const ParkingLotsCard = () => {
               Reserve
             </Button>
           </Grid>
-          {/* <Grid item width={isXs ? "100%" : "auto"}> */}
-          <Grid item width={"100%"}>
-            <Button variant="outlined" color="favorites" size="large" fullWidth>
+          <Grid item width={mdDown ? "100%" : "auto"}>
+            <Button
+              variant="outlined"
+              color="favorites"
+              size="large"
+              onClick={handleAddToFavorites}
+              fullWidth
+            >
               <BsStar size={17} style={{ marginRight: "6px" }} />
               Add to Favorites
             </Button>
@@ -210,6 +223,10 @@ const ParkingLotsCard = () => {
       </Grid>
     </Card>
   );
+};
+
+ParkingLotsCard.propTypes = {
+  parking: PropTypes.object,
 };
 
 export default ParkingLotsCard;
