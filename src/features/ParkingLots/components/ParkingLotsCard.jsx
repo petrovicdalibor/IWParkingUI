@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import Cookies from "universal-cookie";
 import {
   Box,
   Button,
@@ -56,7 +55,6 @@ const bull = (
 );
 
 const ParkingLotsCard = ({ parking }) => {
-  const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
