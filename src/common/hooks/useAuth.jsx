@@ -63,6 +63,7 @@ const useAuth = () => {
 
         setUserVehicles(decodedToken.Id);
         setUserInfo(decodedToken.Id);
+        userContext.setRole(decodedToken.Role);
         userContext.setIsLoggedIn(true);
         return res;
       });

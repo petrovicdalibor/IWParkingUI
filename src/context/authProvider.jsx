@@ -4,17 +4,21 @@ import PropTypes from "prop-types";
 const AuthContext = createContext({
   user: {},
   vehicles: [],
+  role: "",
   isLoggedIn: false,
   // eslint-disable-next-line no-unused-vars
   setUser: (user) => {},
   // eslint-disable-next-line no-unused-vars
   setVehicles: (vehicles) => {},
   // eslint-disable-next-line no-unused-vars
+  setRole: (role) => {},
+  // eslint-disable-next-line no-unused-vars
   setIsLoggedIn: (bool) => {},
 });
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [role, setRole] = useState("");
   const [vehicles, setVehicles] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -22,9 +26,11 @@ const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        role,
         vehicles,
         isLoggedIn,
         setUser,
+        setRole,
         setVehicles,
         setIsLoggedIn,
       }}
