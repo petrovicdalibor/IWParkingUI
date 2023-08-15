@@ -56,7 +56,7 @@ const ProfileSettings = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
   const userContext = useContext(AuthContext);
-  const { updateUserInfo, changePassword } = useAuth();
+  const { updateUserInfo, changePassword, deactivateUser } = useAuth();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -131,6 +131,18 @@ const ProfileSettings = () => {
     }
   };
 
+  const handleDeactivateUser = async () => {
+    await deactivateUser(userContext.user.id)
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+  };
+
   useEffect(() => {
     if (Object.keys(userContext.user).length !== 0) {
       setName(userContext.user.name);
@@ -175,7 +187,7 @@ const ProfileSettings = () => {
                   )}
                 />
               </Grid>
-              {/* <Grid item xs={6} sm={12} display={"flex"} alignItems={"center"}>
+              <Grid item xs={6} sm={12} display={"flex"} alignItems={"center"}>
                 <Button
                   sx={{
                     width: "150px",
@@ -184,12 +196,13 @@ const ProfileSettings = () => {
                     marginBottom: isXs ? "10px" : 0,
                   }}
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   size="normal"
+                  onClick={handleDeactivateUser}
                 >
-                  Upload
+                  Deactivate
                 </Button>
-              </Grid> */}
+              </Grid>
             </Grid>
           </SettingsBox>
           <Grid item pl={isXs ? 0 : 2} xl={12}>
@@ -416,7 +429,7 @@ const ProfileSettings = () => {
                 )}
               />
             </Grid>
-            {/* <Grid
+            <Grid
               item
               xs={6}
               sm={12}
@@ -432,12 +445,13 @@ const ProfileSettings = () => {
                   marginBottom: isXs ? "10px" : 0,
                 }}
                 variant="contained"
-                color="secondary"
+                color="primary"
                 size="normal"
+                onClick={handleDeactivateUser}
               >
-                Upload
+                Deactivate
               </Button>
-            </Grid> */}
+            </Grid>
           </Grid>
           <Grid item pl={isXs ? 0 : 2} mt={isXs ? 4 : 0}>
             <Grid item py={1}>

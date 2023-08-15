@@ -37,10 +37,10 @@ const useAuth = () => {
         },
       })
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         return res.data.vehicles;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return fetchUserVehiclesResult;
   };
@@ -71,6 +71,25 @@ const useAuth = () => {
       });
 
     return loginResult;
+  };
+
+  const deactivateUser = async (userId) => {
+    const deactivateUserResult = await axios
+      .delete(`/api/User/Deactivate/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        logout();
+
+        return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+
+    return deactivateUserResult;
   };
 
   const signUp = async (
@@ -205,6 +224,7 @@ const useAuth = () => {
   return {
     login,
     logout,
+    deactivateUser,
     signUp,
     fetchUser,
     fetchUserVehicles,
