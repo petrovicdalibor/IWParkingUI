@@ -11,11 +11,13 @@ import Reservations from "../../pages/Reservations";
 import Favorites from "../../pages/Favorites";
 import useAuth from "../../common/hooks/useAuth";
 import Cookies from "universal-cookie";
+import useParkingLots from "../../common/hooks/useParkingLots";
 
 const Routes = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const { verifyToken, setUserInfo, setUserVehicles } = useAuth();
+  const { fetchFavoriteLots } = useParkingLots();
 
   useEffect(() => {
     const token = cookies.get("token");
@@ -26,6 +28,8 @@ const Routes = () => {
       userContext.setRole(decodedToken.Role);
       if (decodedToken.Role === "User") {
         setUserVehicles(decodedToken.Id);
+        fetchFavoriteLots(decodedToken.Id);
+        console.log(userContext);
       }
       setUserInfo(decodedToken.Id);
     }

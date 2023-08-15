@@ -4,12 +4,15 @@ import PropTypes from "prop-types";
 const AuthContext = createContext({
   user: {},
   vehicles: [],
+  favorites: [],
   role: "",
   isLoggedIn: false,
   // eslint-disable-next-line no-unused-vars
   setUser: (user) => {},
   // eslint-disable-next-line no-unused-vars
   setVehicles: (vehicles) => {},
+  // eslint-disable-next-line no-unused-vars
+  setFavorites: (parkingLot) => {},
   // eslint-disable-next-line no-unused-vars
   setRole: (role) => {},
   // eslint-disable-next-line no-unused-vars
@@ -19,6 +22,7 @@ const AuthContext = createContext({
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [role, setRole] = useState("");
+  const [favorites, setFavorites] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -27,10 +31,12 @@ const AuthProvider = ({ children }) => {
       value={{
         user,
         role,
+        favorites,
         vehicles,
         isLoggedIn,
         setUser,
         setRole,
+        setFavorites,
         setVehicles,
         setIsLoggedIn,
       }}

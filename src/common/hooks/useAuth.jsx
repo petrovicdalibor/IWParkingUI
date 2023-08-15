@@ -52,9 +52,6 @@ const useAuth = () => {
         password,
       })
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         const decodedToken = JSON.parse(atob(res.data.token.split(".")[1]));
 
         cookies.set("token", res.data.token, {

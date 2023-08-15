@@ -32,9 +32,19 @@ const Home = () => {
       </Grid>
 
       <Grid container>
-        {parkingContext.parkingLots.map((parking) => (
-          <ParkingLotsCard parking={parking} key={parking.id} />
-        ))}
+        {parkingContext.parkingLots.map((parking) => {
+          let isFavorite = userContext.favorites.some(
+            (fav) => fav.id === parking.id
+          );
+
+          return (
+            <ParkingLotsCard
+              isfavorite={isFavorite}
+              parking={parking}
+              key={parking.id}
+            />
+          );
+        })}
       </Grid>
     </>
   );

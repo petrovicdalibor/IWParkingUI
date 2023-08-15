@@ -16,10 +16,12 @@ import {
   BsClock,
   BsPlusCircleFill,
   BsStar,
+  BsStarFill,
 } from "react-icons/bs";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/authProvider";
+import theme from "../../../theme/Theme";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -55,15 +57,19 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = ({ parking }) => {
+const ParkingLotsCard = ({ parking, isfavorite }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
-  const { addToFavorites } = useParkingLots();
+  const { addFavorite, removeFavorite } = useParkingLots();
 
   const handleAddToFavorites = () => {
-    addToFavorites(userContext.user.id, parking.id);
+    if (isfavorite) {
+      removeFavorite(userContext.user.id, parking.id);
+    } else {
+      addFavorite(userContext.user.id, parking.id);
+    }
   };
 
   return (
@@ -92,15 +98,13 @@ const ParkingLotsCard = ({ parking }) => {
               textAlign={"center"}
               justifyContent={"center"}
             >
-              <FreeSpots variant="h5">
-                {parking.capacityCar - parking.reservations.length}
-              </FreeSpots>
+              <FreeSpots variant="h5">150</FreeSpots>
               <Typography
                 variant="subtitle2"
                 minWidth={"69px"}
                 sx={{ color: "#424343" }}
               >
-                out of {parking.capacityCar}
+                out of {parking?.capacityCar}
               </Typography>
             </Grid>
             <Grid item>
@@ -112,7 +116,7 @@ const ParkingLotsCard = ({ parking }) => {
                 columnGap={2}
               >
                 <ParkingName variant="h6" fontSize="1.25rem">
-                  {parking.name}
+                  {parking?.name}
                 </ParkingName>
                 <Typography
                   variant="subtitle2"
@@ -120,7 +124,7 @@ const ParkingLotsCard = ({ parking }) => {
                   sx={{ background: "#E6E6E6", borderRadius: "5px" }}
                   px={1.5}
                 >
-                  {parking.price}&euro;/hr
+                  {parking?.price}&euro;/hr
                 </Typography>
               </Grid>
               <Hidden smDown>
@@ -140,7 +144,7 @@ const ParkingLotsCard = ({ parking }) => {
                       style={{ marginRight: "6px" }}
                       color="#CF0018"
                     />
-                    {parking.address} {bull} {parking.zone} {bull} Car
+                    {parking?.address} {bull} {parking?.zone} {bull} Car
                   </ParkingInfo>
                   <ParkingInfo
                     variant="body2"
@@ -152,8 +156,8 @@ const ParkingLotsCard = ({ parking }) => {
                       style={{ marginRight: "6px" }}
                       color="#CF0018"
                     />
-                    {parking.workingHourFrom.slice(0, -3)} -{" "}
-                    {parking.workingHourTo.slice(0, -3)}
+                    {parking?.workingHourFrom.slice(0, -3)} -{" "}
+                    {parking?.workingHourTo.slice(0, -3)}
                   </ParkingInfo>
                 </Grid>
               </Hidden>
@@ -177,7 +181,7 @@ const ParkingLotsCard = ({ parking }) => {
                   style={{ marginRight: "6px" }}
                   color="#CF0018"
                 />
-                {parking.address} {bull} {parking.zone} {bull} Car
+                {parking?.address} {bull} {parking?.zone} {bull} Car
               </ParkingInfo>
               <ParkingInfo
                 variant="body2"
@@ -223,8 +227,18 @@ const ParkingLotsCard = ({ parking }) => {
                 onClick={handleAddToFavorites}
                 fullWidth
               >
-                <BsStar size={17} style={{ marginRight: "6px" }} />
-                Add to Favorites
+                {isfavorite ? (
+                  <BsStarFill
+                    size={17}
+                    style={{
+                      marginRight: "6px",
+                      color: theme.palette.favorites.accent,
+                    }}
+                  />
+                ) : (
+                  <BsStar size={17} style={{ marginRight: "6px" }} />
+                )}
+                {isfavorite ? "Remove Favorite" : "Add Favorite"}
               </Button>
             </Grid>
           </Grid>
@@ -245,6 +259,7 @@ const ParkingLotsCard = ({ parking }) => {
 
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
+  isfavorite: PropTypes.bool,
 };
 
 export default ParkingLotsCard;
