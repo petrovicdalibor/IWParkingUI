@@ -24,7 +24,9 @@ const Routes = () => {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
       userContext.setRole(decodedToken.Role);
-      setUserVehicles(decodedToken.Id);
+      if (decodedToken.Role === "User") {
+        setUserVehicles(decodedToken.Id);
+      }
       setUserInfo(decodedToken.Id);
     }
   }, []);

@@ -61,7 +61,9 @@ const useAuth = () => {
           expires: new Date(decodedToken.exp * 1000),
         });
 
-        setUserVehicles(decodedToken.Id);
+        if (decodedToken.Role === "User") {
+          setUserVehicles(decodedToken.Id);
+        }
         setUserInfo(decodedToken.Id);
         userContext.setRole(decodedToken.Role);
         userContext.setIsLoggedIn(true);

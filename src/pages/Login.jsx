@@ -19,7 +19,7 @@ import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
 import Cookies from "universal-cookie";
-import AuthVerify from "../common/utils/AuthVerify";
+// import AuthVerify from "../common/utils/AuthVerify";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -105,7 +105,7 @@ function Login() {
   }
   return (
     <>
-      <AuthVerify />
+      {/* <AuthVerify /> */}
       <CssBaseline />
 
       {/* HEADER */}
