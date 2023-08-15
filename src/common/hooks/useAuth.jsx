@@ -2,11 +2,13 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
+import useParkingLots from "./useParkingLots";
 // import { useNavigate } from "react-router";
 
 const useAuth = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
+  const { fetchFavoriteLots } = useParkingLots();
 
   const setUserInfo = async (id) => {
     try {
@@ -37,10 +39,10 @@ const useAuth = () => {
         },
       })
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         return res.data.vehicles;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return fetchUserVehiclesResult;
   };
@@ -60,6 +62,7 @@ const useAuth = () => {
 
         if (decodedToken.Role === "User") {
           setUserVehicles(decodedToken.Id);
+          fetchFavoriteLots(decodedToken.Id);
         }
         setUserInfo(decodedToken.Id);
         userContext.setRole(decodedToken.Role);
@@ -71,6 +74,25 @@ const useAuth = () => {
       });
 
     return loginResult;
+  };
+
+  const deactivateUser = async (userId) => {
+    const deactivateUserResult = await axios
+      .delete(`/api/User/Deactivate/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        logout();
+
+        return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+
+    return deactivateUserResult;
   };
 
   const signUp = async (
@@ -205,6 +227,7 @@ const useAuth = () => {
   return {
     login,
     logout,
+    deactivateUser,
     signUp,
     fetchUser,
     fetchUserVehicles,
