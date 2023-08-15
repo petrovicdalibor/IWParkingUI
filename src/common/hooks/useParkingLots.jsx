@@ -2,10 +2,33 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import Cookies from "universal-cookie";
 import { ParkingContext } from "../../context/parkingProvider";
+import { AuthContext } from "../../context/authProvider";
 
 const useParkingLots = () => {
   const cookies = new Cookies();
+  const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
+
+  const fetchFavoriteLots = async (userId) => {
+    const addToFavoritesResult = await axios
+      .get(
+        `/api/ParkingLot/GetUserFavouriteParkingLots/${userId}`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        userContext.setFavorites(res.data.parkingLots);
+        return res.data.parkingLots;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return addToFavoritesResult;
+  };
 
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
@@ -21,8 +44,8 @@ const useParkingLots = () => {
     return fetchParkingLotsResult;
   };
 
-  const addToFavorites = async (userId, parkingLotId) => {
-    const addToFavoritesResult = await axios
+  const addFavorite = async (userId, parkingLotId) => {
+    const addFavoriteResult = await axios
       .post(
         `/api/ParkingLot/MakeParkingLotFavourite/${userId},${parkingLotId}`,
         {
@@ -36,29 +59,43 @@ const useParkingLots = () => {
         }
       )
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
+        userContext.setFavorites([
+          ...userContext.favorites,
+          res.data.parkingLot,
+        ]);
 
-        // userContext.setVehicles([
-        //   ...userContext.vehicles,
-        //   {
-        //     id: res.data.vehicle.id,
-        //     plateNumber: res.data.vehicle.plateNumber,
-        //     type: res.data.vehicle.type,
-        //     isPrimary: res.data.vehicle.isPrimary,
-        //     userId: res.data.vehicle.userId,
-        //   },
-        // ]);
         return res.data.message;
       })
-      .catch((res) => {
-        throw res;
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
-    return addToFavoritesResult;
+    return addFavoriteResult;
+  };
+  const removeFavorite = async (userId, parkingLotId) => {
+    const removeFavoriteResult = await axios
+      .delete(
+        `/api/ParkingLot/RemoveParkingLotFavourite/${userId},${parkingLotId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        const favoritesArray = userContext.favorites.filter((favorite) => {
+          return favorite.id !== parkingLotId;
+        });
+        userContext.setFavorites(favoritesArray);
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return removeFavoriteResult;
   };
 
-  return { fetchParkingLots, addToFavorites };
+  return { fetchParkingLots, fetchFavoriteLots, addFavorite, removeFavorite };
 };
 
 export default useParkingLots;
