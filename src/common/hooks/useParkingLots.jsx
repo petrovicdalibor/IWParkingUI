@@ -11,13 +11,12 @@ const useParkingLots = () => {
     const fetchParkingLotsResult = await axios
       .get("/api/ParkingLot/GetAll")
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
-
         parkingContext.setParkingLots(res.data.parkingLots);
 
         return res.data;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return fetchParkingLotsResult;
   };

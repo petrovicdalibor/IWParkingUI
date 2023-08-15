@@ -24,10 +24,6 @@ const useVehicles = () => {
         }
       )
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
-
         userContext.setVehicles([
           ...userContext.vehicles,
           {
@@ -40,8 +36,8 @@ const useVehicles = () => {
         ]);
         return res.data.message;
       })
-      .catch((res) => {
-        throw res;
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return addVehicleResult;
   };
@@ -54,14 +50,15 @@ const useVehicles = () => {
         },
       })
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         const vehicleArray = userContext.vehicles.filter((vehicle) => {
           return vehicle.id !== id;
         });
         userContext.setVehicles(vehicleArray);
+
         return res.data.vehicles;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return deleteVehicleResult;
   };
