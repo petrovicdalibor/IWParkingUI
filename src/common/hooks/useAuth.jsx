@@ -68,6 +68,9 @@ const useAuth = () => {
         userContext.setRole(decodedToken.Role);
         userContext.setIsLoggedIn(true);
         return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
 
     return loginResult;
@@ -93,10 +96,10 @@ const useAuth = () => {
         role,
       })
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return signUpResult;
   };
@@ -109,10 +112,10 @@ const useAuth = () => {
         },
       })
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         return res.data.user;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return fetchUserResult;
   };
@@ -134,9 +137,6 @@ const useAuth = () => {
         }
       )
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         userContext.setUser({
           ...userContext.user,
           name: res.data.user.name,
@@ -145,7 +145,11 @@ const useAuth = () => {
           phoneNumber: res.data.user.phoneNumber,
         });
         return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
+
     return updateUserInfoResult;
   };
 
@@ -171,10 +175,10 @@ const useAuth = () => {
         }
       )
       .then((res) => {
-        if (res.data.statusCode !== 200) {
-          throw res.data.message;
-        }
         return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
       });
     return updateUserInfoResult;
   };
@@ -198,6 +202,7 @@ const useAuth = () => {
     userContext.setIsLoggedIn(false);
     userContext.setVehicles([]);
     userContext.setUser({});
+    userContext.setRole("");
   };
 
   return {

@@ -118,22 +118,14 @@ function Signup() {
       setError(confirmPasswordValidator(password, setPassword));
       setErrorOpen(true);
     } else {
-      try {
-        await signUp(
-          name,
-          surname,
-          email,
-          password,
-          confirmPassword,
-          phone,
-          role
-        ).then(() => {
+      await signUp(name, surname, email, password, confirmPassword, phone, role)
+        .then(() => {
           navigate("/login", { replace: true });
+        })
+        .catch((err) => {
+          setError(err);
+          setErrorOpen(true);
         });
-      } catch (err) {
-        setError(err);
-        setErrorOpen(true);
-      }
     }
   };
 
@@ -143,7 +135,6 @@ function Signup() {
 
   return (
     <>
-      {/* <AuthVerify /> */}
       <CssBaseline />
 
       {/* HEADER */}
