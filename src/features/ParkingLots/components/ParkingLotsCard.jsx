@@ -17,6 +17,7 @@ import {
   BsPlusCircleFill,
   BsStar,
   BsStarFill,
+  BsTrashFill,
 } from "react-icons/bs";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 import { useContext } from "react";
@@ -91,22 +92,27 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
           justifyContent="space-between"
         >
           <Grid item display="flex" gap={5} alignItems={"center"}>
-            <Grid
-              item
-              display={"flex"}
-              flexDirection={"column"}
-              textAlign={"center"}
-              justifyContent={"center"}
-            >
-              <FreeSpots variant="h5">150</FreeSpots>
-              <Typography
-                variant="subtitle2"
-                minWidth={"69px"}
-                sx={{ color: "#424343" }}
+            {userContext.role !== "Admin" ? (
+              <Grid
+                item
+                display={"flex"}
+                flexDirection={"column"}
+                textAlign={"center"}
+                justifyContent={"center"}
               >
-                out of {parking?.capacityCar}
-              </Typography>
-            </Grid>
+                <FreeSpots variant="h5">150</FreeSpots>
+                <Typography
+                  variant="subtitle2"
+                  minWidth={"69px"}
+                  sx={{ color: "#424343" }}
+                >
+                  out of {parking?.capacityCar}
+                </Typography>
+              </Grid>
+            ) : (
+              ""
+            )}
+
             <Grid item>
               <Grid
                 item
@@ -207,40 +213,60 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
             justifyItems={"center"}
             mt={mdDown ? 3 : 0}
           >
-            <Grid item width={mdDown ? "100%" : "auto"}>
-              <Button
-                variant="contained"
-                color="success"
-                size="large"
-                disableElevation
-                fullWidth
-              >
-                <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
-                Reserve
-              </Button>
-            </Grid>
-            <Grid item width={mdDown ? "100%" : "auto"}>
-              <Button
-                variant="outlined"
-                color="favorites"
-                size="large"
-                onClick={handleAddToFavorites}
-                fullWidth
-              >
-                {isfavorite ? (
-                  <BsStarFill
-                    size={17}
-                    style={{
-                      marginRight: "6px",
-                      color: theme.palette.favorites.accent,
-                    }}
-                  />
-                ) : (
-                  <BsStar size={17} style={{ marginRight: "6px" }} />
-                )}
-                {isfavorite ? "Remove Favorite" : "Add Favorite"}
-              </Button>
-            </Grid>
+            {userContext.role !== "Admin" ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  disableElevation
+                  fullWidth
+                >
+                  <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
+                  Reserve
+                </Button>
+              </Grid>
+            ) : (
+              ""
+            )}
+            {userContext.role !== "Admin" ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                <Button
+                  variant="outlined"
+                  color="favorites"
+                  size="large"
+                  onClick={handleAddToFavorites}
+                  fullWidth
+                >
+                  {isfavorite ? (
+                    <BsStarFill
+                      size={17}
+                      style={{
+                        marginRight: "6px",
+                        color: theme.palette.favorites.accent,
+                      }}
+                    />
+                  ) : (
+                    <BsStar size={17} style={{ marginRight: "6px" }} />
+                  )}
+                  {isfavorite ? "Remove Favorite" : "Add Favorite"}
+                </Button>
+              </Grid>
+            ) : (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  // onClick={handleRemoveParkingLot}
+                  disableElevation
+                  fullWidth
+                >
+                  <BsTrashFill size={17} style={{ marginRight: "6px" }} />
+                  Remove
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Card>

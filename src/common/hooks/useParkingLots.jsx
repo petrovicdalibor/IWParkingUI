@@ -9,6 +9,20 @@ const useParkingLots = () => {
   const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
 
+  const fetchParkingLots = async () => {
+    const fetchParkingLotsResult = await axios
+      .get("/api/ParkingLot/GetAll")
+      .then((res) => {
+        parkingContext.setParkingLots(res.data.parkingLots);
+
+        return res.data;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return fetchParkingLotsResult;
+  };
+
   const fetchFavoriteLots = async (userId) => {
     const addToFavoritesResult = await axios
       .get(
@@ -28,20 +42,6 @@ const useParkingLots = () => {
         throw err.response.data.Errors[0];
       });
     return addToFavoritesResult;
-  };
-
-  const fetchParkingLots = async () => {
-    const fetchParkingLotsResult = await axios
-      .get("/api/ParkingLot/GetAll")
-      .then((res) => {
-        parkingContext.setParkingLots(res.data.parkingLots);
-
-        return res.data;
-      })
-      .catch((err) => {
-        throw err.response.data.Errors[0];
-      });
-    return fetchParkingLotsResult;
   };
 
   const addFavorite = async (userId, parkingLotId) => {
