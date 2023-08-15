@@ -58,6 +58,9 @@ export const SidebarItem = ({
               display: "inline-flex",
               justifyContent: "center",
               mr: 3,
+              ...(active && {
+                color: "primary.main",
+              }),
             }}
           >
             {icon}
@@ -73,6 +76,9 @@ export const SidebarItem = ({
             fontWeight: 600,
             lineHeight: "24px",
             whiteSpace: "nowrap",
+            ...(active && {
+              color: "primary.main",
+            }),
             // visibility: open ? "visible" : "hidden",
           }}
         >

@@ -23,7 +23,10 @@ const Routes = () => {
     if (verifyToken(token)) {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
-      setUserVehicles(decodedToken.Id);
+      userContext.setRole(decodedToken.Role);
+      if (decodedToken.Role === "User") {
+        setUserVehicles(decodedToken.Id);
+      }
       setUserInfo(decodedToken.Id);
     }
   }, []);

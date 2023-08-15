@@ -19,11 +19,31 @@ const LogoImage = styled("img")(() => ({
   padding: "5px",
 }));
 
+const navItems = [
+  {
+    title: "Parking Lots",
+    path: "/",
+    icon: <LuParkingCircle size={23} />,
+  },
+  {
+    title: "Reservations",
+    path: "/reservations",
+    icon: <BsCalendarEvent size={23} />,
+  },
+  {
+    title: "Favorites",
+    path: "/favorites",
+    icon: <BsStar size={23} />,
+  },
+];
+
 export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const lgDown = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+
+  const pathname = window.location.pathname;
 
   const hamburger = open ? <GrClose size={24} /> : <LuAlignJustify size={26} />;
 
@@ -101,32 +121,20 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
             alignItems: smDown ? "center" : "left",
           }}
         >
-          <SidebarItem
-            active={true}
-            external={false}
-            icon={<LuParkingCircle size={24} />}
-            key={"Parking Lots"}
-            path={"/"}
-            title={"Parking Lots"}
-          />
-          <SidebarItem
-            active={false}
-            external={false}
-            icon={<BsCalendarEvent size={24} />}
-            key={"Reservations"}
-            path={"/reservations"}
-            title={"Reservations"}
-            open={open}
-          />
-          <SidebarItem
-            active={false}
-            external={false}
-            icon={<BsStar size={24} />}
-            key={"Favorites"}
-            path={"/favorites"}
-            title={"Favorites"}
-            open={open}
-          />
+          {navItems.map((item) => {
+            const active = item.path ? pathname === item.path : false;
+
+            return (
+              <SidebarItem
+                active={active}
+                external={item.external}
+                icon={item.icon}
+                key={item.title}
+                path={item.path}
+                title={item.title}
+              />
+            );
+          })}
         </Stack>
       </Box>
     </Box>
