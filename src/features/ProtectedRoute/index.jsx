@@ -29,7 +29,6 @@ const Routes = () => {
       if (decodedToken.Role === "User") {
         setUserVehicles(decodedToken.Id);
         fetchFavoriteLots(decodedToken.Id);
-        console.log(userContext);
       }
       setUserInfo(decodedToken.Id);
     }

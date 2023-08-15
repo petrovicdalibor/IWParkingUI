@@ -2,11 +2,13 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
+import useParkingLots from "./useParkingLots";
 // import { useNavigate } from "react-router";
 
 const useAuth = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
+  const { fetchFavoriteLots } = useParkingLots();
 
   const setUserInfo = async (id) => {
     try {
@@ -60,6 +62,7 @@ const useAuth = () => {
 
         if (decodedToken.Role === "User") {
           setUserVehicles(decodedToken.Id);
+          fetchFavoriteLots(decodedToken.Id);
         }
         setUserInfo(decodedToken.Id);
         userContext.setRole(decodedToken.Role);
