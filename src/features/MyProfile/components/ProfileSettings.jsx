@@ -85,27 +85,20 @@ const ProfileSettings = () => {
   const handlePersonalInfoSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      if (name === "" || surname === "" || email === "" || phone === "") {
-        throw "All field are required";
-      }
-      await updateUserInfo(
-        userContext.user.id,
-        name,
-        surname,
-        email,
-        phone
-      ).then((res) => {
+    if (name === "" || surname === "" || email === "" || phone === "") {
+      throw "All field are required";
+    }
+    await updateUserInfo(userContext.user.id, name, surname, email, phone)
+      .then((res) => {
         setPersonalInfoError(res.data.message);
         setPersonalInfoErrorType("success");
         setPersonalInfoErrorOpen(true);
-        console.log(res);
+      })
+      .catch((err) => {
+        setPersonalInfoError(err);
+        setPersonalInfoErrorType("error");
+        setPersonalInfoErrorOpen(true);
       });
-    } catch (err) {
-      setPersonalInfoError(err);
-      setPersonalInfoErrorType("error");
-      setPersonalInfoErrorOpen(true);
-    }
   };
 
   const handleChangePasswordSubmit = async (e) => {
@@ -124,22 +117,17 @@ const ProfileSettings = () => {
       setPasswordErrorType("error");
       setPasswordErrorOpen(true);
     } else {
-      try {
-        await changePassword(
-          email,
-          currentPassword,
-          newPassword,
-          confirmPassword
-        ).then((res) => {
+      await changePassword(email, currentPassword, newPassword, confirmPassword)
+        .then((res) => {
           setPasswordError(res.data.message);
           setPasswordErrorType("success");
           setPasswordErrorOpen(true);
+        })
+        .catch((err) => {
+          setPasswordError(err);
+          setPasswordErrorType("error");
+          setPasswordErrorOpen(true);
         });
-      } catch (err) {
-        setPasswordError(err);
-        setPasswordErrorType("error");
-        setPasswordErrorOpen(true);
-      }
     }
   };
 
@@ -607,7 +595,7 @@ const ProfileSettings = () => {
                 variant="filled"
                 size={isXs ? "small" : "normal"}
                 InputProps={{ disableUnderline: true }}
-                type="text"
+                type="password"
                 value={newPassword}
                 fullWidth
               />
@@ -618,7 +606,7 @@ const ProfileSettings = () => {
                 variant="filled"
                 size={isXs ? "small" : "normal"}
                 InputProps={{ disableUnderline: true }}
-                type="text"
+                type="password"
                 value={confirmPassword}
                 fullWidth
               />
