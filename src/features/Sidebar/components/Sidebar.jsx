@@ -10,38 +10,29 @@ import {
 } from "@mui/material";
 import { SidebarItem } from "./SidebarItem";
 
-import { LuParkingCircle, LuAlignJustify } from "react-icons/lu";
-import { BsCalendarEvent, BsStar } from "react-icons/bs";
+import { LuAlignJustify } from "react-icons/lu";
 import { GrClose } from "react-icons/gr";
+import { useContext } from "react";
+import { AuthContext } from "../../../context/authProvider";
+
+import {
+  userItems,
+  adminItems,
+  ownerItems,
+} from "../../../common/constants/navbarItems";
 
 const LogoImage = styled("img")(() => ({
   height: "32px",
   padding: "5px",
 }));
 
-const navItems = [
-  {
-    title: "Parking Lots",
-    path: "/",
-    icon: <LuParkingCircle size={23} />,
-  },
-  {
-    title: "Reservations",
-    path: "/reservations",
-    icon: <BsCalendarEvent size={23} />,
-  },
-  {
-    title: "Favorites",
-    path: "/favorites",
-    icon: <BsStar size={23} />,
-  },
-];
-
 export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   const lgDown = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   const smDown = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const smUp = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+
+  const userContext = useContext(AuthContext);
 
   const pathname = window.location.pathname;
 
@@ -121,20 +112,60 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
             alignItems: smDown ? "center" : "left",
           }}
         >
-          {navItems.map((item) => {
-            const active = item.path ? pathname === item.path : false;
+          {userContext.role === "User" || userContext.role === "" ? (
+            userItems.map((item) => {
+              const active = item.path ? pathname === item.path : false;
 
-            return (
-              <SidebarItem
-                active={active}
-                external={item.external}
-                icon={item.icon}
-                key={item.title}
-                path={item.path}
-                title={item.title}
-              />
-            );
-          })}
+              return (
+                <SidebarItem
+                  active={active}
+                  external={item.external}
+                  icon={item.icon}
+                  key={item.title}
+                  path={item.path}
+                  title={item.title}
+                />
+              );
+            })
+          ) : (
+            <></>
+          )}
+          {userContext.role === "Admin" ? (
+            adminItems.map((item) => {
+              const active = item.path ? pathname === item.path : false;
+
+              return (
+                <SidebarItem
+                  active={active}
+                  external={item.external}
+                  icon={item.icon}
+                  key={item.title}
+                  path={item.path}
+                  title={item.title}
+                />
+              );
+            })
+          ) : (
+            <></>
+          )}
+          {userContext.role === "Owner" ? (
+            ownerItems.map((item) => {
+              const active = item.path ? pathname === item.path : false;
+
+              return (
+                <SidebarItem
+                  active={active}
+                  external={item.external}
+                  icon={item.icon}
+                  key={item.title}
+                  path={item.path}
+                  title={item.title}
+                />
+              );
+            })
+          ) : (
+            <></>
+          )}
         </Stack>
       </Box>
     </Box>
