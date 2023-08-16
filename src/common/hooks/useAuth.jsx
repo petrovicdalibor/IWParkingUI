@@ -3,7 +3,6 @@ import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
 import useParkingLots from "./useParkingLots";
-// import { useNavigate } from "react-router";
 
 const useAuth = () => {
   const cookies = new Cookies();
@@ -84,8 +83,6 @@ const useAuth = () => {
         },
       })
       .then((res) => {
-        logout();
-
         return res;
       })
       .catch((err) => {
@@ -216,6 +213,22 @@ const useAuth = () => {
     }
   };
 
+  const fetchAllUsers = async () => {
+    const fetchAllUsersResult = await axios
+      .get(`/api/User/GetAll`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return fetchAllUsersResult;
+  };
+
   const logout = () => {
     cookies.remove("token");
     userContext.setIsLoggedIn(false);
@@ -231,6 +244,7 @@ const useAuth = () => {
     deactivateUser,
     signUp,
     fetchUser,
+    fetchAllUsers,
     fetchUserVehicles,
     updateUserInfo,
     changePassword,

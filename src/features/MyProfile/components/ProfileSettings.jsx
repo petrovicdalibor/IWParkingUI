@@ -56,7 +56,7 @@ const ProfileSettings = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
   const userContext = useContext(AuthContext);
-  const { updateUserInfo, changePassword, deactivateUser } = useAuth();
+  const { updateUserInfo, changePassword, deactivateUser, logout } = useAuth();
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -134,7 +134,7 @@ const ProfileSettings = () => {
   const handleDeactivateUser = async () => {
     await deactivateUser(userContext.user.id)
       .then((res) => {
-        console.log(res);
+        logout();
         return res;
       })
       .catch((err) => {

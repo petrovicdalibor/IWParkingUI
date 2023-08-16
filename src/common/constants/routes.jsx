@@ -6,6 +6,9 @@ import MyProfile from "../../pages/MyProfile.jsx";
 import Reservations from "../../pages/Reservations.jsx";
 import Login from "../../pages/Login";
 import Signup from "../../pages/Signup";
+import UsersOnlyRoute from "../../features/ProtectedRoute/UsersOnlyRoute";
+import AdminsOnlyRoute from "../../features/ProtectedRoute/AdminsOnlyRoute";
+import Users from "../../pages/Users";
 
 // routes accessible to all users
 export const routesForPublic = [
@@ -21,6 +24,42 @@ export const routesForPublic = [
   },
 ];
 
+// routes accessible only to normal users
+const routesForUsersOnly = [
+  {
+    path: "/",
+    element: <UsersOnlyRoute />,
+    children: [
+      {
+        path: "/reservations",
+        element: <Reservations />,
+      },
+      {
+        path: "/favorites",
+        element: <Favorites />,
+      },
+    ],
+  },
+];
+
+// routes accessible only to normal users
+const routesForAdminsOnly = [
+  {
+    path: "/",
+    element: <AdminsOnlyRoute />,
+    children: [
+      {
+        path: "/users",
+        element: <Users />,
+      },
+      {
+        path: "/favorites",
+        element: <Favorites />,
+      },
+    ],
+  },
+];
+
 // routes accessible only to authenticated users
 export const routesForAuthenticatedOnly = [
   {
@@ -31,14 +70,8 @@ export const routesForAuthenticatedOnly = [
         path: "/",
         element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
         children: [
-          {
-            path: "/reservations",
-            element: <Reservations />,
-          },
-          {
-            path: "/favorites",
-            element: <Favorites />,
-          },
+          ...routesForUsersOnly,
+          ...routesForAdminsOnly,
           {
             path: "/profile",
             element: <MyProfile />,
