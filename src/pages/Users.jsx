@@ -13,7 +13,6 @@ const Users = () => {
 
   const handleDeactivateUser = (userId) => {
     deactivateUser(userId);
-    // console.log(user.id);
   };
 
   return (

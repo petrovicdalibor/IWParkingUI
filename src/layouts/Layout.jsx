@@ -74,7 +74,7 @@ const Layout = () => {
               open={openNav}
             />
           </Grid>
-          <Grid item>
+          <Grid item my={3}>
             <Outlet />
           </Grid>
         </LayoutContainer>
