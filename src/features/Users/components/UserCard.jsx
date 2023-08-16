@@ -41,7 +41,6 @@ const UserCard = ({ user, handleDeactivateUser }) => {
             <Grid item display="flex" flexDirection="row" gap={4}>
               <Grid item>
                 <Typography variant="h6">
-                  {console.log(user)}
                   {user.name + " " + user.surname}
                 </Typography>
               </Grid>
