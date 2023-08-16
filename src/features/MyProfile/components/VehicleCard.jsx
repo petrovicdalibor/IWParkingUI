@@ -35,7 +35,6 @@ const VehicleCard = ({ vehicle, isprimary }) => {
   };
 
   const handleVehiclePrimary = () => {
-    // console.log("PRIMARY", vehicle.id, vehicle.userId);
     if (!vehicle.isPrimary) {
       makePrimaryVehicle(vehicle.userId, vehicle.id);
     }
@@ -71,7 +70,7 @@ const VehicleCard = ({ vehicle, isprimary }) => {
           {vehicle.type}
         </Typography>
       </CardContent>
-      <Box p={0.4} zIndex={9999}>
+      <Box p={0.4} zIndex={999}>
         <IconButton
           sx={{ position: "relative", p: "8px" }}
           aria-label="close"

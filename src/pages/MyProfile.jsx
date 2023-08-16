@@ -16,8 +16,8 @@ const CustomTabPanel = (props) => {
     <div
       role="tabpanel"
       hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
       {...other}
     >
       {value === index && <Box sx={{ px: 0 }}>{children}</Box>}
@@ -33,8 +33,8 @@ CustomTabPanel.propTypes = {
 
 const a11yProps = (index) => {
   return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
+    id: `tab-${index}`,
+    "aria-controls": `tabpanel-${index}`,
   };
 };
 
@@ -45,7 +45,6 @@ const MyProfile = () => {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    console.log(newValue);
   };
 
   if (isXs) {
@@ -55,20 +54,34 @@ const MyProfile = () => {
           <Tabs
             value={value}
             onChange={handleChange}
-            aria-label="basic tabs example"
             textColor="secondary"
             indicatorColor="secondary"
           >
-            <Tab label="Profile" sx={{ width: "50%" }} {...a11yProps(0)} />
-            <Tab label="Vehicles" sx={{ width: "50%" }} {...a11yProps(1)} />
+            <Tab
+              label="Profile"
+              sx={{
+                width: userContext.role === "User" ? "50%" : "100% !important",
+                maxWidth: "100%",
+              }}
+              {...a11yProps(0)}
+            />
+            {userContext.role === "User" ? (
+              <Tab label="Vehicles" sx={{ width: "50%" }} {...a11yProps(1)} />
+            ) : (
+              ""
+            )}
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
           <ProfileSettings user={userContext.user} />
         </CustomTabPanel>
-        <CustomTabPanel value={value} index={1}>
-          <Vehicles />
-        </CustomTabPanel>
+        {userContext.role === "User" ? (
+          <CustomTabPanel value={value} index={1}>
+            <Vehicles />
+          </CustomTabPanel>
+        ) : (
+          ""
+        )}
       </Box>
     );
   }
@@ -78,7 +91,7 @@ const MyProfile = () => {
       <Typography variant="h2">My Profile</Typography>
 
       <ProfileSettings user={userContext.user} />
-      <Vehicles />
+      {userContext.role === "User" ? <Vehicles /> : ""}
     </>
   );
 };
