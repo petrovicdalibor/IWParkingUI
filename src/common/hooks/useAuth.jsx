@@ -216,6 +216,22 @@ const useAuth = () => {
     }
   };
 
+  const fetchAllUsers = async () => {
+    const fetchAllUsersResult = await axios
+      .get(`/api/User/GetAll`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return fetchAllUsersResult;
+  };
+
   const logout = () => {
     cookies.remove("token");
     userContext.setIsLoggedIn(false);
@@ -231,6 +247,7 @@ const useAuth = () => {
     deactivateUser,
     signUp,
     fetchUser,
+    fetchAllUsers,
     fetchUserVehicles,
     updateUserInfo,
     changePassword,
