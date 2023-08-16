@@ -16,8 +16,7 @@ const UserCard = ({ user, handleDeactivateUser }) => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
   const deactivateUserHandler = () => {
-    handleDeactivateUser(user.id);
-    // console.log(user.id);
+    handleDeactivateUser(user);
   };
 
   return (
@@ -69,6 +68,7 @@ const UserCard = ({ user, handleDeactivateUser }) => {
                 size="large"
                 disableElevation
                 disabled
+                sx={{ minWidth: "164px" }}
                 fullWidth
               >
                 <BsStopCircle size={20} style={{ marginRight: "8px" }} />
@@ -80,6 +80,7 @@ const UserCard = ({ user, handleDeactivateUser }) => {
                 size="large"
                 onClick={deactivateUserHandler}
                 disableElevation
+                sx={{ minWidth: "164px" }}
                 fullWidth
               >
                 <BsStopCircle size={20} style={{ marginRight: "8px" }} />

@@ -7,12 +7,27 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const { fetchAllUsers, deactivateUser } = useAuth();
 
-  useEffect(() => {
+  const fetchUsers = () => {
     fetchAllUsers().then((res) => setUsers(res.data.users));
+  };
+
+  useEffect(() => {
+    fetchUsers();
   }, []);
 
-  const handleDeactivateUser = (userId) => {
-    deactivateUser(userId);
+  const handleDeactivateUser = async (user) => {
+    const userIndex = users.indexOf(user);
+    const array = [...users];
+
+    array[userIndex] = {
+      ...array[userIndex],
+      isDeactivated: true,
+    };
+    setUsers(array);
+
+    await deactivateUser(user.id);
+
+    fetchUsers();
   };
 
   return (

@@ -3,7 +3,6 @@ import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
 import useParkingLots from "./useParkingLots";
-// import { useNavigate } from "react-router";
 
 const useAuth = () => {
   const cookies = new Cookies();
@@ -84,8 +83,6 @@ const useAuth = () => {
         },
       })
       .then((res) => {
-        logout();
-
         return res;
       })
       .catch((err) => {
