@@ -40,7 +40,7 @@ const LayoutContainer = styled(Grid)(({ theme }) => ({
   },
 }));
 
-export const Layout = () => {
+const Layout = () => {
   const pathname = useLocation();
   const [openNav, setOpenNav] = useState(false);
 
@@ -82,3 +82,5 @@ export const Layout = () => {
     </>
   );
 };
+
+export default Layout;

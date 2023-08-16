@@ -220,6 +220,7 @@ const useAuth = () => {
     cookies.remove("token");
     userContext.setIsLoggedIn(false);
     userContext.setVehicles([]);
+    userContext.setFavorites([]);
     userContext.setUser({});
     userContext.setRole("");
   };
