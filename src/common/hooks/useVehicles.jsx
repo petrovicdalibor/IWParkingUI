@@ -3,7 +3,6 @@ import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
 import useAuth from "../hooks/useAuth";
-// import { useNavigate } from "react-router";
 
 const useVehicles = () => {
   const cookies = new Cookies();
