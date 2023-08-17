@@ -233,7 +233,7 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="outlined"
-                  color="favorites"
+                  color="favorite"
                   size="large"
                   onClick={handleAddToFavorites}
                   fullWidth
@@ -243,13 +243,13 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
                       size={17}
                       style={{
                         marginRight: "6px",
-                        color: theme.palette.favorites.accent,
+                        color: theme.palette.favorite.accent,
                       }}
                     />
                   ) : (
                     <BsStar size={17} style={{ marginRight: "6px" }} />
                   )}
-                  {isfavorite ? "Remove Favorite" : "Add Favorite"}
+                  Favorite
                 </Button>
               </Grid>
             ) : (

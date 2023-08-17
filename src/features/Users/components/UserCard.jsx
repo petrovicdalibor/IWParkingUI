@@ -67,11 +67,10 @@ const UserCard = ({ user, handleDeactivateUser }) => {
                 size="large"
                 disableElevation
                 disabled
-                sx={{ minWidth: "164px" }}
                 fullWidth
               >
                 <BsStopCircle size={20} style={{ marginRight: "8px" }} />
-                Deactivated
+                Deactivate
               </Button>
             ) : (
               <Button
@@ -79,7 +78,6 @@ const UserCard = ({ user, handleDeactivateUser }) => {
                 size="large"
                 onClick={deactivateUserHandler}
                 disableElevation
-                sx={{ minWidth: "164px" }}
                 fullWidth
               >
                 <BsStopCircle size={20} style={{ marginRight: "8px" }} />
