@@ -95,7 +95,8 @@ const Vehicles = () => {
                 <VehicleCard
                   vehicle={vehicle}
                   key={vehicle.id}
-                  isprimary={vehicle.isPrimary.toString()}
+                  isPrimary={vehicle.isPrimary}
+                  // isPrimary={vehicle.isPrimary.toString()}
                 />
               ))
             ) : (

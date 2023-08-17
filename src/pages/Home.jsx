@@ -48,14 +48,14 @@ const Home = () => {
 
       <Grid container>
         {parkingContext.parkingLots.map((parking) => {
-          let isFavorite = userContext.favorites.some(
+          const isFavorite = userContext.favorites.some(
             (fav) => fav.id === parking.id
           );
 
           return (
             <ParkingLotsCard
               handleDeactivateParking={handleDeactivateParking}
-              isfavorite={isFavorite}
+              isFavorite={isFavorite}
               parking={parking}
               key={parking.id}
             />
