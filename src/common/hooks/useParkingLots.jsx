@@ -95,7 +95,29 @@ const useParkingLots = () => {
     return removeFavoriteResult;
   };
 
-  return { fetchParkingLots, fetchFavoriteLots, addFavorite, removeFavorite };
+  const deactivateParkingLot = async (parkingLotId) => {
+    const deactivateParkingLotResult = await axios
+      .delete(`/api/ParkingLot/Deactivate/${parkingLotId}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return deactivateParkingLotResult;
+  };
+
+  return {
+    fetchParkingLots,
+    fetchFavoriteLots,
+    addFavorite,
+    removeFavorite,
+    deactivateParkingLot,
+  };
 };
 
 export default useParkingLots;

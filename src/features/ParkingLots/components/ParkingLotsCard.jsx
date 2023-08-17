@@ -58,7 +58,7 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = ({ parking, isFavorite }) => {
+const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -71,6 +71,10 @@ const ParkingLotsCard = ({ parking, isFavorite }) => {
     } else {
       addFavorite(userContext.user.id, parking.id);
     }
+  };
+
+  const deactivateParkingHandler = () => {
+    handleDeactivateParking(parking);
   };
 
   return (
@@ -253,17 +257,19 @@ const ParkingLotsCard = ({ parking, isFavorite }) => {
                 </Button>
               </Grid>
             ) : (
+              // console.log(parking.isDisabled)
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
                   color="primary"
                   size="large"
-                  // onClick={handleRemoveParkingLot}
+                  onClick={deactivateParkingHandler}
                   disableElevation
+                  disabled={parking.isDeactivated ? true : false}
                   fullWidth
                 >
                   <BsTrashFill size={17} style={{ marginRight: "6px" }} />
-                  Remove
+                  Deactivate
                 </Button>
               </Grid>
             )}
@@ -286,6 +292,7 @@ const ParkingLotsCard = ({ parking, isFavorite }) => {
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
   isFavorite: PropTypes.bool,
+  handleDeactivateParking: PropTypes.func,
 };
 
 export default ParkingLotsCard;
