@@ -5,29 +5,27 @@ import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useVehicles from "../../../common/hooks/useVehicles";
 
-const VCard = styled(Card)(({ theme, isprimary = false }) => ({
+const VCard = styled(Card, {
+  shouldForwardProp: (props) => props != "isPrimary",
+})(({ theme, isPrimary }) => ({
   display: "flex",
   cursor: "pointer",
   width: "fit-content",
   borderRadius: "10px",
-  color: isprimary === "true" ? "#2563EB" : "#2B2D2F",
-  border:
-    isprimary === "true"
-      ? "1px solid rgba(37, 99, 235, 0.35)"
-      : "1px solid #ECECEC",
-  boxShadow:
-    isprimary === "true"
-      ? "0px 0px 15px 0px rgba(37, 99, 235, 0.25)"
-      : "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
+  color: isPrimary ? "#2563EB" : "#2B2D2F",
+  border: isPrimary ? "1px solid rgba(37, 99, 235, 0.35)" : "1px solid #ECECEC",
+  boxShadow: isPrimary
+    ? "0px 0px 15px 0px rgba(37, 99, 235, 0.25)"
+    : "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
   ":hover": {
-    border: isprimary === "true" ? "" : "1px solid #C5C5C5",
+    border: isPrimary ? "" : "1px solid #C5C5C5",
   },
   transition: theme.transitions.create("border", {
     duration: theme.transitions.duration.shorter,
   }),
 }));
 
-const VehicleCard = ({ vehicle, isprimary }) => {
+const VehicleCard = ({ vehicle, isPrimary }) => {
   const { deleteVehicle, makePrimaryVehicle } = useVehicles();
 
   const handleVehicleDelete = () => {
@@ -41,7 +39,7 @@ const VehicleCard = ({ vehicle, isprimary }) => {
   };
 
   return (
-    <VCard variant="outlined" isprimary={isprimary}>
+    <VCard variant="outlined" isPrimary={isPrimary}>
       <CardContent
         onClick={handleVehiclePrimary}
         style={{
@@ -87,7 +85,7 @@ const VehicleCard = ({ vehicle, isprimary }) => {
 
 VehicleCard.propTypes = {
   vehicle: PropTypes.object,
-  isprimary: PropTypes.any,
+  isPrimary: PropTypes.any,
 };
 
 export default VehicleCard;
