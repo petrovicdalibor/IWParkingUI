@@ -2,11 +2,13 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
+import useAuth from "../hooks/useAuth";
 // import { useNavigate } from "react-router";
 
 const useVehicles = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
+  const { setUserVehicles } = useAuth();
 
   const addVehicle = async (userId, plateNumber, type) => {
     const addVehicleResult = await axios
@@ -54,6 +56,8 @@ const useVehicles = () => {
           return vehicle.id !== id;
         });
         userContext.setVehicles(vehicleArray);
+
+        setUserVehicles(userContext.user.id);
 
         return res.data.vehicles;
       })
