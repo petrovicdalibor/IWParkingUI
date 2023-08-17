@@ -24,7 +24,7 @@ const Home = () => {
     };
     parkingContext.setParkingLots(array);
 
-    await deactivateParkingLot(parking);
+    await deactivateParkingLot(parking.id);
 
     fetchParkingLots();
   };

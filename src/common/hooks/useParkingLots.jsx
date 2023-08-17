@@ -95,9 +95,9 @@ const useParkingLots = () => {
     return removeFavoriteResult;
   };
 
-  const deactivateParkingLot = async (parking) => {
+  const deactivateParkingLot = async (parkingLotId) => {
     const deactivateParkingLotResult = await axios
-      .delete(`/api/ParkingLot/Deactivate/${parking.id}`, {
+      .delete(`/api/ParkingLot/Deactivate/${parkingLotId}`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
