@@ -8,11 +8,26 @@ import { AuthContext } from "../context/authProvider";
 const Home = () => {
   const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
-  const { fetchParkingLots } = useParkingLots();
+  const { fetchParkingLots, deactivateParkingLot } = useParkingLots();
 
   useEffect(() => {
     fetchParkingLots();
   }, []);
+
+  const handleDeactivateParking = async (parking) => {
+    const parkingLotIndex = parkingContext.parkingLots.indexOf(parking);
+    const array = [...parkingContext.parkingLots];
+
+    array[parkingLotIndex] = {
+      ...array[parkingLotIndex],
+      isDeactivated: true,
+    };
+    parkingContext.setParkingLots(array);
+
+    await deactivateParkingLot(parking);
+
+    fetchParkingLots();
+  };
 
   return (
     <>
@@ -39,6 +54,7 @@ const Home = () => {
 
           return (
             <ParkingLotsCard
+              handleDeactivateParking={handleDeactivateParking}
               isfavorite={isFavorite}
               parking={parking}
               key={parking.id}
