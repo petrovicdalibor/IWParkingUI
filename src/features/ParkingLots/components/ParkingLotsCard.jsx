@@ -58,7 +58,7 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = ({ parking, isfavorite }) => {
+const ParkingLotsCard = ({ parking, isFavorite }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -66,7 +66,7 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
   const { addFavorite, removeFavorite } = useParkingLots();
 
   const handleAddToFavorites = () => {
-    if (isfavorite) {
+    if (isFavorite) {
       removeFavorite(userContext.user.id, parking.id);
     } else {
       addFavorite(userContext.user.id, parking.id);
@@ -238,7 +238,7 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
                   onClick={handleAddToFavorites}
                   fullWidth
                 >
-                  {isfavorite ? (
+                  {isFavorite ? (
                     <BsStarFill
                       size={17}
                       style={{
@@ -285,7 +285,7 @@ const ParkingLotsCard = ({ parking, isfavorite }) => {
 
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
-  isfavorite: PropTypes.bool,
+  isFavorite: PropTypes.bool,
 };
 
 export default ParkingLotsCard;
