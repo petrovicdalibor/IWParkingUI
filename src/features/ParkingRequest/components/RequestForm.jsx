@@ -32,7 +32,7 @@ const RequestForm = ({ isEdit }) => {
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(null);
+  const [price, setPrice] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zone, setZone] = useState("");
@@ -45,8 +45,8 @@ const RequestForm = ({ isEdit }) => {
       <Hidden mdDown>
         <Grid
           item
-          xs="12"
-          md="3"
+          xs={12}
+          md={3}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -54,7 +54,7 @@ const RequestForm = ({ isEdit }) => {
           <BsPSquare size={110} color="#757575" style={{ margin: "12px" }} />
         </Grid>
       </Hidden>
-      <Grid item xs="12" md="9">
+      <Grid item xs={12} md={9}>
         <Box
           component="form"
           // onSubmit={handlePersonalInfoSubmit}
@@ -63,7 +63,7 @@ const RequestForm = ({ isEdit }) => {
             item
             xs={12}
             display={"flex"}
-            direction={isXs ? "column" : "row"}
+            flexDirection={isXs ? "column" : "row"}
             gap={2}
           >
             <TextField
@@ -77,7 +77,7 @@ const RequestForm = ({ isEdit }) => {
               value={name}
               fullWidth
             />
-            <Grid item xs={12} md="4" display={"flex"} gap={2}>
+            <Grid item xs={12} md={4} display={"flex"} gap={2}>
               <TextField
                 label="Price"
                 onChange={(e) => setPrice(e.target.value)}
@@ -100,7 +100,7 @@ const RequestForm = ({ isEdit }) => {
             item
             xs={12}
             display={"flex"}
-            direction={isXs ? "column" : "row"}
+            flexDirection={isXs ? "column" : "row"}
             gap={2}
             mt={2}
           >
@@ -115,7 +115,7 @@ const RequestForm = ({ isEdit }) => {
               value={address}
               fullWidth
             />
-            <Grid item xs={12} md="5" display={"flex"} gap={2}>
+            <Grid item xs={12} md={5} display={"flex"} gap={2}>
               <FormControl variant="filled" sx={{ minWidth: "100%" }}>
                 <InputLabel
                   id="demo-simple-select-filled-label"
@@ -138,7 +138,7 @@ const RequestForm = ({ isEdit }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md="5" display={"flex"} gap={2}>
+            <Grid item xs={12} md={5} display={"flex"} gap={2}>
               <FormControl variant="filled" sx={{ minWidth: "100%" }}>
                 <InputLabel
                   id="demo-simple-select-filled-label"
@@ -165,7 +165,7 @@ const RequestForm = ({ isEdit }) => {
           <Grid
             item
             display="flex"
-            direction={mdDown ? "column" : "row"}
+            flexDirection={mdDown ? "column" : "row"}
             // alignItems="center"
             mt={2}
             gap={2}
@@ -177,7 +177,7 @@ const RequestForm = ({ isEdit }) => {
               sm={12}
               md={5}
               alignItems="center"
-              direction="row"
+              flexDirection="row"
               gap={2}
             >
               <Grid
@@ -255,7 +255,7 @@ const RequestForm = ({ isEdit }) => {
               xs={12}
               sm={7}
               alignItems="center"
-              direction="row"
+              flexDirection="row"
               gap={2}
             >
               <Grid item xs={12} sm={6} display="flex" gap={2}>

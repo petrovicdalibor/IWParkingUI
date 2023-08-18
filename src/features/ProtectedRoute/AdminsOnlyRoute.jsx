@@ -7,7 +7,7 @@ const AdminsOnlyRoute = () => {
   const token = cookies.get("token");
   const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
-  if (decodedToken.Role !== "Admin") {
+  if (decodedToken.Role !== "SuperAdmin") {
     return <Navigate to="/" />;
   }
 

@@ -96,7 +96,7 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
           justifyContent="space-between"
         >
           <Grid item display="flex" gap={5} alignItems={"center"}>
-            {userContext.role !== "Admin" ? (
+            {userContext.role !== "SuperAdmin" ? (
               <Grid
                 item
                 display={"flex"}
@@ -217,7 +217,7 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
             justifyItems={"center"}
             mt={mdDown ? 3 : 0}
           >
-            {userContext.role !== "Admin" ? (
+            {userContext.role !== "SuperAdmin" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -233,7 +233,7 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
             ) : (
               ""
             )}
-            {userContext.role !== "Admin" ? (
+            {userContext.role !== "SuperAdmin" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="outlined"

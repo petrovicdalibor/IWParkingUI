@@ -130,7 +130,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           ) : (
             <></>
           )}
-          {userContext.role === "Admin" ? (
+          {userContext.role === "SuperAdmin" ? (
             adminItems.map((item) => {
               const active = item.path ? pathname === item.path : false;
 

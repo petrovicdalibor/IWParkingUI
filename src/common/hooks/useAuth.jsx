@@ -30,9 +30,9 @@ const useAuth = () => {
     }
   };
 
-  const fetchUserVehicles = async (id) => {
+  const fetchUserVehicles = async () => {
     const fetchUserVehiclesResult = await axios
-      .get(`/api/Vehicle/GetByUserId/${id}`, {
+      .get(`/api/Vehicle/GetByUserId`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
