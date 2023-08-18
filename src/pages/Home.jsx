@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import useParkingLots from "../common/hooks/useParkingLots";
 import { ParkingContext } from "../context/parkingProvider";
 import { AuthContext } from "../context/authProvider";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const userContext = useContext(AuthContext);
@@ -37,9 +38,11 @@ const Home = () => {
         </Grid>
         {userContext.role === "Owner" ? (
           <Grid item>
-            <Button variant="contained" color="secondary" disableElevation>
-              Add Parking Lot
-            </Button>
+            <Link to="/add-parking">
+              <Button variant="contained" color="secondary" disableElevation>
+                Add Parking Lot
+              </Button>
+            </Link>
           </Grid>
         ) : (
           ""
