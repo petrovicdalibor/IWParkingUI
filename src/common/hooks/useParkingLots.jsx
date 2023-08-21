@@ -40,7 +40,6 @@ const useParkingLots = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
         return res.data.requests;
       })
       .catch((err) => {
