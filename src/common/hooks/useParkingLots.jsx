@@ -71,6 +71,7 @@ const useParkingLots = () => {
       });
     return addFavoriteResult;
   };
+
   const removeFavorite = async (userId, parkingLotId) => {
     const removeFavoriteResult = await axios
       .delete(
@@ -111,11 +112,59 @@ const useParkingLots = () => {
     return deactivateParkingLotResult;
   };
 
+  const addParkingLot = async (
+    name,
+    city,
+    zone,
+    address,
+    workingHourFrom,
+    workingHourTo,
+    capacityCar,
+    capacityAdaptedCar,
+    price,
+    userId
+  ) => {
+    const addFavoriteResult = await axios
+      .post(
+        `/api/ParkingLot/Create`,
+        {
+          name,
+          city,
+          zone,
+          address,
+          workingHourFrom,
+          workingHourTo,
+          capacityCar,
+          capacityAdaptedCar,
+          price,
+          userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        // userContext.setFavorites([
+        //   ...userContext.favorites,
+        //   res.data.parkingLot,
+        // ]);
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return addFavoriteResult;
+  };
+
   return {
     fetchParkingLots,
     fetchFavoriteLots,
     addFavorite,
     removeFavorite,
+    addParkingLot,
     deactivateParkingLot,
   };
 };

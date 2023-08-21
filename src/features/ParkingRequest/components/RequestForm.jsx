@@ -1,4 +1,6 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import {
   Box,
   Button,
@@ -20,6 +22,8 @@ import { TimeField } from "@mui/x-date-pickers/TimeField";
 import { BsPSquare } from "react-icons/bs";
 import { useState } from "react";
 import PropTypes from "prop-types";
+import useParkingLots from "../../../common/hooks/useParkingLots";
+import Cookies from "universal-cookie";
 
 const RequestBox = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -27,9 +31,19 @@ const RequestBox = styled(Grid)(({ theme }) => ({
   },
 }));
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Europe/Belgrade");
+
 const RequestForm = ({ isEdit }) => {
+  const cookies = new Cookies();
+  const token = cookies.get("token");
+  const decodedToken = JSON.parse(atob(token.split(".")[1]));
+
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+  const { addParkingLot } = useParkingLots();
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -37,8 +51,44 @@ const RequestForm = ({ isEdit }) => {
   const [city, setCity] = useState("");
   const [zone, setZone] = useState("");
 
-  const [workFrom, setWorkFrom] = useState(dayjs());
-  const [workTo, setWorkTo] = useState(dayjs());
+  const [capacityCar, setCapacityCar] = useState("");
+  const [capacityAdaptedCar, setCapacityAdaptedCar] = useState("");
+
+  const [workFrom, setWorkFrom] = useState(
+    dayjs.utc("2023-01-01T23:00").tz("Europe/Belgrade")
+  );
+  const [workTo, setWorkTo] = useState(
+    dayjs.utc("2023-01-01T23:00").tz("Europe/Belgrade")
+  );
+
+  const handleParkingEdit = () => {};
+
+  const handleParkingAdd = async (e) => {
+    e.preventDefault();
+    const workFromParse = workFrom
+      .tz("Europe/Belgrade")
+      .toDate()
+      .toString()
+      .split(" ")[4];
+    const workToParse = workTo
+      .tz("Europe/Belgrade")
+      .toDate()
+      .toString()
+      .split(" ")[4];
+
+    await addParkingLot(
+      name,
+      price,
+      zone,
+      address,
+      workFromParse,
+      workToParse,
+      capacityCar,
+      capacityAdaptedCar,
+      price,
+      decodedToken.Id
+    );
+  };
 
   return (
     <RequestBox container p={3} mt={2} direction="row">
@@ -57,7 +107,7 @@ const RequestForm = ({ isEdit }) => {
       <Grid item xs={12} md={9}>
         <Box
           component="form"
-          // onSubmit={handlePersonalInfoSubmit}
+          onSubmit={isEdit ? handleParkingEdit : handleParkingAdd}
         >
           <Grid
             item
@@ -166,7 +216,6 @@ const RequestForm = ({ isEdit }) => {
             item
             display="flex"
             flexDirection={mdDown ? "column" : "row"}
-            // alignItems="center"
             mt={2}
             gap={2}
           >
@@ -188,7 +237,10 @@ const RequestForm = ({ isEdit }) => {
                 flexDirection="row"
                 gap={2}
               >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                  // dateLibInstance={dayjs.tz}
+                  dateAdapter={AdapterDayjs}
+                >
                   <DemoContainer
                     components={["TimeField"]}
                     sx={{
@@ -198,6 +250,7 @@ const RequestForm = ({ isEdit }) => {
                     }}
                   >
                     <TimeField
+                      timezone="Europe/Belgrade"
                       label="From"
                       variant="filled"
                       color="secondary"
@@ -231,6 +284,7 @@ const RequestForm = ({ isEdit }) => {
                     }}
                   >
                     <TimeField
+                      timezone="Europe/Belgrade"
                       label="To"
                       variant="filled"
                       color="secondary"
@@ -242,7 +296,6 @@ const RequestForm = ({ isEdit }) => {
                       format="HH:mm"
                       sx={{
                         minWidth: "0 !important",
-                        // background: "#000 !important",
                       }}
                     />
                   </DemoContainer>
@@ -261,26 +314,26 @@ const RequestForm = ({ isEdit }) => {
               <Grid item xs={12} sm={6} display="flex" gap={2}>
                 <TextField
                   label="Car Capacity"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setCapacityCar(e.target.value)}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  value={name}
+                  value={capacityCar}
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={6} display="flex" gap={2}>
                 <TextField
                   label="Adapted Car Capacity"
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => setCapacityAdaptedCar(e.target.value)}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
                   InputProps={{ disableUnderline: true }}
                   type="text"
-                  value={name}
+                  value={capacityAdaptedCar}
                   fullWidth
                 />
               </Grid>
