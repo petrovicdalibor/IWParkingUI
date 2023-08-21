@@ -155,8 +155,20 @@ const ParkingLotsCard = ({
                 </Typography>
                 {userContext.role === "Owner" ? (
                   <Badge
-                    badgeContent={parking.status === 1 ? "Pending" : "Active"}
-                    color={parking.status === 1 ? "warning" : "success"}
+                    badgeContent={
+                      parking.status === 1
+                        ? "Pending"
+                        : parking.status === 2
+                        ? "Active"
+                        : "Declined"
+                    }
+                    color={
+                      parking.status === 1
+                        ? "warning"
+                        : parking.status === 2
+                        ? "success"
+                        : "primary"
+                    }
                     componentsProps={{
                       badge: {
                         style: {
