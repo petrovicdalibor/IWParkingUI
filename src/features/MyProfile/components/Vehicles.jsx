@@ -51,13 +51,13 @@ const Vehicles = () => {
   const [vehicleError, setVehicleError] = useState("");
   const [vehicleErrorType, setVehicleErrorType] = useState("info");
 
-  const handleVehicleAddSubmit = (e) => {
+  const handleVehicleAddSubmit = async (e) => {
     e.preventDefault();
     if (plate === "" || type === "") {
       setVehicleError("All fields are required");
       setVehicleErrorType("error");
     } else {
-      addVehicle(userContext.user.id, plate, type)
+      await addVehicle(plate, type)
         .then((res) => {
           setVehicleError(res);
           setVehicleErrorType("success");

@@ -9,12 +9,11 @@ const useVehicles = () => {
   const userContext = useContext(AuthContext);
   const { setUserVehicles } = useAuth();
 
-  const addVehicle = async (userId, plateNumber, type) => {
+  const addVehicle = async (plateNumber, type) => {
     const addVehicleResult = await axios
       .post(
         `/api/Vehicle/Create`,
         {
-          userId,
           plateNumber,
           type,
         },

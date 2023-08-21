@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -18,6 +19,9 @@ import {
   BsStar,
   BsStarFill,
   BsTrashFill,
+  BsCheckCircle,
+  BsXCircle,
+  BsPerson,
 } from "react-icons/bs";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 import { useContext } from "react";
@@ -58,12 +62,18 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
+const ParkingLotsCard = ({
+  parking,
+  requestId,
+  owner,
+  isFavorite,
+  handleDeactivateParking,
+}) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
-  const { addFavorite, removeFavorite } = useParkingLots();
+  const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
 
   const handleAddToFavorites = () => {
     if (isFavorite) {
@@ -75,6 +85,13 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
 
   const deactivateParkingHandler = () => {
     handleDeactivateParking(parking);
+  };
+
+  const approveParkingHandler = async () => {
+    await modifyRequest(requestId, "Approved");
+  };
+  const declineParkingHandler = async () => {
+    await modifyRequest(requestId, "Declined");
   };
 
   return (
@@ -136,7 +153,25 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
                 >
                   {parking?.price}&euro;/hr
                 </Typography>
+                {userContext.role === "Owner" ? (
+                  <Badge
+                    badgeContent={parking.status === 1 ? "Pending" : "Active"}
+                    color={parking.status === 1 ? "warning" : "success"}
+                    componentsProps={{
+                      badge: {
+                        style: {
+                          position: "relative",
+                          transform: "none",
+                          WebkitTransform: "none",
+                        },
+                      },
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
               </Grid>
+
               <Hidden smDown>
                 <Grid
                   item
@@ -166,9 +201,25 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
                       style={{ marginRight: "6px" }}
                       color="#CF0018"
                     />
-                    {parking?.workingHourFrom.slice(0, -3)} -{" "}
-                    {parking?.workingHourTo.slice(0, -3)}
+                    {parking?.workingHourFrom?.slice(0, -3)} -{" "}
+                    {parking?.workingHourTo?.slice(0, -3)}
                   </ParkingInfo>
+                  {userContext.role === "SuperAdmin" && owner ? (
+                    <ParkingInfo
+                      variant="body2"
+                      display={"flex"}
+                      alignItems={"center"}
+                    >
+                      <BsPerson
+                        size={17}
+                        style={{ marginRight: "6px" }}
+                        color="#CF0018"
+                      />
+                      {owner?.name} {owner?.surname}
+                    </ParkingInfo>
+                  ) : (
+                    ""
+                  )}
                 </Grid>
               </Hidden>
             </Grid>
@@ -203,7 +254,8 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
                   style={{ marginRight: "6px" }}
                   color="#CF0018"
                 />
-                06:00 - 00:00
+                {parking?.workingHourFrom?.slice(0, -3)} -{" "}
+                {parking?.workingHourTo?.slice(0, -3)}
               </ParkingInfo>
             </Grid>
           </Hidden>
@@ -217,7 +269,8 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
             justifyItems={"center"}
             mt={mdDown ? 3 : 0}
           >
-            {userContext.role !== "SuperAdmin" ? (
+            {userContext.role !== "SuperAdmin" &&
+            userContext.role !== "Owner" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -233,7 +286,8 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
             ) : (
               ""
             )}
-            {userContext.role !== "SuperAdmin" ? (
+            {userContext.role !== "SuperAdmin" &&
+            userContext.role !== "Owner" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="outlined"
@@ -257,7 +311,9 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
                 </Button>
               </Grid>
             ) : (
-              // console.log(parking.isDisabled)
+              ""
+            )}
+            {userContext.role === "SuperAdmin" && parking.status === 2 ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -272,6 +328,63 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
                   Deactivate
                 </Button>
               </Grid>
+            ) : (
+              ""
+            )}
+
+            {userContext.role === "SuperAdmin" && parking.status === 1 ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  onClick={approveParkingHandler}
+                  disableElevation
+                  disabled={parking.isDeactivated ? true : false}
+                  fullWidth
+                >
+                  <BsCheckCircle size={17} style={{ marginRight: "6px" }} />
+                  Approve
+                </Button>
+              </Grid>
+            ) : (
+              ""
+            )}
+            {userContext.role === "SuperAdmin" && parking.status === 1 ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={declineParkingHandler}
+                  disableElevation
+                  disabled={parking.isDeactivated ? true : false}
+                  fullWidth
+                >
+                  <BsXCircle size={17} style={{ marginRight: "6px" }} />
+                  Decline
+                </Button>
+              </Grid>
+            ) : (
+              ""
+            )}
+            {userContext.role === "Owner" && parking.status === 2 ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  onClick={deactivateParkingHandler}
+                  disableElevation
+                  disabled={parking.isDeactivated ? true : false}
+                  fullWidth
+                >
+                  <BsTrashFill size={17} style={{ marginRight: "6px" }} />
+                  Deactivate
+                </Button>
+              </Grid>
+            ) : (
+              ""
             )}
           </Grid>
         </Grid>
@@ -291,6 +404,8 @@ const ParkingLotsCard = ({ parking, isFavorite, handleDeactivateParking }) => {
 
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
+  requestId: PropTypes.number,
+  owner: PropTypes.object,
   isFavorite: PropTypes.bool,
   handleDeactivateParking: PropTypes.func,
 };

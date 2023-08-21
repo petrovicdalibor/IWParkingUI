@@ -9,13 +9,39 @@ const useParkingLots = () => {
   const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
 
+  const token =
+    cookies.get("token") === undefined
+      ? null
+      : `Bearer ${cookies.get("token")}`;
+
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
-      .get("/api/ParkingLot/GetAll")
+      .get("/api/ParkingLot/GetAll", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
 
         return res.data;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return fetchParkingLotsResult;
+  };
+
+  const fetchRequests = async () => {
+    const fetchParkingLotsResult = await axios
+      .get("/api/Request/GetAll", {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        return res.data.requests;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
@@ -96,6 +122,26 @@ const useParkingLots = () => {
     return removeFavoriteResult;
   };
 
+  const modifyRequest = async (id, action) => {
+    const modifyRequestResult = await axios
+      .put(
+        `/api/Request/Modify/${id}`,
+        { status: action },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return modifyRequestResult;
+  };
+
   const deactivateParkingLot = async (parkingLotId) => {
     const deactivateParkingLotResult = await axios
       .delete(`/api/ParkingLot/Deactivate/${parkingLotId}`, {
@@ -146,11 +192,6 @@ const useParkingLots = () => {
         }
       )
       .then((res) => {
-        // userContext.setFavorites([
-        //   ...userContext.favorites,
-        //   res.data.parkingLot,
-        // ]);
-
         return res.data.message;
       })
       .catch((err) => {
@@ -161,10 +202,12 @@ const useParkingLots = () => {
 
   return {
     fetchParkingLots,
+    fetchRequests,
     fetchFavoriteLots,
     addFavorite,
     removeFavorite,
     addParkingLot,
+    modifyRequest,
     deactivateParkingLot,
   };
 };

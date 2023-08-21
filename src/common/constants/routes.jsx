@@ -2,6 +2,7 @@ import Layout from "../../layouts/Layout";
 import ProtectedRoute from "../../features/ProtectedRoute/ProtectedRoute";
 import Favorites from "../../pages/Favorites.jsx";
 import Home from "../../pages/Home.jsx";
+import Requests from "../../pages/Requests.jsx";
 import MyProfile from "../../pages/MyProfile.jsx";
 import Reservations from "../../pages/Reservations.jsx";
 import AddParking from "../../pages/AddParking.jsx";
@@ -71,6 +72,10 @@ const routesForAdminsOnly = [
       {
         path: "/favorites",
         element: <Favorites />,
+      },
+      {
+        path: "/requests",
+        element: <Requests />,
       },
     ],
   },

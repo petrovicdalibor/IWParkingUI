@@ -9,7 +9,7 @@ const useAuth = () => {
   const userContext = useContext(AuthContext);
   const { fetchFavoriteLots } = useParkingLots();
 
-  const setUserInfo = async (id) => {
+  const setUserInfo = async () => {
     try {
       await fetchUser().then((res) => {
         userContext.setUser(res);

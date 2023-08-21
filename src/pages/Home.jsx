@@ -13,7 +13,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchParkingLots();
-  }, []);
+  }, [userContext.role]);
 
   const handleDeactivateParking = async (parking) => {
     const parkingLotIndex = parkingContext.parkingLots.indexOf(parking);

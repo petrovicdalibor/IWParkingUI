@@ -24,6 +24,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 import Cookies from "universal-cookie";
+import { useNavigate } from "react-router-dom";
 
 const RequestBox = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -42,6 +43,8 @@ const RequestForm = ({ isEdit }) => {
 
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
+  const navigate = useNavigate();
 
   const { addParkingLot } = useParkingLots();
 
@@ -87,7 +90,7 @@ const RequestForm = ({ isEdit }) => {
       capacityAdaptedCar,
       price,
       decodedToken.Id
-    );
+    ).then(() => navigate("/"));
   };
 
   return (
@@ -237,10 +240,7 @@ const RequestForm = ({ isEdit }) => {
                 flexDirection="row"
                 gap={2}
               >
-                <LocalizationProvider
-                  // dateLibInstance={dayjs.tz}
-                  dateAdapter={AdapterDayjs}
-                >
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer
                     components={["TimeField"]}
                     sx={{
