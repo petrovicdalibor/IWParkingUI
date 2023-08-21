@@ -11,7 +11,7 @@ const useAuth = () => {
 
   const setUserInfo = async (id) => {
     try {
-      await fetchUser(id).then((res) => {
+      await fetchUser().then((res) => {
         userContext.setUser(res);
         userContext.setIsLoggedIn(true);
       });
@@ -75,7 +75,24 @@ const useAuth = () => {
     return loginResult;
   };
 
-  const deactivateUser = async (userId) => {
+  const deactivateUser = async () => {
+    const deactivateUserResult = await axios
+      .delete(`/api/User/Deactivate`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+
+    return deactivateUserResult;
+  };
+
+  const deactivateUserById = async (userId) => {
     const deactivateUserResult = await axios
       .delete(`/api/User/Deactivate/${userId}`, {
         headers: {
@@ -120,9 +137,9 @@ const useAuth = () => {
     return signUpResult;
   };
 
-  const fetchUser = async (id) => {
+  const fetchUser = async () => {
     const fetchUserResult = await axios
-      .get(`/api/User/Get/${id}`, {
+      .get(`/api/User/Get`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
@@ -136,10 +153,10 @@ const useAuth = () => {
     return fetchUserResult;
   };
 
-  const updateUserInfo = async (id, name, surname, email, phone) => {
+  const updateUserInfo = async (name, surname, email, phone) => {
     const updateUserInfoResult = await axios
       .put(
-        `/api/User/Update/${id}`,
+        `/api/User/Update`,
         {
           name: name,
           surname: surname,
@@ -242,6 +259,7 @@ const useAuth = () => {
     login,
     logout,
     deactivateUser,
+    deactivateUserById,
     signUp,
     fetchUser,
     fetchAllUsers,

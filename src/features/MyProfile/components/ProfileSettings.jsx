@@ -88,7 +88,7 @@ const ProfileSettings = () => {
     if (name === "" || surname === "" || email === "" || phone === "") {
       throw "All field are required";
     }
-    await updateUserInfo(userContext.user.id, name, surname, email, phone)
+    await updateUserInfo(name, surname, email, phone)
       .then((res) => {
         setPersonalInfoError(res.data.message);
         setPersonalInfoErrorType("success");
@@ -132,7 +132,7 @@ const ProfileSettings = () => {
   };
 
   const handleDeactivateUser = async () => {
-    await deactivateUser(userContext.user.id)
+    await deactivateUser()
       .then((res) => {
         logout();
         return res;

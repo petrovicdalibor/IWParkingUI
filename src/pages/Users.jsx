@@ -5,7 +5,7 @@ import useAuth from "../common/hooks/useAuth";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const { fetchAllUsers, deactivateUser } = useAuth();
+  const { fetchAllUsers, deactivateUserById } = useAuth();
 
   const fetchUsers = () => {
     fetchAllUsers().then((res) => setUsers(res.data.users));
@@ -25,7 +25,7 @@ const Users = () => {
     };
     setUsers(array);
 
-    await deactivateUser(user.id);
+    await deactivateUserById(user.id);
 
     fetchUsers();
   };
