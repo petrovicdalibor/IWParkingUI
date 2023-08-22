@@ -10,11 +10,11 @@ import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <AuthProvider>
-      <div className="toast-container">
-        <ToastContainer limit={2} />
-      </div>
       <ParkingProvider>
         <ThemeProvider theme={Theme}>
+          <div className="toast-container">
+            <ToastContainer style={{ zIndex: 100000 }} limit={2} />
+          </div>
           <Routes />
         </ThemeProvider>
       </ParkingProvider>
