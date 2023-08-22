@@ -27,6 +27,7 @@ import useParkingLots from "../../../common/hooks/useParkingLots";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/authProvider";
 import theme from "../../../theme/Theme";
+import { useNavigate } from "react-router-dom";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -72,6 +73,7 @@ const ParkingLotsCard = ({
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
 
@@ -89,9 +91,11 @@ const ParkingLotsCard = ({
 
   const approveParkingHandler = async () => {
     await modifyRequest(requestId, "Approved");
+    navigate("/");
   };
   const declineParkingHandler = async () => {
     await modifyRequest(requestId, "Declined");
+    navigate("/");
   };
 
   return (
@@ -153,7 +157,8 @@ const ParkingLotsCard = ({
                 >
                   {parking?.price}&euro;/hr
                 </Typography>
-                {userContext.role === "Owner" ? (
+                {userContext.role === "Owner" ||
+                userContext.role === "SuperAdmin" ? (
                   <Badge
                     badgeContent={
                       parking.status === 1
