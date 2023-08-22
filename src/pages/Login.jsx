@@ -8,18 +8,16 @@ import {
   TextField,
   useMediaQuery,
   Link,
-  Alert,
-  Collapse,
-  IconButton,
   styled,
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
+import "react-toastify/dist/ReactToastify.css";
 import loginimage from "../assets/login-illustration.svg";
 import { useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 
+import { toastSuccess, toastError } from "../common/utils/toasts";
+
 import Cookies from "universal-cookie";
-// import AuthVerify from "../common/utils/AuthVerify";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -72,9 +70,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
 
-  const [error, setError] = useState("");
-  const [errorOpen, setErrorOpen] = useState(false);
-
   const handleEmailInput = (e) => {
     setEmail(e.target.value);
   };
@@ -90,12 +85,36 @@ function Login() {
       setPasswordError(password === "" ? "Password field is required" : "");
     } else {
       try {
-        await login(email, password).then(() => {
+        await login(email, password).then((res) => {
+          const toastId = "login-success";
+
+          toastSuccess(res.data.message, { toastId });
+          // toast.success(res.data.message, {
+          //   position: toast.POSITION.TOP_RIGHT,
+          //   autoClose: 3000, //3 seconds
+          //   hideProgressBar: false,
+          //   closeOnClick: true,
+          //   pauseOnHover: true,
+          //   draggable: false,
+          //   toastId,
+          //   transition: Slide,
+          // });
           navigate("/", { replace: true });
         });
       } catch (err) {
-        setError(err);
-        setErrorOpen(true);
+        const toastId = "login-error";
+
+        toastError(err, { toastId });
+        // toast.error(err, {
+        //   position: toast.POSITION.TOP_RIGHT,
+        //   autoClose: 3000, //3 seconds
+        //   hideProgressBar: false,
+        //   closeOnClick: true,
+        //   pauseOnHover: true,
+        //   draggable: false,
+        //   toastId,
+        //   transition: Slide,
+        // });
       }
     }
   };
@@ -107,7 +126,6 @@ function Login() {
     <>
       <CssBaseline />
 
-      {/* HEADER */}
       <Container container justifyContent={mdDown ? "center" : "start"}>
         <Grid item display="flex" alignItems="baseline" justifyContent="center">
           <Logo
@@ -118,7 +136,6 @@ function Login() {
         </Grid>
       </Container>
 
-      {/* LOGIN FORM WITH IMAGE */}
       <Container
         container
         direction={mdDown ? "column" : "row"}
@@ -136,26 +153,6 @@ function Login() {
             Enter your email and password
           </Typography>
 
-          <Collapse in={errorOpen}>
-            <Alert
-              severity="error"
-              action={
-                <IconButton
-                  aria-label="close"
-                  color="inherit"
-                  size="small"
-                  onClick={() => {
-                    setErrorOpen(false);
-                  }}
-                >
-                  <CloseIcon fontSize="inherit" />
-                </IconButton>
-              }
-              sx={{ mt: 1 }}
-            >
-              {error}
-            </Alert>
-          </Collapse>
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <TextField
               sx={{ mt: 2 }}

@@ -5,8 +5,6 @@ import TopBar from "../features/TopBar/components/TopBar";
 import { Grid } from "@mui/material";
 import { Outlet, useLocation } from "react-router";
 
-// import AuthVerify from "../common/utils/AuthVerify";
-
 const SIDE_NAV_WIDTH = 255;
 const TABLET_SIDE_NAV_WIDTH = 80;
 

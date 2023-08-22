@@ -5,6 +5,7 @@ import useParkingLots from "../common/hooks/useParkingLots";
 import { ParkingContext } from "../context/parkingProvider";
 import { AuthContext } from "../context/authProvider";
 import { Link } from "react-router-dom";
+import { toastError, toastSuccess } from "../common/utils/toasts";
 
 const Home = () => {
   const userContext = useContext(AuthContext);
@@ -25,7 +26,17 @@ const Home = () => {
     };
     parkingContext.setParkingLots(array);
 
-    await deactivateParkingLot(parking.id);
+    await deactivateParkingLot(parking.id)
+      .then((res) => {
+        const toastId = "deactivate-parking";
+
+        toastSuccess(res, { toastId });
+      })
+      .catch((err) => {
+        const toastId = "deactivate-parking";
+
+        toastError(err, { toastId });
+      });
 
     fetchParkingLots();
   };

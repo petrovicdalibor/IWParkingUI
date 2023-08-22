@@ -20,6 +20,7 @@ import useAuth from "../../../common/hooks/useAuth";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { confirmPasswordValidator } from "../../../common/utils/validators";
+import { toastError, toastSuccess } from "../../../common/utils/toasts";
 
 const SettingsBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -63,10 +64,6 @@ const ProfileSettings = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [personalInfoError, setPersonalInfoError] = useState("");
-  const [personalInfoErrorType, setPersonalInfoErrorType] = useState("info");
-  const [personalInfoErrorOpen, setPersonalInfoErrorOpen] = useState(false);
-
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -90,14 +87,14 @@ const ProfileSettings = () => {
     }
     await updateUserInfo(name, surname, email, phone)
       .then((res) => {
-        setPersonalInfoError(res.data.message);
-        setPersonalInfoErrorType("success");
-        setPersonalInfoErrorOpen(true);
+        const toastId = "update-user-info";
+
+        toastSuccess(res.data.message, { toastId });
       })
       .catch((err) => {
-        setPersonalInfoError(err);
-        setPersonalInfoErrorType("error");
-        setPersonalInfoErrorOpen(true);
+        const toastId = "update-user-info-err";
+
+        toastError(err, { toastId });
       });
   };
 
@@ -119,14 +116,14 @@ const ProfileSettings = () => {
     } else {
       await changePassword(email, currentPassword, newPassword, confirmPassword)
         .then((res) => {
-          setPasswordError(res.data.message);
-          setPasswordErrorType("success");
-          setPasswordErrorOpen(true);
+          const toastId = "change-password";
+
+          toastSuccess(res.data.message, { toastId });
         })
         .catch((err) => {
-          setPasswordError(err);
-          setPasswordErrorType("error");
-          setPasswordErrorOpen(true);
+          const toastId = "change-password-err";
+
+          toastError(err, { toastId });
         });
     }
   };
@@ -135,10 +132,18 @@ const ProfileSettings = () => {
     await deactivateUser()
       .then((res) => {
         logout();
-        return res;
+
+        const toastId = "deactivate-user";
+
+        toastSuccess(res.data.message, { toastId });
+
+        return res.data.message;
       })
       .catch((err) => {
-        console.log(err);
+        const toastId = "deactivate-user-err";
+
+        toastError(err, { toastId });
+
         return err;
       });
   };
@@ -212,26 +217,7 @@ const ProfileSettings = () => {
                   Edit your personal info
                 </Typography>
               </Grid>
-              <Collapse in={personalInfoErrorOpen}>
-                <Alert
-                  severity={personalInfoErrorType}
-                  action={
-                    <IconButton
-                      aria-label="close"
-                      color="inherit"
-                      size="small"
-                      onClick={() => {
-                        setPersonalInfoErrorOpen(false);
-                      }}
-                    >
-                      <CloseIcon fontSize="inherit" />
-                    </IconButton>
-                  }
-                  sx={{ mb: 2 }}
-                >
-                  {personalInfoError}
-                </Alert>
-              </Collapse>
+
               <Box component="form" onSubmit={handlePersonalInfoSubmit}>
                 <Grid item xs={12} sm={12} xl={12} display={"flex"} gap={2}>
                   <TextField
@@ -429,14 +415,7 @@ const ProfileSettings = () => {
                 )}
               />
             </Grid>
-            <Grid
-              item
-              xs={6}
-              sm={12}
-              display={"flex"}
-              // alignItems={isXs ? "center" : "end"}
-              alignItems={"center"}
-            >
+            <Grid item xs={6} sm={12} display={"flex"} alignItems={"center"}>
               <Button
                 sx={{
                   width: "150px",
@@ -459,26 +438,7 @@ const ProfileSettings = () => {
                 Edit your personal info
               </Typography>
             </Grid>
-            <Collapse in={personalInfoErrorOpen}>
-              <Alert
-                severity={personalInfoErrorType}
-                action={
-                  <IconButton
-                    aria-label="close"
-                    color="inherit"
-                    size="small"
-                    onClick={() => {
-                      setPersonalInfoErrorOpen(false);
-                    }}
-                  >
-                    <CloseIcon fontSize="inherit" />
-                  </IconButton>
-                }
-                sx={{ mb: 2 }}
-              >
-                {personalInfoError}
-              </Alert>
-            </Collapse>
+
             <Box component="form" onSubmit={handlePersonalInfoSubmit}>
               <Grid
                 item

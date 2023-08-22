@@ -37,7 +37,7 @@ const useVehicles = () => {
         return res.data.message;
       })
       .catch((err) => {
-        throw err.response.data.Errors[0];
+        throw err.response.data.errors[0];
       });
     return addVehicleResult;
   };
@@ -65,12 +65,11 @@ const useVehicles = () => {
     return deleteVehicleResult;
   };
 
-  const makePrimaryVehicle = async (userId, vehicleId) => {
+  const makePrimaryVehicle = async (vehicleId) => {
     const addVehicleResult = await axios
       .post(
-        `/api/Vehicle/MakePrimary/${userId},${vehicleId}`,
+        `/api/Vehicle/MakePrimary/${vehicleId}`,
         {
-          userId,
           vehicleId,
         },
         {
@@ -96,6 +95,10 @@ const useVehicles = () => {
         userContext.setVehicles(editedVehicles);
 
         return res.data.vehicles;
+      })
+      .catch((err) => {
+        console.log(err);
+        throw err;
       });
     return addVehicleResult;
   };

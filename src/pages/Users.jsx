@@ -2,6 +2,7 @@ import { Grid, Typography } from "@mui/material";
 import UserCard from "../features/Users/components/UserCard";
 import { useEffect, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
+import { toastError, toastSuccess } from "../common/utils/toasts";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -25,7 +26,17 @@ const Users = () => {
     };
     setUsers(array);
 
-    await deactivateUserById(user.id);
+    await deactivateUserById(user.id)
+      .then((res) => {
+        const toastId = "deactivate-user";
+
+        toastSuccess(res.data.message, { toastId });
+      })
+      .catch((err) => {
+        const toastId = "deactivate-user";
+
+        toastError(err, { toastId });
+      });
 
     fetchUsers();
   };

@@ -4,6 +4,11 @@ import styled from "@emotion/styled";
 import { Box, Card, CardContent, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import useVehicles from "../../../common/hooks/useVehicles";
+import {
+  toastError,
+  toastInfo,
+  toastSuccess,
+} from "../../../common/utils/toasts";
 
 const VCard = styled(Card, {
   shouldForwardProp: (props) => props != "isPrimary",
@@ -28,13 +33,33 @@ const VCard = styled(Card, {
 const VehicleCard = ({ vehicle, isPrimary }) => {
   const { deleteVehicle, makePrimaryVehicle } = useVehicles();
 
-  const handleVehicleDelete = () => {
-    deleteVehicle(vehicle.id);
+  const handleVehicleDelete = async () => {
+    await deleteVehicle(vehicle.id)
+      .then(() => {
+        const toastId = `delete-vehicle-${vehicle.id}`;
+        toastSuccess("Vehicle deleted", { toastId });
+      })
+      .catch((err) => {
+        const toastId = `delete-vehicle-${vehicle.id}`;
+        toastError(err, { toastId });
+      });
   };
 
-  const handleVehiclePrimary = () => {
+  const handleVehiclePrimary = async () => {
     if (!vehicle.isPrimary) {
-      makePrimaryVehicle(vehicle.userId, vehicle.id);
+      await makePrimaryVehicle(vehicle.id)
+        .then(() => {
+          const toastId = `make-primary-${vehicle.id}`;
+
+          toastInfo(`${vehicle.plateNumber} is now your primary vehicle.`, {
+            toastId,
+          });
+        })
+        .catch((err) => {
+          const toastId = `make-primary-${vehicle.id}`;
+
+          toastError(err, { toastId });
+        });
     }
   };
 
