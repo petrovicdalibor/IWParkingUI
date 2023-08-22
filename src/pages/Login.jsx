@@ -89,32 +89,13 @@ function Login() {
           const toastId = "login-success";
 
           toastSuccess(res.data.message, { toastId });
-          // toast.success(res.data.message, {
-          //   position: toast.POSITION.TOP_RIGHT,
-          //   autoClose: 3000, //3 seconds
-          //   hideProgressBar: false,
-          //   closeOnClick: true,
-          //   pauseOnHover: true,
-          //   draggable: false,
-          //   toastId,
-          //   transition: Slide,
-          // });
+
           navigate("/", { replace: true });
         });
       } catch (err) {
         const toastId = "login-error";
 
         toastError(err, { toastId });
-        // toast.error(err, {
-        //   position: toast.POSITION.TOP_RIGHT,
-        //   autoClose: 3000, //3 seconds
-        //   hideProgressBar: false,
-        //   closeOnClick: true,
-        //   pauseOnHover: true,
-        //   draggable: false,
-        //   toastId,
-        //   transition: Slide,
-        // });
       }
     }
   };
