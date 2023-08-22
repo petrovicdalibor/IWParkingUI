@@ -2,12 +2,12 @@ import Cookies from "universal-cookie";
 
 import { Navigate, Outlet } from "react-router";
 
-const AdminsOnlyRoute = () => {
+const OwnersOnlyRoute = () => {
   const cookies = new Cookies();
   const token = cookies.get("token");
   const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
-  if (decodedToken.Role !== "SuperAdmin") {
+  if (decodedToken.Role !== "Owner") {
     return <Navigate to="/" />;
   }
 
@@ -18,4 +18,4 @@ const AdminsOnlyRoute = () => {
   );
 };
 
-export default AdminsOnlyRoute;
+export default OwnersOnlyRoute;

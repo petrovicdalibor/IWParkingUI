@@ -9,13 +9,38 @@ const useParkingLots = () => {
   const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
 
+  const token =
+    cookies.get("token") === undefined
+      ? null
+      : `Bearer ${cookies.get("token")}`;
+
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
-      .get("/api/ParkingLot/GetAll")
+      .get("/api/ParkingLot/GetAll", {
+        headers: {
+          Authorization: token,
+        },
+      })
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
 
         return res.data;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return fetchParkingLotsResult;
+  };
+
+  const fetchRequests = async () => {
+    const fetchParkingLotsResult = await axios
+      .get("/api/Request/GetAll", {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        return res.data.requests;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
@@ -71,6 +96,7 @@ const useParkingLots = () => {
       });
     return addFavoriteResult;
   };
+
   const removeFavorite = async (userId, parkingLotId) => {
     const removeFavoriteResult = await axios
       .delete(
@@ -95,6 +121,26 @@ const useParkingLots = () => {
     return removeFavoriteResult;
   };
 
+  const modifyRequest = async (id, action) => {
+    const modifyRequestResult = await axios
+      .put(
+        `/api/Request/Modify/${id}`,
+        { status: action },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return modifyRequestResult;
+  };
+
   const deactivateParkingLot = async (parkingLotId) => {
     const deactivateParkingLotResult = await axios
       .delete(`/api/ParkingLot/Deactivate/${parkingLotId}`, {
@@ -111,11 +157,56 @@ const useParkingLots = () => {
     return deactivateParkingLotResult;
   };
 
+  const addParkingLot = async (
+    name,
+    city,
+    zone,
+    address,
+    workingHourFrom,
+    workingHourTo,
+    capacityCar,
+    capacityAdaptedCar,
+    price,
+    userId
+  ) => {
+    const addFavoriteResult = await axios
+      .post(
+        `/api/ParkingLot/Create`,
+        {
+          name,
+          city,
+          zone,
+          address,
+          workingHourFrom,
+          workingHourTo,
+          capacityCar,
+          capacityAdaptedCar,
+          price,
+          userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return addFavoriteResult;
+  };
+
   return {
     fetchParkingLots,
+    fetchRequests,
     fetchFavoriteLots,
     addFavorite,
     removeFavorite,
+    addParkingLot,
+    modifyRequest,
     deactivateParkingLot,
   };
 };

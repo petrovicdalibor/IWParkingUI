@@ -2,11 +2,14 @@ import Layout from "../../layouts/Layout";
 import ProtectedRoute from "../../features/ProtectedRoute/ProtectedRoute";
 import Favorites from "../../pages/Favorites.jsx";
 import Home from "../../pages/Home.jsx";
+import Requests from "../../pages/Requests.jsx";
 import MyProfile from "../../pages/MyProfile.jsx";
 import Reservations from "../../pages/Reservations.jsx";
+import AddParking from "../../pages/AddParking.jsx";
 import Login from "../../pages/Login";
 import Signup from "../../pages/Signup";
 import UsersOnlyRoute from "../../features/ProtectedRoute/UsersOnlyRoute";
+import OwnersOnlyRoute from "../../features/ProtectedRoute/OwnersOnlyRoute";
 import AdminsOnlyRoute from "../../features/ProtectedRoute/AdminsOnlyRoute";
 import Users from "../../pages/Users";
 
@@ -42,7 +45,21 @@ const routesForUsersOnly = [
   },
 ];
 
-// routes accessible only to normal users
+// routes accessible only to owner users
+const routesForOwnersOnly = [
+  {
+    path: "/",
+    element: <OwnersOnlyRoute />,
+    children: [
+      {
+        path: "/add-parking",
+        element: <AddParking />,
+      },
+    ],
+  },
+];
+
+// routes accessible only to admin users
 const routesForAdminsOnly = [
   {
     path: "/",
@@ -55,6 +72,10 @@ const routesForAdminsOnly = [
       {
         path: "/favorites",
         element: <Favorites />,
+      },
+      {
+        path: "/requests",
+        element: <Requests />,
       },
     ],
   },
@@ -71,6 +92,7 @@ export const routesForAuthenticatedOnly = [
         element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
         children: [
           ...routesForUsersOnly,
+          ...routesForOwnersOnly,
           ...routesForAdminsOnly,
           {
             path: "/profile",

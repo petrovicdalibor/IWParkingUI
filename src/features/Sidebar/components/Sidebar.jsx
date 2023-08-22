@@ -130,7 +130,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           ) : (
             <></>
           )}
-          {userContext.role === "Admin" ? (
+          {userContext.role === "SuperAdmin" ? (
             adminItems.map((item) => {
               const active = item.path ? pathname === item.path : false;
 
@@ -180,6 +180,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           sx: {
             backgroundColor: "#F1F1F1",
             width: 255,
+            overflow: "hidden",
           },
         }}
         variant="permanent"
@@ -199,6 +200,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           sx: {
             backgroundColor: "#F1F1F1",
             width: open ? "255px" : "80px",
+            overflow: "hidden",
             transition: (theme) =>
               theme.transitions.create("width", {
                 duration: theme.transitions.duration.shorter,
