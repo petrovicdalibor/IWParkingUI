@@ -21,6 +21,7 @@ import { AuthContext } from "../../../context/authProvider";
 import useVehicles from "../../../common/hooks/useVehicles";
 
 import CloseIcon from "@mui/icons-material/Close";
+import { toastError, toastSuccess } from "../../../common/utils/toasts";
 
 const VehiclesGridItem = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("xl")]: {
@@ -58,13 +59,19 @@ const Vehicles = () => {
       setVehicleErrorType("error");
     } else {
       await addVehicle(plate, type)
-        .then((res) => {
-          setVehicleError(res);
-          setVehicleErrorType("success");
+        .then(() => {
+          const toastId = "add-vehicle";
+
+          toastSuccess("Vehicle plate successfully added.", {
+            toastId,
+          });
         })
-        .catch((res) => {
-          setVehicleError(res);
-          setVehicleErrorType("error");
+        .catch((err) => {
+          const toastId = "add-vehicle-err";
+
+          toastError(err, {
+            toastId,
+          });
         });
       setPlate("");
       setType("");
@@ -96,7 +103,6 @@ const Vehicles = () => {
                   vehicle={vehicle}
                   key={vehicle.id}
                   isPrimary={vehicle.isPrimary}
-                  // isPrimary={vehicle.isPrimary.toString()}
                 />
               ))
             ) : (

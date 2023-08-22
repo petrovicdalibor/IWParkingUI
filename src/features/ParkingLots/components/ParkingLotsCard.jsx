@@ -28,6 +28,11 @@ import { useContext } from "react";
 import { AuthContext } from "../../../context/authProvider";
 import theme from "../../../theme/Theme";
 import { useNavigate } from "react-router-dom";
+import {
+  toastError,
+  toastInfo,
+  toastSuccess,
+} from "../../../common/utils/toasts";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -77,11 +82,31 @@ const ParkingLotsCard = ({
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
 
-  const handleAddToFavorites = () => {
+  const handleAddToFavorites = async () => {
     if (isFavorite) {
-      removeFavorite(userContext.user.id, parking.id);
+      await removeFavorite(userContext.user.id, parking.id)
+        .then(() => {
+          const toastId = `remove-favorite-${parking.id}`;
+
+          toastInfo("Parking lot removed from favorites.", { toastId });
+        })
+        .catch((err) => {
+          const toastId = `remove-favorite-${parking.id}`;
+
+          toastError(err, { toastId });
+        });
     } else {
-      addFavorite(userContext.user.id, parking.id);
+      await addFavorite(userContext.user.id, parking.id)
+        .then(() => {
+          const toastId = `add-favorite-${parking.id}`;
+
+          toastInfo("Parking lot added to favorites.", { toastId });
+        })
+        .catch((err) => {
+          const toastId = `add-favorite-${parking.id}`;
+
+          toastError(err, { toastId });
+        });
     }
   };
 
@@ -90,12 +115,34 @@ const ParkingLotsCard = ({
   };
 
   const approveParkingHandler = async () => {
-    await modifyRequest(requestId, "Approved");
-    navigate("/");
+    await modifyRequest(requestId, "Approved")
+      .then((res) => {
+        const toastId = "modify-request";
+
+        toastSuccess(res, { toastId });
+
+        navigate("/");
+      })
+      .catch((err) => {
+        const toastId = "modify-request";
+
+        toastError(err, { toastId });
+      });
   };
   const declineParkingHandler = async () => {
-    await modifyRequest(requestId, "Declined");
-    navigate("/");
+    await modifyRequest(requestId, "Declined")
+      .then((res) => {
+        const toastId = "modify-request";
+
+        toastSuccess(res, { toastId });
+
+        navigate("/");
+      })
+      .catch((err) => {
+        const toastId = "modify-request";
+
+        toastError(err, { toastId });
+      });
   };
 
   return (
