@@ -32,6 +32,7 @@ import {
   confirmPasswordValidator,
   passwordValidator,
 } from "../common/utils/validators";
+import { toastError, toastSuccess } from "../common/utils/toasts";
 
 const Container = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {
@@ -98,7 +99,6 @@ function Signup() {
   const handleSubmit = async (e) => {
     // Handling form submission logic
     e.preventDefault();
-    console.log(name, surname, email);
 
     if (
       name === "" ||
@@ -120,11 +120,16 @@ function Signup() {
     } else {
       await signUp(name, surname, email, password, confirmPassword, phone, role)
         .then(() => {
+          const toastId = "signup-success";
+
+          toastSuccess("Successfully signed up.", { toastId });
+
           navigate("/login", { replace: true });
         })
         .catch((err) => {
-          setError(err);
-          setErrorOpen(true);
+          const toastId = "signup-error";
+
+          toastError(err, { toastId });
         });
     }
   };

@@ -38,14 +38,32 @@ const UserCard = ({ user, handleDeactivateUser }) => {
           justifyContent="space-between"
         >
           <Grid item display="flex" flexDirection="column" gap={1}>
-            <Grid item display="flex" flexDirection="row" gap={4}>
+            <Grid item display="flex" flexDirection="row" gap={1}>
               <Grid item>
                 <Typography variant="h6">
                   {user.name + " " + user.surname}
                 </Typography>
               </Grid>
               <Grid item alignSelf="center">
-                <Badge badgeContent={"User"} color="success" />
+                <Badge
+                  badgeContent={user.role}
+                  color={
+                    user.role === "SuperAdmin"
+                      ? "primary"
+                      : user.role === "Owner"
+                      ? "warning"
+                      : "success"
+                  }
+                  componentsProps={{
+                    badge: {
+                      style: {
+                        position: "relative",
+                        transform: "none",
+                        WebkitTransform: "none",
+                      },
+                    },
+                  }}
+                />
               </Grid>
             </Grid>
             <Grid item display="flex" flexDirection="row" gap={4}>

@@ -210,6 +210,8 @@ const ParkingLotsCard = ({
                     badgeContent={
                       parking.status === 1
                         ? "Pending"
+                        : parking.isDeactivated
+                        ? "Deactivated"
                         : parking.status === 2
                         ? "Active"
                         : "Declined"
@@ -217,6 +219,8 @@ const ParkingLotsCard = ({
                     color={
                       parking.status === 1
                         ? "warning"
+                        : parking.isDeactivated
+                        ? "primary"
                         : parking.status === 2
                         ? "success"
                         : "primary"
