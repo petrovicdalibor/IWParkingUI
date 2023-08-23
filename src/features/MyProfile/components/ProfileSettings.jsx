@@ -18,6 +18,9 @@ import { stringAvatar } from "../../../common/utils/AvatarUtil";
 import { AuthContext } from "../../../context/authProvider";
 import useAuth from "../../../common/hooks/useAuth";
 
+import useConfirm from "../../../common/hooks/useConfirm";
+import ConfirmDialog from "../../ConfirmDialog/components/ConfirmDialog";
+
 import CloseIcon from "@mui/icons-material/Close";
 import { confirmPasswordValidator } from "../../../common/utils/validators";
 import { toastError, toastSuccess } from "../../../common/utils/toasts";
@@ -58,6 +61,7 @@ const ProfileSettings = () => {
   const isXl = useMediaQuery((theme) => theme.breakpoints.only("xl"));
   const userContext = useContext(AuthContext);
   const { updateUserInfo, changePassword, deactivateUser, logout } = useAuth();
+  const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -129,23 +133,29 @@ const ProfileSettings = () => {
   };
 
   const handleDeactivateUser = async () => {
-    await deactivateUser()
-      .then((res) => {
-        logout();
+    const confirmDialog = await open(
+      `Are you sure you want to deactivate your account?`
+    );
 
-        const toastId = "deactivate-user";
+    if (confirmDialog) {
+      await deactivateUser()
+        .then((res) => {
+          logout();
 
-        toastSuccess(res.data.message, { toastId });
+          const toastId = "deactivate-user";
 
-        return res.data.message;
-      })
-      .catch((err) => {
-        const toastId = "deactivate-user-err";
+          toastSuccess(res.data.message, { toastId });
 
-        toastError(err, { toastId });
+          return res.data.message;
+        })
+        .catch((err) => {
+          const toastId = "deactivate-user-err";
 
-        return err;
-      });
+          toastError(err, { toastId });
+
+          return err;
+        });
+    }
   };
 
   useEffect(() => {
@@ -604,6 +614,7 @@ const ProfileSettings = () => {
           </Box>
         </Grid>
       </SettingsBox>
+      <ConfirmDialogModal />
     </>
   );
 };
