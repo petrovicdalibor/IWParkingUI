@@ -2,6 +2,7 @@ import { Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import useParkingLots from "../common/hooks/useParkingLots";
 import ParkingLotsCard from "../features/ParkingLots/components/ParkingLotsCard";
+import { toastError } from "../common/utils/toasts";
 
 const Requests = () => {
   const { fetchRequests } = useParkingLots();
@@ -13,7 +14,11 @@ const Requests = () => {
       .then((res) => {
         setRequests(res);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const toastId = "fetchRequest-error";
+
+        toastError(err, { toastId });
+      });
   };
 
   useEffect(() => {
