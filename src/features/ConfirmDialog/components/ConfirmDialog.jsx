@@ -16,7 +16,6 @@ const ConfirmDialog = ({ onConfirm, onCancel, open, text }) => {
 
   return (
     <Dialog
-      //   fullScreen={fullScreen}
       open={open}
       onClose={onCancel}
       aria-labelledby="responsive-dialog-title"
