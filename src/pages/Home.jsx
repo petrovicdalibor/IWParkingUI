@@ -6,39 +6,48 @@ import { ParkingContext } from "../context/parkingProvider";
 import { AuthContext } from "../context/authProvider";
 import { Link } from "react-router-dom";
 import { toastError, toastSuccess } from "../common/utils/toasts";
+import useConfirm from "../common/hooks/useConfirm";
+import ConfirmDialog from "../features/ConfirmDialog/components/ConfirmDialog";
 
 const Home = () => {
   const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
   const { fetchParkingLots, deactivateParkingLot } = useParkingLots();
+  const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   useEffect(() => {
     fetchParkingLots();
   }, [userContext.role]);
 
   const handleDeactivateParking = async (parking) => {
-    const parkingLotIndex = parkingContext.parkingLots.indexOf(parking);
-    const array = [...parkingContext.parkingLots];
+    const confirmDialog = await open(
+      `Are you sure you want to deactivate ${parking.name}?`
+    );
 
-    array[parkingLotIndex] = {
-      ...array[parkingLotIndex],
-      isDeactivated: true,
-    };
-    parkingContext.setParkingLots(array);
+    if (confirmDialog) {
+      const parkingLotIndex = parkingContext.parkingLots.indexOf(parking);
+      const array = [...parkingContext.parkingLots];
 
-    await deactivateParkingLot(parking.id)
-      .then((res) => {
-        const toastId = "deactivate-parking";
+      array[parkingLotIndex] = {
+        ...array[parkingLotIndex],
+        isDeactivated: true,
+      };
+      parkingContext.setParkingLots(array);
 
-        toastSuccess(res, { toastId });
-      })
-      .catch((err) => {
-        const toastId = "deactivate-parking";
+      await deactivateParkingLot(parking.id)
+        .then((res) => {
+          const toastId = "deactivate-parking";
 
-        toastError(err, { toastId });
-      });
+          toastSuccess(res, { toastId });
+        })
+        .catch((err) => {
+          const toastId = "deactivate-parking";
 
-    fetchParkingLots();
+          toastError(err, { toastId });
+        });
+
+      fetchParkingLots();
+    }
   };
 
   return (
@@ -76,6 +85,7 @@ const Home = () => {
           );
         })}
       </Grid>
+      <ConfirmDialogModal />
     </>
   );
 };

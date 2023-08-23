@@ -3,10 +3,13 @@ import UserCard from "../features/Users/components/UserCard";
 import { useEffect, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
 import { toastError, toastSuccess } from "../common/utils/toasts";
+import useConfirm from "../common/hooks/useConfirm";
+import ConfirmDialog from "../features/ConfirmDialog/components/ConfirmDialog";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const { fetchAllUsers, deactivateUserById } = useAuth();
+  const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const fetchUsers = () => {
     fetchAllUsers().then((res) => setUsers(res.data.users));
@@ -17,28 +20,33 @@ const Users = () => {
   }, []);
 
   const handleDeactivateUser = async (user) => {
-    const userIndex = users.indexOf(user);
-    const array = [...users];
+    const confirmDialog = await open(
+      `Are you sure you want to deactivate ${user.name}?`
+    );
 
-    array[userIndex] = {
-      ...array[userIndex],
-      isDeactivated: true,
-    };
-    setUsers(array);
+    if (confirmDialog) {
+      const userIndex = users.indexOf(user);
+      const array = [...users];
 
-    await deactivateUserById(user.id)
-      .then((res) => {
-        const toastId = "deactivate-user";
+      array[userIndex] = {
+        ...array[userIndex],
+        isDeactivated: true,
+      };
+      setUsers(array);
 
-        toastSuccess(res.data.message, { toastId });
-      })
-      .catch((err) => {
-        const toastId = "deactivate-user";
+      await deactivateUserById(user.id)
+        .then((res) => {
+          const toastId = "deactivate-user";
 
-        toastError(err, { toastId });
-      });
+          toastSuccess(res.data.message, { toastId });
+        })
+        .catch((err) => {
+          const toastId = "deactivate-user";
 
-    fetchUsers();
+          toastError(err, { toastId });
+        });
+      fetchUsers();
+    }
   };
 
   return (
@@ -58,6 +66,7 @@ const Users = () => {
           />
         ))}
       </Grid>
+      <ConfirmDialogModal />
     </>
   );
 };

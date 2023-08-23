@@ -33,6 +33,8 @@ import {
   toastInfo,
   toastSuccess,
 } from "../../../common/utils/toasts";
+import useConfirm from "../../../common/hooks/useConfirm";
+import ConfirmDialog from "../../ConfirmDialog/components/ConfirmDialog";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -81,6 +83,7 @@ const ParkingLotsCard = ({
   const navigate = useNavigate();
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
+  const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const handleAddToFavorites = async () => {
     if (isFavorite) {
@@ -115,34 +118,46 @@ const ParkingLotsCard = ({
   };
 
   const approveParkingHandler = async () => {
-    await modifyRequest(requestId, "Approved")
-      .then((res) => {
-        const toastId = "modify-request";
+    const confirmDialog = await open(
+      `Are you sure you want to approve ${parking.name}?`
+    );
 
-        toastSuccess(res, { toastId });
+    if (confirmDialog) {
+      await modifyRequest(requestId, "Approved")
+        .then((res) => {
+          const toastId = "modify-request";
 
-        navigate("/");
-      })
-      .catch((err) => {
-        const toastId = "modify-request";
+          toastSuccess(res, { toastId });
 
-        toastError(err, { toastId });
-      });
+          navigate("/");
+        })
+        .catch((err) => {
+          const toastId = "modify-request";
+
+          toastError(err, { toastId });
+        });
+    }
   };
   const declineParkingHandler = async () => {
-    await modifyRequest(requestId, "Declined")
-      .then((res) => {
-        const toastId = "modify-request";
+    const confirmDialog = await open(
+      `Are you sure you want to decline ${parking.name}?`
+    );
 
-        toastSuccess(res, { toastId });
+    if (confirmDialog) {
+      await modifyRequest(requestId, "Declined")
+        .then((res) => {
+          const toastId = "modify-request";
 
-        navigate("/");
-      })
-      .catch((err) => {
-        const toastId = "modify-request";
+          toastSuccess(res, { toastId });
 
-        toastError(err, { toastId });
-      });
+          navigate("/");
+        })
+        .catch((err) => {
+          const toastId = "modify-request";
+
+          toastError(err, { toastId });
+        });
+    }
   };
 
   return (
@@ -466,6 +481,7 @@ const ParkingLotsCard = ({
           }}
         />
       </Hidden>
+      <ConfirmDialogModal />
     </>
   );
 };
