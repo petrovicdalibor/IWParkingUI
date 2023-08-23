@@ -25,6 +25,7 @@ import PropTypes from "prop-types";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
+import { toastError, toastSuccess } from "../../../common/utils/toasts";
 
 const RequestBox = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -64,10 +65,45 @@ const RequestForm = ({ isEdit }) => {
     dayjs.utc("2023-01-01T23:00").tz("Europe/Belgrade")
   );
 
+  const handleCapacityCarChange = (e) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setCapacityCar(e.target.value);
+    }
+  };
+
+  const handleCapacityAdaptedCarChange = (e) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setCapacityAdaptedCar(e.target.value);
+    }
+  };
+
+  const handlePriceChange = (e) => {
+    const regex = /^[0-9\b]+$/;
+    if (e.target.value === "" || regex.test(e.target.value)) {
+      setPrice(e.target.value);
+    }
+  };
+
   const handleParkingEdit = () => {};
 
   const handleParkingAdd = async (e) => {
     e.preventDefault();
+
+    if (
+      name === "" ||
+      price === "" ||
+      zone === "" ||
+      address === "" ||
+      capacityCar === "" ||
+      capacityAdaptedCar === ""
+    ) {
+      const toastId = "parking-add-err";
+      toastError("All field are required.", { toastId });
+      return;
+    }
+
     const workFromParse = workFrom
       .tz("Europe/Belgrade")
       .toDate()
@@ -79,9 +115,20 @@ const RequestForm = ({ isEdit }) => {
       .toString()
       .split(" ")[4];
 
+    console.log(
+      name,
+      city,
+      zone,
+      address,
+      workFromParse,
+      workToParse,
+      capacityCar,
+      capacityAdaptedCar,
+      price
+    );
     await addParkingLot(
       name,
-      price,
+      city,
       zone,
       address,
       workFromParse,
@@ -90,7 +137,19 @@ const RequestForm = ({ isEdit }) => {
       capacityAdaptedCar,
       price,
       decodedToken.Id
-    ).then(() => navigate("/"));
+    )
+      .then(() => {
+        const toastId = "parking-add-success";
+        toastSuccess("Successfully added a new Parking Lot Request.", {
+          toastId,
+        });
+
+        navigate("/");
+      })
+      .catch((err) => {
+        const toastId = "parking-add-error";
+        toastError(err, { toastId });
+      });
   };
 
   return (
@@ -133,7 +192,7 @@ const RequestForm = ({ isEdit }) => {
             <Grid item xs={12} md={4} display={"flex"} gap={2}>
               <TextField
                 label="Price"
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={handlePriceChange}
                 color="secondary"
                 variant="filled"
                 size={isXs ? "small" : "normal"}
@@ -184,10 +243,12 @@ const RequestForm = ({ isEdit }) => {
                   onChange={(e) => setCity(e.target.value)}
                 >
                   <MenuItem value="">
-                    <em>None</em>
+                    <em>&#8205;</em>
                   </MenuItem>
-                  <MenuItem value="Car">Car</MenuItem>
-                  <MenuItem value="Adapted Car">Adapted Car</MenuItem>
+                  <MenuItem value="Skopje">Skopje</MenuItem>
+                  <MenuItem value="Bitola">Bitola</MenuItem>
+                  <MenuItem value="Prilep">Prilep</MenuItem>
+                  <MenuItem value="Kumanovo">Kumanovo</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -207,10 +268,11 @@ const RequestForm = ({ isEdit }) => {
                   onChange={(e) => setZone(e.target.value)}
                 >
                   <MenuItem value="">
-                    <em>None</em>
+                    <em>&#8205;</em>
                   </MenuItem>
-                  <MenuItem value="Car">Car</MenuItem>
-                  <MenuItem value="Adapted Car">Adapted Car</MenuItem>
+                  <MenuItem value="Zone 1">Zone 1</MenuItem>
+                  <MenuItem value="Zone 2">Zone 2</MenuItem>
+                  <MenuItem value="Zone 3">Zone 3</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -314,7 +376,7 @@ const RequestForm = ({ isEdit }) => {
               <Grid item xs={12} sm={6} display="flex" gap={2}>
                 <TextField
                   label="Car Capacity"
-                  onChange={(e) => setCapacityCar(e.target.value)}
+                  onChange={handleCapacityCarChange}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
@@ -327,7 +389,7 @@ const RequestForm = ({ isEdit }) => {
               <Grid item xs={12} sm={6} display="flex" gap={2}>
                 <TextField
                   label="Adapted Car Capacity"
-                  onChange={(e) => setCapacityAdaptedCar(e.target.value)}
+                  onChange={handleCapacityAdaptedCarChange}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
@@ -356,7 +418,7 @@ const RequestForm = ({ isEdit }) => {
               fullWidth={isXs ? true : false}
               type="submit"
             >
-              Save Changes
+              {isEdit ? "Save Changes" : "Submit Request"}
             </Button>
           </Grid>
         </Box>
