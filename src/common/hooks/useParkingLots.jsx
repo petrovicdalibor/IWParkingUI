@@ -194,7 +194,7 @@ const useParkingLots = () => {
         return res.data.message;
       })
       .catch((err) => {
-        throw err.response.data.Errors[0];
+        throw err.response.data.errors[0];
       });
     return addFavoriteResult;
   };

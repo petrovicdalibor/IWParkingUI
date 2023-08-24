@@ -17,7 +17,6 @@ export const SidebarItem = ({
           target: "_blank",
         }
       : {
-          // TODO: Change to Link when implementing react-router
           component: Link,
           to: path,
         }
@@ -79,7 +78,6 @@ export const SidebarItem = ({
             ...(active && {
               color: "primary.main",
             }),
-            // visibility: open ? "visible" : "hidden",
           }}
         >
           {title}
