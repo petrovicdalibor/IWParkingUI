@@ -223,19 +223,19 @@ const ParkingLotsCard = ({
                 userContext.role === "SuperAdmin" ? (
                   <Badge
                     badgeContent={
-                      parking.status === 1
-                        ? "Pending"
-                        : parking.isDeactivated
+                      parking.isDeactivated
                         ? "Deactivated"
+                        : parking.status === 1
+                        ? "Pending"
                         : parking.status === 2
                         ? "Active"
                         : "Declined"
                     }
                     color={
-                      parking.status === 1
-                        ? "warning"
-                        : parking.isDeactivated
+                      parking.isDeactivated
                         ? "primary"
+                        : parking.status === 1
+                        ? "warning"
                         : parking.status === 2
                         ? "success"
                         : "primary"
