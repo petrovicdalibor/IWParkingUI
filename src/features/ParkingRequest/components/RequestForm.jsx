@@ -115,17 +115,6 @@ const RequestForm = ({ isEdit }) => {
       .toString()
       .split(" ")[4];
 
-    console.log(
-      name,
-      city,
-      zone,
-      address,
-      workFromParse,
-      workToParse,
-      capacityCar,
-      capacityAdaptedCar,
-      price
-    );
     await addParkingLot(
       name,
       city,
