@@ -87,7 +87,7 @@ const ParkingLotsCard = ({
 
   const handleAddToFavorites = async () => {
     if (isFavorite) {
-      await removeFavorite(userContext.user.id, parking.id)
+      await removeFavorite(parking.id)
         .then(() => {
           const toastId = `remove-favorite-${parking.id}`;
 
@@ -99,7 +99,7 @@ const ParkingLotsCard = ({
           toastError(err, { toastId });
         });
     } else {
-      await addFavorite(userContext.user.id, parking.id)
+      await addFavorite(parking.id)
         .then(() => {
           const toastId = `add-favorite-${parking.id}`;
 

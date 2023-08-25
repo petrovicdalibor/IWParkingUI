@@ -13,6 +13,7 @@ const Requests = () => {
     await fetchRequests()
       .then((res) => {
         setRequests(res);
+        // console.log(res);
       })
       .catch((err) => {
         const toastId = "fetchRequest-error";
@@ -36,7 +37,7 @@ const Requests = () => {
         {requests.map((request) => {
           return (
             <ParkingLotsCard
-              parking={request.parkingLot}
+              parking={request.parkingLotTemp}
               requestId={request.id}
               key={request.id}
               owner={request.user}

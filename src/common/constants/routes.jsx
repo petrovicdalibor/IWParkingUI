@@ -55,6 +55,10 @@ const routesForOwnersOnly = [
         path: "/add-parking",
         element: <AddParking />,
       },
+      {
+        path: "/requests",
+        element: <Requests />,
+      },
     ],
   },
 ];

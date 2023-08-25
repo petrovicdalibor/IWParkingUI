@@ -48,4 +48,9 @@ export const ownerItems = [
     path: "/",
     icon: <LuParkingCircle size={23} />,
   },
+  {
+    title: "Requests",
+    path: "/requests",
+    icon: <BsCardText size={23} />,
+  },
 ];

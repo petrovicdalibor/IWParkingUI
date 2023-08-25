@@ -26,7 +26,7 @@ const Home = () => {
   const { fetchParkingLots, deactivateParkingLot } = useParkingLots();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
-  const [selectedStatus, setSelectedStatus] = useState([0]);
+  const [selectedStatus, setSelectedStatus] = useState(0);
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
@@ -38,32 +38,22 @@ const Home = () => {
   }, [parkingContext.parkingLots]);
 
   const handleStatusChange = (e) => {
-    const {
-      target: { value },
-    } = e;
-
-    if (value.length === 0 || (value.length > 1 && value.at(-1) === 0)) {
-      setSelectedStatus([0]);
+    setSelectedStatus(e.target.value);
+    if (e.target.value === 0 || userContext.role === "User") {
       setParkings(parkingContext.parkingLots);
       return;
     }
 
-    setSelectedStatus(value.filter((id) => id !== 0));
-
     setParkings(
       parkingContext.parkingLots.filter((parking) => {
-        console.log({ value, parking: parking.name });
         return (
-          (value.includes(1) &&
-            parking.status === 1 &&
-            !parking.isDeactivated) ||
-          (value.includes(2) &&
+          (e.target.value === 1 &&
             parking.status === 2 &&
             !parking.isDeactivated) ||
-          (value.includes(3) &&
-            parking.status === 3 &&
-            !parking.isDeactivated) ||
-          (value.includes(4) && parking.isDeactivated)
+          (e.target.value === 2 && parking.isDeactivated) ||
+          (e.target.value === 3 &&
+            parking.status === 1 &&
+            !parking.isDeactivated)
         );
       })
     );
@@ -135,13 +125,13 @@ const Home = () => {
               value={selectedStatus}
               onChange={handleStatusChange}
               label="City"
-              multiple
             >
               <MenuItem value={0}>All</MenuItem>
-              <MenuItem value={2}>Active</MenuItem>
-              <MenuItem value={4}>Deactivated</MenuItem>
-              <MenuItem value={3}>Declined</MenuItem>
-              <MenuItem value={1}>Pending</MenuItem>
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={2}>Deactivated</MenuItem>
+              {userContext.role === "Owner" && (
+                <MenuItem value={3}>Pending</MenuItem>
+              )}
             </Select>
           </FormControl>
         </Grid>
@@ -150,20 +140,35 @@ const Home = () => {
       )}
 
       <Grid container>
-        {parkings.map((parking) => {
-          const isFavorite = userContext.favorites.some(
-            (fav) => fav.id === parking.id
-          );
+        {userContext.role === "User"
+          ? parkingContext.parkingLots.map((parking) => {
+              const isFavorite = userContext.favorites.some(
+                (fav) => fav.id === parking.id
+              );
 
-          return (
-            <ParkingLotsCard
-              handleDeactivateParking={handleDeactivateParking}
-              isFavorite={isFavorite}
-              parking={parking}
-              key={parking.id}
-            />
-          );
-        })}
+              return (
+                <ParkingLotsCard
+                  handleDeactivateParking={handleDeactivateParking}
+                  isFavorite={isFavorite}
+                  parking={parking}
+                  key={parking.id}
+                />
+              );
+            })
+          : parkings.map((parking) => {
+              const isFavorite = userContext.favorites.some(
+                (fav) => fav.id === parking.id
+              );
+
+              return (
+                <ParkingLotsCard
+                  handleDeactivateParking={handleDeactivateParking}
+                  isFavorite={isFavorite}
+                  parking={parking}
+                  key={parking.id}
+                />
+              );
+            })}
       </Grid>
       <ConfirmDialogModal />
     </>

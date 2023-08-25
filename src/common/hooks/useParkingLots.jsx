@@ -16,7 +16,7 @@ const useParkingLots = () => {
 
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
-      .get("/api/ParkingLot/GetAll", {
+      .get("/api/ParkingLot/GetAll?pageNumber=1&pageSize=5&city=Skopje", {
         headers: {
           Authorization: token,
         },
@@ -27,7 +27,7 @@ const useParkingLots = () => {
         return res.data;
       })
       .catch((err) => {
-        throw err.response.data.Errors[0];
+        throw err.response.data.errors[0];
       });
     return fetchParkingLotsResult;
   };
@@ -43,15 +43,15 @@ const useParkingLots = () => {
         return res.data.requests;
       })
       .catch((err) => {
-        throw err.response.data.Errors[0];
+        throw err.response.data.errors[0];
       });
     return fetchParkingLotsResult;
   };
 
-  const fetchFavoriteLots = async (userId) => {
+  const fetchFavoriteLots = async () => {
     const addToFavoritesResult = await axios
       .get(
-        `/api/ParkingLot/GetUserFavouriteParkingLots/${userId}`,
+        `/api/ParkingLot/GetUserFavouriteParkingLots`,
 
         {
           headers: {
@@ -69,14 +69,11 @@ const useParkingLots = () => {
     return addToFavoritesResult;
   };
 
-  const addFavorite = async (userId, parkingLotId) => {
+  const addFavorite = async (parkingLotId) => {
     const addFavoriteResult = await axios
       .post(
-        `/api/ParkingLot/MakeParkingLotFavourite/${userId},${parkingLotId}`,
-        {
-          userId,
-          parkingLotId,
-        },
+        `/api/ParkingLot/MakeParkingLotFavourite/${parkingLotId}`,
+        { parkingLotId },
         {
           headers: {
             Authorization: `Bearer ${cookies.get("token")}`,
@@ -97,16 +94,13 @@ const useParkingLots = () => {
     return addFavoriteResult;
   };
 
-  const removeFavorite = async (userId, parkingLotId) => {
+  const removeFavorite = async (parkingLotId) => {
     const removeFavoriteResult = await axios
-      .delete(
-        `/api/ParkingLot/RemoveParkingLotFavourite/${userId},${parkingLotId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${cookies.get("token")}`,
-          },
-        }
-      )
+      .delete(`/api/ParkingLot/RemoveParkingLotFavourite/${parkingLotId}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
       .then((res) => {
         const favoritesArray = userContext.favorites.filter((favorite) => {
           return favorite.id !== parkingLotId;
