@@ -109,7 +109,7 @@ const Home = () => {
         )}
       </Grid>
       {userContext.role === "Owner" || userContext.role === "SuperAdmin" ? (
-        <Grid item sx={{ minWidth: "150px", maxWidth: "180px" }}>
+        <Grid item mt={1} sx={{ minWidth: "150px", maxWidth: "180px" }}>
           <FormControl
             variant="filled"
             size={isXs ? "small" : "normal"}
@@ -129,9 +129,6 @@ const Home = () => {
               <MenuItem value={0}>All</MenuItem>
               <MenuItem value={1}>Active</MenuItem>
               <MenuItem value={2}>Deactivated</MenuItem>
-              {userContext.role === "Owner" && (
-                <MenuItem value={3}>Pending</MenuItem>
-              )}
             </Select>
           </FormControl>
         </Grid>

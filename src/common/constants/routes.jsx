@@ -12,6 +12,7 @@ import UsersOnlyRoute from "../../features/ProtectedRoute/UsersOnlyRoute";
 import OwnersOnlyRoute from "../../features/ProtectedRoute/OwnersOnlyRoute";
 import AdminsOnlyRoute from "../../features/ProtectedRoute/AdminsOnlyRoute";
 import Users from "../../pages/Users";
+import AdminsAndOwnersOnlyRoute from "../../features/ProtectedRoute/AdminsAndOwnersOnlyRoute";
 
 // routes accessible to all users
 export const routesForPublic = [
@@ -55,10 +56,6 @@ const routesForOwnersOnly = [
         path: "/add-parking",
         element: <AddParking />,
       },
-      {
-        path: "/requests",
-        element: <Requests />,
-      },
     ],
   },
 ];
@@ -77,6 +74,15 @@ const routesForAdminsOnly = [
         path: "/favorites",
         element: <Favorites />,
       },
+    ],
+  },
+];
+
+const routesForAdminsAndOwnersOnly = [
+  {
+    path: "/",
+    element: <AdminsAndOwnersOnlyRoute />,
+    children: [
       {
         path: "/requests",
         element: <Requests />,
@@ -96,6 +102,7 @@ export const routesForAuthenticatedOnly = [
         element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
         children: [
           ...routesForUsersOnly,
+          ...routesForAdminsAndOwnersOnly,
           ...routesForOwnersOnly,
           ...routesForAdminsOnly,
           {

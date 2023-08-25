@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import useParkingLots from "../common/hooks/useParkingLots";
 import ParkingLotsCard from "../features/ParkingLots/components/ParkingLotsCard";
@@ -8,12 +8,13 @@ const Requests = () => {
   const { fetchRequests } = useParkingLots();
 
   const [requests, setRequests] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleFetchRequests = async () => {
     await fetchRequests()
       .then((res) => {
         setRequests(res);
-        // console.log(res);
+        setIsLoading(false);
       })
       .catch((err) => {
         const toastId = "fetchRequest-error";
@@ -33,7 +34,24 @@ const Requests = () => {
         </Grid>
       </Grid>
 
-      <Grid container>
+      <Grid
+        container
+        display={"flex"}
+        justifyContent={isLoading && "center"}
+        alignItems={isLoading && "center"}
+        height={isLoading && "60vh"}
+      >
+        {isLoading && (
+          <Grid
+            item
+            alignContent={"center"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            alignSelf={"center"}
+          >
+            <CircularProgress />
+          </Grid>
+        )}
         {requests.map((request) => {
           return (
             <ParkingLotsCard
