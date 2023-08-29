@@ -4,6 +4,7 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  Pagination,
   Select,
   Typography,
   useMediaQuery,
@@ -166,6 +167,10 @@ const Home = () => {
                 />
               );
             })}
+
+        <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
+          <Pagination count={10} color="primary" />
+        </Grid>
       </Grid>
       <ConfirmDialogModal />
     </>

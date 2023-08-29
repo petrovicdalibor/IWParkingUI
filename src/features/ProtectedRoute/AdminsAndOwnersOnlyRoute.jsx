@@ -8,9 +8,6 @@ const AdminsAndOwnersOnlyRoute = () => {
   const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
   if (decodedToken.Role === "User") {
-    {
-      console.log(decodedToken.Role);
-    }
     return <Navigate to="/" />;
   }
 

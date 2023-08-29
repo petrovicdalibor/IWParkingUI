@@ -16,7 +16,7 @@ const useParkingLots = () => {
 
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
-      .get("/api/ParkingLot/GetAll?pageNumber=1&pageSize=5&city=Skopje", {
+      .post("/api/ParkingLot/GetAll?pageNumber=1&pageSize=5", {
         headers: {
           Authorization: token,
         },

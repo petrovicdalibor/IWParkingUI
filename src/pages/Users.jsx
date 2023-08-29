@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Typography } from "@mui/material";
+import { CircularProgress, Grid, Pagination, Typography } from "@mui/material";
 import UserCard from "../features/Users/components/UserCard";
 import { useEffect, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
@@ -69,7 +69,14 @@ const Users = () => {
         alignItems={isLoading && "center"}
         height={isLoading && "60vh"}
       >
-        {isLoading && (
+        {users.map((user) => (
+          <UserCard
+            key={user.id}
+            user={user}
+            handleDeactivateUser={handleDeactivateUser}
+          />
+        ))}
+        {isLoading ? (
           <Grid
             item
             alignContent={"center"}
@@ -79,14 +86,11 @@ const Users = () => {
           >
             <CircularProgress />
           </Grid>
+        ) : (
+          <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
+            <Pagination count={10} color="primary" />
+          </Grid>
         )}
-        {users.map((user) => (
-          <UserCard
-            key={user.id}
-            user={user}
-            handleDeactivateUser={handleDeactivateUser}
-          />
-        ))}
       </Grid>
       <ConfirmDialogModal />
     </>
