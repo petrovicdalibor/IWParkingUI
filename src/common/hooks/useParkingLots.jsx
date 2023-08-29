@@ -32,6 +32,23 @@ const useParkingLots = () => {
     return fetchParkingLotsResult;
   };
 
+  const fetchParkingLot = async (id) => {
+    const fetchParkingLotResult = await axios
+      .get(`/api/ParkingLot/Get/${id}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        // console.log(res);
+        return res.data.parkingLot;
+      })
+      .catch((err) => {
+        throw err.response.data.errors[0];
+      });
+    return fetchParkingLotResult;
+  };
+
   const fetchRequests = async () => {
     const fetchParkingLotsResult = await axios
       .get("/api/Request/GetAll", {
@@ -160,10 +177,9 @@ const useParkingLots = () => {
     workingHourTo,
     capacityCar,
     capacityAdaptedCar,
-    price,
-    userId
+    price
   ) => {
-    const addFavoriteResult = await axios
+    const addParkingLotResult = await axios
       .post(
         `/api/ParkingLot/Create`,
         {
@@ -176,7 +192,6 @@ const useParkingLots = () => {
           capacityCar,
           capacityAdaptedCar,
           price,
-          userId,
         },
         {
           headers: {
@@ -190,16 +205,59 @@ const useParkingLots = () => {
       .catch((err) => {
         throw err.response.data.errors[0];
       });
-    return addFavoriteResult;
+    return addParkingLotResult;
+  };
+
+  const editParkingLot = async (
+    name,
+    city,
+    zone,
+    address,
+    workingHourFrom,
+    workingHourTo,
+    capacityCar,
+    capacityAdaptedCar,
+    price,
+    parkingLotId
+  ) => {
+    const editParkingLotResult = await axios
+      .put(
+        `/api/ParkingLot/Update/${parkingLotId}`,
+        {
+          name,
+          city,
+          zone,
+          address,
+          workingHourFrom,
+          workingHourTo,
+          capacityCar,
+          capacityAdaptedCar,
+          price,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return editParkingLotResult;
   };
 
   return {
     fetchParkingLots,
+    fetchParkingLot,
     fetchRequests,
     fetchFavoriteLots,
     addFavorite,
     removeFavorite,
     addParkingLot,
+    editParkingLot,
     modifyRequest,
     deactivateParkingLot,
   };

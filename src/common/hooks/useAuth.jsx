@@ -247,7 +247,8 @@ const useAuth = () => {
   };
 
   const logout = () => {
-    cookies.remove("token");
+    cookies.remove("token", { path: "/" });
+
     userContext.setIsLoggedIn(false);
     userContext.setVehicles([]);
     userContext.setFavorites([]);

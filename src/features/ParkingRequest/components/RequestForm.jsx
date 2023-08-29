@@ -20,12 +20,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import { BsPSquare } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import useParkingLots from "../../../common/hooks/useParkingLots";
-import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
+// import Cookies from "universal-cookie";
+import { useNavigate, useParams } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../common/utils/toasts";
+import useParkingLots from "../../../common/hooks/useParkingLots";
 
 const RequestBox = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -37,17 +37,15 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Belgrade");
 
-const RequestForm = ({ isEdit }) => {
-  const cookies = new Cookies();
-  const token = cookies.get("token");
-  const decodedToken = JSON.parse(atob(token.split(".")[1]));
+const RequestForm = ({ parkingLot }) => {
+  const location = useParams();
 
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const navigate = useNavigate();
 
-  const { addParkingLot } = useParkingLots();
+  const { addParkingLot, editParkingLot } = useParkingLots();
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -86,9 +84,7 @@ const RequestForm = ({ isEdit }) => {
     }
   };
 
-  const handleParkingEdit = () => {};
-
-  const handleParkingAdd = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -115,34 +111,80 @@ const RequestForm = ({ isEdit }) => {
       .toString()
       .split(" ")[4];
 
-    await addParkingLot(
-      name,
-      city,
-      zone,
-      address,
-      workFromParse,
-      workToParse,
-      capacityCar,
-      capacityAdaptedCar,
-      price,
-      decodedToken.Id
-    )
-      .then(() => {
-        const toastId = "parking-add-success";
-        toastSuccess("Successfully added a new Parking Lot Request.", {
-          toastId,
-        });
+    if (parkingLot.id) {
+      await editParkingLot(
+        name,
+        city,
+        zone,
+        address,
+        workFromParse,
+        workToParse,
+        capacityCar,
+        capacityAdaptedCar,
+        price,
+        parkingLot.id
+      )
+        .then(() => {
+          const toastId = "parking-add-success";
+          toastSuccess(`Successfully edited ${parkingLot.name}`, {
+            toastId,
+          });
 
-        navigate("/");
-      })
-      .catch((err) => {
-        const toastId = "parking-add-error";
-        toastError(err, { toastId });
-      });
+          navigate("/");
+        })
+        .catch((err) => {
+          const toastId = "parking-add-error";
+          toastError(err, { toastId });
+        });
+    } else {
+      await addParkingLot(
+        name,
+        city,
+        zone,
+        address,
+        workFromParse,
+        workToParse,
+        capacityCar,
+        capacityAdaptedCar,
+        price
+      )
+        .then(() => {
+          const toastId = "parking-add-success";
+          toastSuccess("Successfully added a new Parking Lot Request.", {
+            toastId,
+          });
+
+          navigate("/");
+        })
+        .catch((err) => {
+          const toastId = "parking-add-error";
+          toastError(err, { toastId });
+        });
+    }
   };
+
+  useEffect(() => {
+    if (parkingLot != {}) {
+      const workFromParse = dayjs(
+        `2020-08-04T${parkingLot.workingHourFrom}.000Z-2`
+      );
+      const workToParse = dayjs(`2020-08-04T${parkingLot.workingHourTo}.000Z`);
+
+      setName(parkingLot.name);
+      setPrice(parkingLot.price);
+      setAddress(parkingLot.address);
+      setCity(parkingLot.city);
+      setZone(parkingLot.zone);
+      setWorkFrom(workFromParse);
+      setWorkTo(workToParse);
+      setCapacityCar(parkingLot.capacityCar);
+      setCapacityAdaptedCar(parkingLot.capacityAdaptedCar);
+    }
+  }, [parkingLot]);
 
   return (
     <RequestBox container p={3} mt={2} direction="row">
+      {console.log(location)}
       <Hidden mdDown>
         <Grid
           item
@@ -156,10 +198,7 @@ const RequestForm = ({ isEdit }) => {
         </Grid>
       </Hidden>
       <Grid item xs={12} md={9}>
-        <Box
-          component="form"
-          onSubmit={isEdit ? handleParkingEdit : handleParkingAdd}
-        >
+        <Box component="form" onSubmit={handleSubmit}>
           <Grid
             item
             xs={12}
@@ -407,7 +446,7 @@ const RequestForm = ({ isEdit }) => {
               fullWidth={isXs ? true : false}
               type="submit"
             >
-              {isEdit ? "Save Changes" : "Submit Request"}
+              {parkingLot.id ? "Save Changes" : "Submit Request"}
             </Button>
           </Grid>
         </Box>
@@ -417,7 +456,7 @@ const RequestForm = ({ isEdit }) => {
 };
 
 RequestForm.propTypes = {
-  isEdit: PropTypes.bool,
+  parkingLot: PropTypes.object,
 };
 
 export default RequestForm;

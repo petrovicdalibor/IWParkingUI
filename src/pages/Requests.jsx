@@ -18,7 +18,6 @@ const Requests = () => {
       })
       .catch((err) => {
         const toastId = "fetchRequest-error";
-
         toastError(err, { toastId });
       });
   };
@@ -55,7 +54,7 @@ const Requests = () => {
         {requests.map((request) => {
           return (
             <ParkingLotsCard
-              parking={request.parkingLotTemp}
+              parking={request.parkingLot}
               requestId={request.id}
               key={request.id}
               owner={request.user}
