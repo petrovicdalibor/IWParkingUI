@@ -27,12 +27,15 @@ const Home = () => {
   const { fetchParkingLots, deactivateParkingLot } = useParkingLots();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
-  const [selectedStatus, setSelectedStatus] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState("");
   const [numPages, setNumPages] = useState(0);
+  const [page, setPage] = useState(1);
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
-    fetchParkingLots(1, 3).then((res) => setNumPages(res.numPages));
+    fetchParkingLots(1, 3, selectedStatus).then((res) =>
+      setNumPages(res.numPages)
+    );
   }, [userContext.role]);
 
   useEffect(() => {
@@ -41,20 +44,19 @@ const Home = () => {
 
   const handleStatusChange = (e) => {
     setSelectedStatus(e.target.value);
-    if (e.target.value === 0 || userContext.role === "User") {
-      setParkings(parkingContext.parkingLots);
+    setPage(1);
+    if (e.target.value === "" || userContext.role === "User") {
+      fetchParkingLots(1, 3, "").then((res) => {
+        setNumPages(res.numPages);
+        setPage(1);
+      });
       return;
     }
 
-    setParkings(
-      parkingContext.parkingLots.filter((parking) => {
-        return (
-          (e.target.value === 1 && !parking.isDeactivated) ||
-          (e.target.value === 2 && parking.isDeactivated) ||
-          (e.target.value === 3 && !parking.isDeactivated)
-        );
-      })
-    );
+    fetchParkingLots(1, 3, e.target.value).then((res) => {
+      setNumPages(res.numPages);
+      setPage(1);
+    });
   };
 
   const handleDeactivateParking = async (parking) => {
@@ -89,7 +91,8 @@ const Home = () => {
   };
 
   const handlePageChange = (e, value) => {
-    fetchParkingLots(value, 3);
+    setPage(value);
+    fetchParkingLots(value, 3, selectedStatus).then((res) => console.log(res));
   };
 
   return (
@@ -128,9 +131,9 @@ const Home = () => {
               onChange={handleStatusChange}
               label="City"
             >
-              <MenuItem value={0}>All</MenuItem>
-              <MenuItem value={1}>Active</MenuItem>
-              <MenuItem value={2}>Deactivated</MenuItem>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="1">Active</MenuItem>
+              <MenuItem value="2">Deactivated</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -169,10 +172,12 @@ const Home = () => {
               );
             })}
 
+        {console.log(page)}
         <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
           <Pagination
             count={numPages}
             color="primary"
+            defaultPage={page}
             disabled={numPages === 1}
             onChange={handlePageChange}
           />
