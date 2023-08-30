@@ -16,20 +16,40 @@ const useParkingLots = () => {
 
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
-      .get("/api/ParkingLot/GetAll", {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .post(
+        "/api/ParkingLot/GetAll?pageNumber=1&pageSize=10",
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
 
         return res.data;
       })
       .catch((err) => {
-        throw err.response.data.Errors[0];
+        throw err.response.data.errors[0];
       });
     return fetchParkingLotsResult;
+  };
+
+  const fetchParkingLot = async (id) => {
+    const fetchParkingLotResult = await axios
+      .get(`/api/ParkingLot/Get/${id}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        return res.data.parkingLot;
+      })
+      .catch((err) => {
+        throw err.response.data.errors[0];
+      });
+    return fetchParkingLotResult;
   };
 
   const fetchRequests = async () => {
@@ -43,15 +63,15 @@ const useParkingLots = () => {
         return res.data.requests;
       })
       .catch((err) => {
-        throw err.response.data.Errors[0];
+        throw err.response.data.errors[0];
       });
     return fetchParkingLotsResult;
   };
 
-  const fetchFavoriteLots = async (userId) => {
+  const fetchFavoriteLots = async () => {
     const addToFavoritesResult = await axios
       .get(
-        `/api/ParkingLot/GetUserFavouriteParkingLots/${userId}`,
+        `/api/ParkingLot/GetUserFavouriteParkingLots`,
 
         {
           headers: {
@@ -69,14 +89,11 @@ const useParkingLots = () => {
     return addToFavoritesResult;
   };
 
-  const addFavorite = async (userId, parkingLotId) => {
+  const addFavorite = async (parkingLotId) => {
     const addFavoriteResult = await axios
       .post(
-        `/api/ParkingLot/MakeParkingLotFavourite/${userId},${parkingLotId}`,
-        {
-          userId,
-          parkingLotId,
-        },
+        `/api/ParkingLot/MakeParkingLotFavourite/${parkingLotId}`,
+        { parkingLotId },
         {
           headers: {
             Authorization: `Bearer ${cookies.get("token")}`,
@@ -97,16 +114,13 @@ const useParkingLots = () => {
     return addFavoriteResult;
   };
 
-  const removeFavorite = async (userId, parkingLotId) => {
+  const removeFavorite = async (parkingLotId) => {
     const removeFavoriteResult = await axios
-      .delete(
-        `/api/ParkingLot/RemoveParkingLotFavourite/${userId},${parkingLotId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${cookies.get("token")}`,
-          },
-        }
-      )
+      .delete(`/api/ParkingLot/RemoveParkingLotFavourite/${parkingLotId}`, {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
       .then((res) => {
         const favoritesArray = userContext.favorites.filter((favorite) => {
           return favorite.id !== parkingLotId;
@@ -166,10 +180,9 @@ const useParkingLots = () => {
     workingHourTo,
     capacityCar,
     capacityAdaptedCar,
-    price,
-    userId
+    price
   ) => {
-    const addFavoriteResult = await axios
+    const addParkingLotResult = await axios
       .post(
         `/api/ParkingLot/Create`,
         {
@@ -182,7 +195,6 @@ const useParkingLots = () => {
           capacityCar,
           capacityAdaptedCar,
           price,
-          userId,
         },
         {
           headers: {
@@ -196,16 +208,59 @@ const useParkingLots = () => {
       .catch((err) => {
         throw err.response.data.errors[0];
       });
-    return addFavoriteResult;
+    return addParkingLotResult;
+  };
+
+  const editParkingLot = async (
+    name,
+    city,
+    zone,
+    address,
+    workingHourFrom,
+    workingHourTo,
+    capacityCar,
+    capacityAdaptedCar,
+    price,
+    parkingLotId
+  ) => {
+    const editParkingLotResult = await axios
+      .put(
+        `/api/ParkingLot/Update/${parkingLotId}`,
+        {
+          name,
+          city,
+          zone,
+          address,
+          workingHourFrom,
+          workingHourTo,
+          capacityCar,
+          capacityAdaptedCar,
+          price,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        throw err.response.data.Errors[0];
+      });
+    return editParkingLotResult;
   };
 
   return {
     fetchParkingLots,
+    fetchParkingLot,
     fetchRequests,
     fetchFavoriteLots,
     addFavorite,
     removeFavorite,
     addParkingLot,
+    editParkingLot,
     modifyRequest,
     deactivateParkingLot,
   };

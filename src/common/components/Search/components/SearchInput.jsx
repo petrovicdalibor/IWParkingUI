@@ -54,7 +54,6 @@ const SearchInput = () => {
       <SearchGrid
         container
         sx={{ width: "100%", marginLeft: 0 }}
-        // spacing={}
         direction="row"
       >
         <SearchGridItem item xs={8} sx={{ paddingLeft: "0 !important" }}>

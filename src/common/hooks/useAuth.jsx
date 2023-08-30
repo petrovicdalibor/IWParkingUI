@@ -57,6 +57,7 @@ const useAuth = () => {
 
         cookies.set("token", res.data.token, {
           expires: new Date(decodedToken.exp * 1000),
+          path: "/",
         });
 
         if (decodedToken.Role === "User") {
@@ -247,7 +248,8 @@ const useAuth = () => {
   };
 
   const logout = () => {
-    cookies.remove("token");
+    cookies.remove("token", { path: "/" });
+
     userContext.setIsLoggedIn(false);
     userContext.setVehicles([]);
     userContext.setFavorites([]);

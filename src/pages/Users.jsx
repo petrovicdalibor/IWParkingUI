@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { CircularProgress, Grid, Pagination, Typography } from "@mui/material";
 import UserCard from "../features/Users/components/UserCard";
 import { useEffect, useState } from "react";
 import useAuth from "../common/hooks/useAuth";
@@ -8,11 +8,16 @@ import ConfirmDialog from "../features/ConfirmDialog/components/ConfirmDialog";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const { fetchAllUsers, deactivateUserById } = useAuth();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const fetchUsers = () => {
-    fetchAllUsers().then((res) => setUsers(res.data.users));
+    fetchAllUsers().then((res) => {
+      setUsers(res.data.users);
+      setIsLoading(false);
+    });
   };
 
   useEffect(() => {
@@ -57,7 +62,13 @@ const Users = () => {
         </Grid>
       </Grid>
 
-      <Grid container>
+      <Grid
+        container
+        display={"flex"}
+        justifyContent={isLoading && "center"}
+        alignItems={isLoading && "center"}
+        height={isLoading && "60vh"}
+      >
         {users.map((user) => (
           <UserCard
             key={user.id}
@@ -65,6 +76,21 @@ const Users = () => {
             handleDeactivateUser={handleDeactivateUser}
           />
         ))}
+        {isLoading ? (
+          <Grid
+            item
+            alignContent={"center"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            alignSelf={"center"}
+          >
+            <CircularProgress />
+          </Grid>
+        ) : (
+          <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
+            <Pagination count={10} color="primary" />
+          </Grid>
+        )}
       </Grid>
       <ConfirmDialogModal />
     </>
