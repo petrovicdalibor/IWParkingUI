@@ -14,10 +14,10 @@ const useParkingLots = () => {
       ? null
       : `Bearer ${cookies.get("token")}`;
 
-  const fetchParkingLots = async () => {
+  const fetchParkingLots = async (pageNumber, pageSize) => {
     const fetchParkingLotsResult = await axios
       .post(
-        "/api/ParkingLot/GetAll?pageNumber=1&pageSize=10",
+        `/api/ParkingLot/GetAll?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         {},
         {
           headers: {
