@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://localhost:7181",
+  baseURL: "https://iwparkingapi20230830132638.azurewebsites.net",
 });

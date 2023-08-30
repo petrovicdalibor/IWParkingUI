@@ -179,7 +179,13 @@ const RequestForm = ({ parkingLot }) => {
   }, [parkingLot.id]);
 
   return (
-    <RequestBox container p={3} mt={2} direction="row">
+    <RequestBox
+      container
+      p={3}
+      mt={2}
+      borderRadius="10px !important"
+      direction="row"
+    >
       <Hidden mdDown>
         <Grid
           item
