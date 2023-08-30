@@ -23,7 +23,7 @@ import { BsPSquare } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // import Cookies from "universal-cookie";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../common/utils/toasts";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 
@@ -38,8 +38,6 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault("Europe/Belgrade");
 
 const RequestForm = ({ parkingLot }) => {
-  const location = useParams();
-
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
@@ -164,11 +162,9 @@ const RequestForm = ({ parkingLot }) => {
   };
 
   useEffect(() => {
-    if (parkingLot != {}) {
-      const workFromParse = dayjs(
-        `2020-08-04T${parkingLot.workingHourFrom}.000Z-2`
-      );
-      const workToParse = dayjs(`2020-08-04T${parkingLot.workingHourTo}.000Z`);
+    if (parkingLot.id) {
+      const workFromParse = dayjs(`2020-08-04T${parkingLot.workingHourFrom}`);
+      const workToParse = dayjs(`2020-08-04T${parkingLot.workingHourTo}`);
 
       setName(parkingLot.name);
       setPrice(parkingLot.price);
@@ -180,11 +176,10 @@ const RequestForm = ({ parkingLot }) => {
       setCapacityCar(parkingLot.capacityCar);
       setCapacityAdaptedCar(parkingLot.capacityAdaptedCar);
     }
-  }, [parkingLot]);
+  }, [parkingLot.id]);
 
   return (
     <RequestBox container p={3} mt={2} direction="row">
-      {console.log(location)}
       <Hidden mdDown>
         <Grid
           item
@@ -298,9 +293,12 @@ const RequestForm = ({ parkingLot }) => {
                   <MenuItem value="">
                     <em>&#8205;</em>
                   </MenuItem>
-                  <MenuItem value="Zone 1">Zone 1</MenuItem>
-                  <MenuItem value="Zone 2">Zone 2</MenuItem>
-                  <MenuItem value="Zone 3">Zone 3</MenuItem>
+                  <MenuItem value="A1">A1</MenuItem>
+                  <MenuItem value="A2">A2</MenuItem>
+                  <MenuItem value="A3">A3</MenuItem>
+                  <MenuItem value="B1">B1</MenuItem>
+                  <MenuItem value="B2">B2</MenuItem>
+                  <MenuItem value="B3">B3</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

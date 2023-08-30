@@ -16,11 +16,15 @@ const useParkingLots = () => {
 
   const fetchParkingLots = async () => {
     const fetchParkingLotsResult = await axios
-      .post("/api/ParkingLot/GetAll?pageNumber=1&pageSize=5", {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .post(
+        "/api/ParkingLot/GetAll?pageNumber=1&pageSize=10",
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
 
@@ -40,7 +44,6 @@ const useParkingLots = () => {
         },
       })
       .then((res) => {
-        // console.log(res);
         return res.data.parkingLot;
       })
       .catch((err) => {

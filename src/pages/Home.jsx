@@ -48,13 +48,9 @@ const Home = () => {
     setParkings(
       parkingContext.parkingLots.filter((parking) => {
         return (
-          (e.target.value === 1 &&
-            parking.status === 2 &&
-            !parking.isDeactivated) ||
+          (e.target.value === 1 && !parking.isDeactivated) ||
           (e.target.value === 2 && parking.isDeactivated) ||
-          (e.target.value === 3 &&
-            parking.status === 1 &&
-            !parking.isDeactivated)
+          (e.target.value === 3 && !parking.isDeactivated)
         );
       })
     );

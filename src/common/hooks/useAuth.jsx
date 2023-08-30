@@ -57,6 +57,7 @@ const useAuth = () => {
 
         cookies.set("token", res.data.token, {
           expires: new Date(decodedToken.exp * 1000),
+          path: "/",
         });
 
         if (decodedToken.Role === "User") {

@@ -22,12 +22,13 @@ import {
   BsCheckCircle,
   BsXCircle,
   BsPerson,
+  BsPencilSquare,
 } from "react-icons/bs";
 import useParkingLots from "../../../common/hooks/useParkingLots";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/authProvider";
 import theme from "../../../theme/Theme";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   toastError,
   toastInfo,
@@ -76,6 +77,7 @@ const ParkingLotsCard = ({
   owner,
   isFavorite,
   handleDeactivateParking,
+  type,
 }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
@@ -219,6 +221,7 @@ const ParkingLotsCard = ({
                 >
                   {parking?.price}&euro;/hr
                 </Typography>
+
                 {userContext.role === "Owner" ||
                 userContext.role === "SuperAdmin" ? (
                   <Badge
@@ -272,7 +275,8 @@ const ParkingLotsCard = ({
                       style={{ marginRight: "6px" }}
                       color="#CF0018"
                     />
-                    {parking?.address} {bull} {parking?.zone} {bull} Car
+                    {parking?.address} {bull} {parking?.city} {bull}{" "}
+                    {parking?.zone}
                   </ParkingInfo>
                   <ParkingInfo
                     variant="body2"
@@ -415,7 +419,7 @@ const ParkingLotsCard = ({
               ""
             )}
 
-            {userContext.role === "SuperAdmin" && parking.status === 1 ? (
+            {userContext.role === "SuperAdmin" && type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -433,7 +437,7 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
-            {userContext.role === "SuperAdmin" && parking.status === 1 ? (
+            {userContext.role === "SuperAdmin" && type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -452,6 +456,42 @@ const ParkingLotsCard = ({
               ""
             )}
             {userContext.role === "Owner" && parking.status === 2 ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                {parking.isDeactivated ? (
+                  <Button
+                    variant="outlined"
+                    color="favorite"
+                    size="large"
+                    disableElevation
+                    disabled={parking.isDeactivated ? true : false}
+                    fullWidth
+                  >
+                    <BsPencilSquare size={17} style={{ marginRight: "6px" }} />
+                    Edit
+                  </Button>
+                ) : (
+                  <Link to={`/parkinglot/${parking.id}/edit`}>
+                    <Button
+                      variant="outlined"
+                      color="favorite"
+                      size="large"
+                      disableElevation
+                      disabled={parking.isDeactivated ? true : false}
+                      fullWidth
+                    >
+                      <BsPencilSquare
+                        size={17}
+                        style={{ marginRight: "6px" }}
+                      />
+                      Edit
+                    </Button>
+                  </Link>
+                )}
+              </Grid>
+            ) : (
+              ""
+            )}
+            {userContext.role === "Owner" && parking.status === 2 && !type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -492,6 +532,7 @@ ParkingLotsCard.propTypes = {
   owner: PropTypes.object,
   isFavorite: PropTypes.bool,
   handleDeactivateParking: PropTypes.func,
+  type: PropTypes.string,
 };
 
 export default ParkingLotsCard;
