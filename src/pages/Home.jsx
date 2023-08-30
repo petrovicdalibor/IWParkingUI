@@ -170,7 +170,6 @@ const Home = () => {
               );
             })}
 
-        {console.log(page)}
         <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
           <Pagination
             count={numPages}
