@@ -28,10 +28,11 @@ const Home = () => {
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const [selectedStatus, setSelectedStatus] = useState(0);
+  const [numPages, setNumPages] = useState(0);
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
-    fetchParkingLots();
+    fetchParkingLots(1, 3).then((res) => setNumPages(res.numPages));
   }, [userContext.role]);
 
   useEffect(() => {
@@ -85,6 +86,10 @@ const Home = () => {
 
       fetchParkingLots();
     }
+  };
+
+  const handlePageChange = (e, value) => {
+    fetchParkingLots(value, 3);
   };
 
   return (
@@ -165,7 +170,12 @@ const Home = () => {
             })}
 
         <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
-          <Pagination count={10} color="primary" />
+          <Pagination
+            count={numPages}
+            color="primary"
+            disabled={numPages === 1}
+            onChange={handlePageChange}
+          />
         </Grid>
       </Grid>
       <ConfirmDialogModal />
