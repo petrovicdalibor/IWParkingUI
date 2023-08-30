@@ -33,7 +33,7 @@ const Home = () => {
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
-    fetchParkingLots(1, 3, selectedStatus).then((res) =>
+    fetchParkingLots(0, 0, selectedStatus).then((res) =>
       setNumPages(res.numPages)
     );
   }, [userContext.role]);
@@ -42,20 +42,18 @@ const Home = () => {
     setParkings(parkingContext.parkingLots);
   }, [parkingContext.parkingLots]);
 
-  const handleStatusChange = (e) => {
+  const handleStatusChange = async (e) => {
     setSelectedStatus(e.target.value);
     setPage(1);
     if (e.target.value === "" || userContext.role === "User") {
-      fetchParkingLots(1, 3, "").then((res) => {
+      await fetchParkingLots(0, 0, "").then((res) => {
         setNumPages(res.numPages);
-        setPage(1);
       });
       return;
     }
 
-    fetchParkingLots(1, 3, e.target.value).then((res) => {
+    await fetchParkingLots(0, 0, e.target.value).then((res) => {
       setNumPages(res.numPages);
-      setPage(1);
     });
   };
 
@@ -86,13 +84,13 @@ const Home = () => {
           toastError(err, { toastId });
         });
 
-      fetchParkingLots();
+      fetchParkingLots(page, 0, selectedStatus);
     }
   };
 
   const handlePageChange = (e, value) => {
     setPage(value);
-    fetchParkingLots(value, 3, selectedStatus).then((res) => console.log(res));
+    fetchParkingLots(value, 0, selectedStatus);
   };
 
   return (
@@ -113,7 +111,7 @@ const Home = () => {
           ""
         )}
       </Grid>
-      {userContext.role === "Owner" || userContext.role === "SuperAdmin" ? (
+      {userContext.role === "SuperAdmin" || userContext.role === "Owner" ? (
         <Grid item mt={1} sx={{ minWidth: "150px", maxWidth: "180px" }}>
           <FormControl
             variant="filled"
@@ -178,6 +176,7 @@ const Home = () => {
             count={numPages}
             color="primary"
             defaultPage={page}
+            page={page}
             disabled={numPages === 1}
             onChange={handlePageChange}
           />

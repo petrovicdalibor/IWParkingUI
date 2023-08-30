@@ -22,7 +22,9 @@ const AddParking = () => {
     <>
       <Grid item display="flex" flexDirection="column">
         <Grid item>
-          <Typography variant="h2">Add Parking Lot</Typography>
+          <Typography variant="h2">
+            {id ? `Edit ${parkingLot.name}` : "Add parking lot"}
+          </Typography>
         </Grid>
 
         <RequestForm parkingLot={parkingLot} />
