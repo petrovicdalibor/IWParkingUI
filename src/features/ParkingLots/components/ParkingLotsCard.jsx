@@ -19,7 +19,7 @@ import {
   BsStar,
   BsStarFill,
   BsTrashFill,
-  BsCheckCircle,
+  BsInfoCircle,
   BsXCircle,
   BsPerson,
   BsPencilSquare,
@@ -430,8 +430,8 @@ const ParkingLotsCard = ({
             {userContext.role === "SuperAdmin" && type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
-                  variant="contained"
-                  color="primary"
+                  variant="outlined"
+                  color="favorite"
                   size="large"
                   onClick={() => {
                     setOpenDetails(true);
@@ -440,7 +440,7 @@ const ParkingLotsCard = ({
                   disabled={parking.isDeactivated ? true : false}
                   fullWidth
                 >
-                  <BsXCircle size={17} style={{ marginRight: "6px" }} />
+                  <BsInfoCircle size={17} style={{ marginRight: "6px" }} />
                   Details
                 </Button>
               </Grid>
