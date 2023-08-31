@@ -20,7 +20,6 @@ import {
   BsStarFill,
   BsTrashFill,
   BsInfoCircle,
-  BsXCircle,
   BsPerson,
   BsPencilSquare,
 } from "react-icons/bs";
@@ -408,7 +407,9 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
-            {userContext.role === "SuperAdmin" && parking.status === 2 ? (
+            {!request &&
+            userContext.role === "SuperAdmin" &&
+            parking.status === 2 ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -515,13 +516,15 @@ const ParkingLotsCard = ({
         />
       </Hidden>
       <ConfirmDialogModal />
-      <RequestDetails
-        open={openDetails}
-        request={request}
-        handleClose={handleClose}
-        handleApprove={approveParkingHandler}
-        handleDecline={declineParkingHandler}
-      />
+      {request && (
+        <RequestDetails
+          open={openDetails}
+          request={request}
+          handleClose={handleClose}
+          handleApprove={approveParkingHandler}
+          handleDecline={declineParkingHandler}
+        />
+      )}
     </>
   );
 };
