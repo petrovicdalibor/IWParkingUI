@@ -25,7 +25,7 @@ import {
   BsPencilSquare,
 } from "react-icons/bs";
 import useParkingLots from "../../../common/hooks/useParkingLots";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/authProvider";
 import theme from "../../../theme/Theme";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,6 +36,7 @@ import {
 } from "../../../common/utils/toasts";
 import useConfirm from "../../../common/hooks/useConfirm";
 import ConfirmDialog from "../../ConfirmDialog/components/ConfirmDialog";
+import RequestDetails from "../../RequestDetails/components/RequestDetails";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -73,6 +74,7 @@ const bull = (
 
 const ParkingLotsCard = ({
   parking,
+  request,
   requestId,
   owner,
   isFavorite,
@@ -86,6 +88,8 @@ const ParkingLotsCard = ({
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
+
+  const [openDetails, setOpenDetails] = useState(false);
 
   const handleAddToFavorites = async () => {
     if (isFavorite) {
@@ -160,6 +164,10 @@ const ParkingLotsCard = ({
           toastError(err, { toastId });
         });
     }
+  };
+
+  const handleClose = () => {
+    setOpenDetails(false);
   };
 
   return (
@@ -423,38 +431,23 @@ const ParkingLotsCard = ({
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
-                  color="success"
-                  size="large"
-                  onClick={approveParkingHandler}
-                  disableElevation
-                  disabled={parking.isDeactivated ? true : false}
-                  fullWidth
-                >
-                  <BsCheckCircle size={17} style={{ marginRight: "6px" }} />
-                  Approve
-                </Button>
-              </Grid>
-            ) : (
-              ""
-            )}
-            {userContext.role === "SuperAdmin" && type ? (
-              <Grid item width={mdDown ? "100%" : "auto"}>
-                <Button
-                  variant="contained"
                   color="primary"
                   size="large"
-                  onClick={declineParkingHandler}
+                  onClick={() => {
+                    setOpenDetails(true);
+                  }}
                   disableElevation
                   disabled={parking.isDeactivated ? true : false}
                   fullWidth
                 >
                   <BsXCircle size={17} style={{ marginRight: "6px" }} />
-                  Decline
+                  Details
                 </Button>
               </Grid>
             ) : (
               ""
             )}
+
             {userContext.role === "Owner" && parking.status === 2 ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 {parking.isDeactivated ? (
@@ -522,12 +515,20 @@ const ParkingLotsCard = ({
         />
       </Hidden>
       <ConfirmDialogModal />
+      <RequestDetails
+        open={openDetails}
+        request={request}
+        handleClose={handleClose}
+        handleApprove={approveParkingHandler}
+        handleDecline={declineParkingHandler}
+      />
     </>
   );
 };
 
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
+  request: PropTypes.object,
   requestId: PropTypes.number,
   owner: PropTypes.object,
   isFavorite: PropTypes.bool,
