@@ -3,11 +3,29 @@ import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
 import useAuth from "../hooks/useAuth";
+import { FilterContext } from "../../context/filterContext";
 
 const useVehicles = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
+  const filterContext = useContext(FilterContext);
   const { setUserVehicles } = useAuth();
+
+  const fetchVehicleTypes = async () => {
+    const fetchVehicleTypesResult = await axios
+      .get("/api/Vehicle/GetVehicleTypes", {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        filterContext.setVehicleTypes(res.data.vehicleTypes);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return fetchVehicleTypesResult;
+  };
 
   const addVehicle = async (plateNumber, type) => {
     const addVehicleResult = await axios
@@ -103,6 +121,7 @@ const useVehicles = () => {
   };
 
   return {
+    fetchVehicleTypes,
     addVehicle,
     deleteVehicle,
     makePrimaryVehicle,
