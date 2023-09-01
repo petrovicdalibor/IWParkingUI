@@ -97,7 +97,6 @@ const useVehicles = () => {
         return res.data.vehicles;
       })
       .catch((err) => {
-        console.log(err);
         throw err;
       });
     return addVehicleResult;

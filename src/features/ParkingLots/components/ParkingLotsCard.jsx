@@ -19,13 +19,12 @@ import {
   BsStar,
   BsStarFill,
   BsTrashFill,
-  BsCheckCircle,
-  BsXCircle,
+  BsInfoCircle,
   BsPerson,
   BsPencilSquare,
 } from "react-icons/bs";
 import useParkingLots from "../../../common/hooks/useParkingLots";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/authProvider";
 import theme from "../../../theme/Theme";
 import { Link, useNavigate } from "react-router-dom";
@@ -36,6 +35,7 @@ import {
 } from "../../../common/utils/toasts";
 import useConfirm from "../../../common/hooks/useConfirm";
 import ConfirmDialog from "../../ConfirmDialog/components/ConfirmDialog";
+import RequestDetails from "../../RequestDetails/components/RequestDetails";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -73,11 +73,9 @@ const bull = (
 
 const ParkingLotsCard = ({
   parking,
-  requestId,
-  owner,
+  request,
   isFavorite,
   handleDeactivateParking,
-  type,
 }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
@@ -86,6 +84,8 @@ const ParkingLotsCard = ({
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
+
+  const [openDetails, setOpenDetails] = useState(false);
 
   const handleAddToFavorites = async () => {
     if (isFavorite) {
@@ -125,7 +125,7 @@ const ParkingLotsCard = ({
     );
 
     if (confirmDialog) {
-      await modifyRequest(requestId, "Approved")
+      await modifyRequest(request.id, "Approved")
         .then((res) => {
           const toastId = "modify-request";
 
@@ -146,7 +146,7 @@ const ParkingLotsCard = ({
     );
 
     if (confirmDialog) {
-      await modifyRequest(requestId, "Declined")
+      await modifyRequest(request.id, "Declined")
         .then((res) => {
           const toastId = "modify-request";
 
@@ -160,6 +160,10 @@ const ParkingLotsCard = ({
           toastError(err, { toastId });
         });
     }
+  };
+
+  const handleClose = () => {
+    setOpenDetails(false);
   };
 
   return (
@@ -228,7 +232,7 @@ const ParkingLotsCard = ({
                     badgeContent={
                       parking.isDeactivated
                         ? "Deactivated"
-                        : parking.status === 1
+                        : parking.status === 1 || request
                         ? "Pending"
                         : parking.status === 2
                         ? "Active"
@@ -237,7 +241,7 @@ const ParkingLotsCard = ({
                     color={
                       parking.isDeactivated
                         ? "primary"
-                        : parking.status === 1
+                        : parking.status === 1 || request
                         ? "warning"
                         : parking.status === 2
                         ? "success"
@@ -291,7 +295,7 @@ const ParkingLotsCard = ({
                     {parking?.workingHourFrom?.slice(0, -3)} -{" "}
                     {parking?.workingHourTo?.slice(0, -3)}
                   </ParkingInfo>
-                  {userContext.role === "SuperAdmin" && owner ? (
+                  {userContext.role === "SuperAdmin" && request?.user ? (
                     <ParkingInfo
                       variant="body2"
                       display={"flex"}
@@ -302,7 +306,7 @@ const ParkingLotsCard = ({
                         style={{ marginRight: "6px" }}
                         color="#CF0018"
                       />
-                      {owner?.name} {owner?.surname}
+                      {request?.user.name} {request?.user.surname}
                     </ParkingInfo>
                   ) : (
                     ""
@@ -400,7 +404,9 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
-            {userContext.role === "SuperAdmin" && parking.status === 2 ? (
+            {!request &&
+            userContext.role === "SuperAdmin" &&
+            parking.status === 2 ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -419,64 +425,49 @@ const ParkingLotsCard = ({
               ""
             )}
 
-            {userContext.role === "SuperAdmin" && type ? (
+            {userContext.role === "SuperAdmin" && request?.type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
-                  variant="contained"
-                  color="success"
+                  variant="outlined"
+                  color="favorite"
                   size="large"
-                  onClick={approveParkingHandler}
+                  onClick={() => {
+                    setOpenDetails(true);
+                  }}
                   disableElevation
                   disabled={parking.isDeactivated ? true : false}
                   fullWidth
                 >
-                  <BsCheckCircle size={17} style={{ marginRight: "6px" }} />
-                  Approve
+                  <BsInfoCircle size={17} style={{ marginRight: "6px" }} />
+                  Details
                 </Button>
               </Grid>
             ) : (
               ""
             )}
-            {userContext.role === "SuperAdmin" && type ? (
+
+            {userContext.role === "Owner" && !request ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  onClick={declineParkingHandler}
-                  disableElevation
-                  disabled={parking.isDeactivated ? true : false}
-                  fullWidth
-                >
-                  <BsXCircle size={17} style={{ marginRight: "6px" }} />
-                  Decline
-                </Button>
-              </Grid>
-            ) : (
-              ""
-            )}
-            {userContext.role === "Owner" && parking.status === 2 ? (
-              <Grid item width={mdDown ? "100%" : "auto"}>
-                {parking.isDeactivated ? (
+                {parking?.isDeactivated ? (
                   <Button
                     variant="outlined"
                     color="favorite"
                     size="large"
                     disableElevation
-                    disabled={parking.isDeactivated ? true : false}
+                    disabled={parking?.isDeactivated ? true : false}
                     fullWidth
                   >
                     <BsPencilSquare size={17} style={{ marginRight: "6px" }} />
                     Edit
                   </Button>
                 ) : (
-                  <Link to={`/parkinglot/${parking.id}/edit`}>
+                  <Link to={`/parkinglot/${parking?.id}/edit`}>
                     <Button
                       variant="outlined"
                       color="favorite"
                       size="large"
                       disableElevation
-                      disabled={parking.isDeactivated ? true : false}
+                      disabled={parking?.isDeactivated ? true : false}
                       fullWidth
                     >
                       <BsPencilSquare
@@ -491,7 +482,9 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
-            {userContext.role === "Owner" && parking.status === 2 && !type ? (
+            {userContext.role === "Owner" &&
+            parking?.status === 2 &&
+            !request?.type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -522,17 +515,24 @@ const ParkingLotsCard = ({
         />
       </Hidden>
       <ConfirmDialogModal />
+      {request && (
+        <RequestDetails
+          open={openDetails}
+          request={request}
+          handleClose={handleClose}
+          handleApprove={approveParkingHandler}
+          handleDecline={declineParkingHandler}
+        />
+      )}
     </>
   );
 };
 
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
-  requestId: PropTypes.number,
-  owner: PropTypes.object,
+  request: PropTypes.object,
   isFavorite: PropTypes.bool,
   handleDeactivateParking: PropTypes.func,
-  type: PropTypes.string,
 };
 
 export default ParkingLotsCard;

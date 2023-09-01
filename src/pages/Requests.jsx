@@ -27,7 +27,6 @@ const Requests = () => {
   }, []);
   return (
     <>
-      {console.log(requests)}
       <Grid item display="flex" flexDirection="row" gap={3}>
         <Grid item>
           <Typography variant="h2">Requests</Typography>
@@ -56,10 +55,8 @@ const Requests = () => {
           return (
             <ParkingLotsCard
               parking={request.parkingLot}
-              requestId={request.id}
-              type={request.type}
+              request={request}
               key={request.id}
-              owner={request.user}
             />
           );
         })}
