@@ -56,10 +56,7 @@ const Requests = () => {
             <ParkingLotsCard
               parking={request.parkingLot}
               request={request}
-              requestId={request.id}
-              type={request.type}
               key={request.id}
-              owner={request.user}
             />
           );
         })}

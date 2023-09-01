@@ -33,7 +33,7 @@ const Home = () => {
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
-    fetchParkingLots(0, 0, selectedStatus).then((res) =>
+    fetchParkingLots(0, 5, selectedStatus).then((res) =>
       setNumPages(res.numPages)
     );
   }, [userContext.role]);
@@ -46,13 +46,13 @@ const Home = () => {
     setSelectedStatus(e.target.value);
     setPage(1);
     if (e.target.value === "" || userContext.role === "User") {
-      await fetchParkingLots(0, 0, "").then((res) => {
+      await fetchParkingLots(0, 5, "").then((res) => {
         setNumPages(res.numPages);
       });
       return;
     }
 
-    await fetchParkingLots(0, 0, e.target.value).then((res) => {
+    await fetchParkingLots(0, 5, e.target.value).then((res) => {
       setNumPages(res.numPages);
     });
   };
@@ -84,13 +84,13 @@ const Home = () => {
           toastError(err, { toastId });
         });
 
-      fetchParkingLots(page, 0, selectedStatus);
+      fetchParkingLots(page, 5, selectedStatus);
     }
   };
 
   const handlePageChange = (e, value) => {
     setPage(value);
-    fetchParkingLots(value, 0, selectedStatus);
+    fetchParkingLots(value, 5, selectedStatus);
   };
 
   return (

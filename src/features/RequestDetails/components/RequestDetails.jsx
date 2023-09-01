@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { BsCheckCircle, BsXCircle } from "react-icons/bs";
 import CloseIcon from "@mui/icons-material/Close";
+import RequestDetailsItem from "./RequestDetailsItem";
 
 const RequestDetails = ({
   open,
@@ -19,12 +20,6 @@ const RequestDetails = ({
   handleApprove,
   handleDecline,
 }) => {
-  const oldStyle = { textDecoration: "line-through", color: "#959595" };
-  const newStyle = {
-    backgroundColor: "#E8FEF1",
-    color: "#219653",
-  };
-
   return (
     <Dialog
       open={open}
@@ -56,241 +51,73 @@ const RequestDetails = ({
       </IconButton>
       <DialogContent>
         <Grid container direction="column">
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Name</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.name !== request.parkingLot.name ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.name}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.name !== request.parkingLot.name
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.name}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>City</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.city !== request.parkingLot.city ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.city}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.city !== request.parkingLot.city
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.city}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Address</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.address !== request.parkingLot.address ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.address}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.address !== request.parkingLot.address
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.address}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Zone</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.zone !== request.parkingLot.zone ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.zone}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.zone !== request.parkingLot.zone
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.zone}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Working Hours</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              (request.oldParkingLot.workingHourFrom !==
-                request.parkingLot.workingHourFrom ||
-                request.oldParkingLot.workingHourTo !==
-                  request.parkingLot.workingHourTo) ? (
-                <Typography sx={oldStyle} p>
-                  {`${request.oldParkingLot.workingHourFrom.slice(
-                    0,
-                    -3
-                  )} - ${request.oldParkingLot.workingHourTo.slice(0, -3)}`}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  (request.oldParkingLot.workingHourFrom !==
-                    request.parkingLot.workingHourFrom ||
-                    request.oldParkingLot.workingHourTo !==
-                      request.parkingLot.workingHourTo)
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {`${request.parkingLot.workingHourFrom.slice(
-                  0,
-                  -3
-                )} - ${request.parkingLot.workingHourTo.slice(0, -3)}`}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Car Capacity</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.capacityCar !==
-                request.parkingLot.capacityCar ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.capacityCar}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.capacityCar !==
-                    request.parkingLot.capacityCar
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.capacityCar}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Adapted Car Capacity</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.capacityAdaptedCar !==
-                request.parkingLot.capacityAdaptedCar ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.capacityAdaptedCar}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.capacityAdaptedCar !==
-                    request.parkingLot.capacityAdaptedCar
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.capacityAdaptedCar}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Price</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              {request.oldParkingLot &&
-              request.oldParkingLot.price !== request.parkingLot.price ? (
-                <Typography sx={oldStyle} p>
-                  {request.oldParkingLot.price}
-                </Typography>
-              ) : (
-                ""
-              )}
-              <Typography
-                sx={
-                  request.oldParkingLot &&
-                  request.oldParkingLot.price !== request.parkingLot.price
-                    ? newStyle
-                    : {}
-                }
-                p
-              >
-                {request.parkingLot.price}
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid item xs={12} display="flex" flexDirection="row">
-            <Grid item xs={6} minWidth="224px" sx={{ color: "#757575" }}>
-              <Typography p>Owner</Typography>
-            </Grid>
-            <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-              <Typography p>{request.user.name}</Typography>
-            </Grid>
-          </Grid>
+          <RequestDetailsItem
+            label="Name"
+            oldValue={request.oldParkingLot?.name}
+            newValue={request.parkingLot.name}
+          />
+          <RequestDetailsItem
+            label="City"
+            oldValue={request.oldParkingLot?.city}
+            newValue={request.parkingLot.city}
+          />
+          <RequestDetailsItem
+            label="Address"
+            oldValue={request.oldParkingLot?.address}
+            newValue={request.parkingLot.address}
+          />
+          <RequestDetailsItem
+            label="Zone"
+            oldValue={request.oldParkingLot?.zone}
+            newValue={request.parkingLot.zone}
+          />
+          <RequestDetailsItem
+            label="Working Hours"
+            oldValue={`${request.oldParkingLot?.workingHourFrom.slice(
+              0,
+              -3
+            )} - ${request.oldParkingLot?.workingHourTo.slice(0, -3)}`}
+            newValue={`${request.parkingLot.workingHourFrom.slice(
+              0,
+              -3
+            )} - ${request.parkingLot.workingHourTo.slice(0, -3)}`}
+          />
+          <RequestDetailsItem
+            label="Car Capacity"
+            oldValue={request.oldParkingLot?.capacityCar}
+            newValue={request.parkingLot.capacityCar}
+          />
+          <RequestDetailsItem
+            label="Adapted Car Capacity"
+            oldValue={request.oldParkingLot?.capacityAdaptedCar}
+            newValue={request.parkingLot.capacityAdaptedCar}
+          />
+          <RequestDetailsItem
+            label="Price"
+            oldValue={request.oldParkingLot?.price}
+            newValue={request.parkingLot.price}
+          />
+
+          <RequestDetailsItem
+            label="City"
+            oldValue={request.user.name}
+            newValue={request.user.name}
+          />
         </Grid>
       </DialogContent>
       <DialogActions sx={{ px: "24px", pb: "16px" }}>
+        <Button
+          onClick={() => {
+            handleDecline();
+            handleClose();
+          }}
+          variant="contained"
+          color="primary"
+          size="large"
+        >
+          <BsXCircle size={17} style={{ marginRight: "6px" }} />
+          Decline
+        </Button>
         <Button
           onClick={() => {
             handleApprove();
@@ -303,18 +130,6 @@ const RequestDetails = ({
         >
           <BsCheckCircle size={17} style={{ marginRight: "6px" }} />
           Approve
-        </Button>
-        <Button
-          onClick={() => {
-            handleDecline();
-            handleClose();
-          }}
-          variant="contained"
-          color="primary"
-          size="large"
-        >
-          <BsXCircle size={17} style={{ marginRight: "6px" }} />
-          Decline
         </Button>
       </DialogActions>
     </Dialog>

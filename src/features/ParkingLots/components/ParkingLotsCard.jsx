@@ -74,11 +74,8 @@ const bull = (
 const ParkingLotsCard = ({
   parking,
   request,
-  requestId,
-  owner,
   isFavorite,
   handleDeactivateParking,
-  type,
 }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
@@ -128,7 +125,7 @@ const ParkingLotsCard = ({
     );
 
     if (confirmDialog) {
-      await modifyRequest(requestId, "Approved")
+      await modifyRequest(request.id, "Approved")
         .then((res) => {
           const toastId = "modify-request";
 
@@ -149,7 +146,7 @@ const ParkingLotsCard = ({
     );
 
     if (confirmDialog) {
-      await modifyRequest(requestId, "Declined")
+      await modifyRequest(request.id, "Declined")
         .then((res) => {
           const toastId = "modify-request";
 
@@ -235,7 +232,7 @@ const ParkingLotsCard = ({
                     badgeContent={
                       parking.isDeactivated
                         ? "Deactivated"
-                        : parking.status === 1
+                        : parking.status === 1 || request
                         ? "Pending"
                         : parking.status === 2
                         ? "Active"
@@ -244,7 +241,7 @@ const ParkingLotsCard = ({
                     color={
                       parking.isDeactivated
                         ? "primary"
-                        : parking.status === 1
+                        : parking.status === 1 || request
                         ? "warning"
                         : parking.status === 2
                         ? "success"
@@ -298,7 +295,7 @@ const ParkingLotsCard = ({
                     {parking?.workingHourFrom?.slice(0, -3)} -{" "}
                     {parking?.workingHourTo?.slice(0, -3)}
                   </ParkingInfo>
-                  {userContext.role === "SuperAdmin" && owner ? (
+                  {userContext.role === "SuperAdmin" && request?.user ? (
                     <ParkingInfo
                       variant="body2"
                       display={"flex"}
@@ -309,7 +306,7 @@ const ParkingLotsCard = ({
                         style={{ marginRight: "6px" }}
                         color="#CF0018"
                       />
-                      {owner?.name} {owner?.surname}
+                      {request?.user.name} {request?.user.surname}
                     </ParkingInfo>
                   ) : (
                     ""
@@ -428,7 +425,7 @@ const ParkingLotsCard = ({
               ""
             )}
 
-            {userContext.role === "SuperAdmin" && type ? (
+            {userContext.role === "SuperAdmin" && request?.type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="outlined"
@@ -449,28 +446,28 @@ const ParkingLotsCard = ({
               ""
             )}
 
-            {userContext.role === "Owner" && parking.status === 2 ? (
+            {userContext.role === "Owner" && !request ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
-                {parking.isDeactivated ? (
+                {parking?.isDeactivated ? (
                   <Button
                     variant="outlined"
                     color="favorite"
                     size="large"
                     disableElevation
-                    disabled={parking.isDeactivated ? true : false}
+                    disabled={parking?.isDeactivated ? true : false}
                     fullWidth
                   >
                     <BsPencilSquare size={17} style={{ marginRight: "6px" }} />
                     Edit
                   </Button>
                 ) : (
-                  <Link to={`/parkinglot/${parking.id}/edit`}>
+                  <Link to={`/parkinglot/${parking?.id}/edit`}>
                     <Button
                       variant="outlined"
                       color="favorite"
                       size="large"
                       disableElevation
-                      disabled={parking.isDeactivated ? true : false}
+                      disabled={parking?.isDeactivated ? true : false}
                       fullWidth
                     >
                       <BsPencilSquare
@@ -485,7 +482,9 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
-            {userContext.role === "Owner" && parking.status === 2 && !type ? (
+            {userContext.role === "Owner" &&
+            parking?.status === 2 &&
+            !request?.type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -532,11 +531,8 @@ const ParkingLotsCard = ({
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
   request: PropTypes.object,
-  requestId: PropTypes.number,
-  owner: PropTypes.object,
   isFavorite: PropTypes.bool,
   handleDeactivateParking: PropTypes.func,
-  type: PropTypes.string,
 };
 
 export default ParkingLotsCard;
