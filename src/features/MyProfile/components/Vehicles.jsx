@@ -22,6 +22,7 @@ import useVehicles from "../../../common/hooks/useVehicles";
 
 import CloseIcon from "@mui/icons-material/Close";
 import { toastError, toastSuccess } from "../../../common/utils/toasts";
+import { FilterContext } from "../../../context/filterContext";
 
 const VehiclesGridItem = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.down("xl")]: {
@@ -42,6 +43,7 @@ const VehiclesBox = styled(Box)(({ theme }) => ({
 
 const Vehicles = () => {
   const userContext = useContext(AuthContext);
+  const filterContext = useContext(FilterContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
   const { addVehicle } = useVehicles();
@@ -166,8 +168,11 @@ const Vehicles = () => {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value="Car">Car</MenuItem>
-                      <MenuItem value="Adapted Car">Adapted Car</MenuItem>
+                      {filterContext.vehicleTypes.map((type) => (
+                        <MenuItem value={type} key={type}>
+                          {type}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>

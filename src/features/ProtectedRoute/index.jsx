@@ -10,12 +10,15 @@ import {
   routesForNotAuthenticatedOnly,
   routesForAuthenticatedOnly,
 } from "../../common/constants/routes";
+import useVehicles from "../../common/hooks/useVehicles";
 
 const Routes = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const { verifyToken, setUserInfo, setUserVehicles } = useAuth();
-  const { fetchFavoriteLots } = useParkingLots();
+  const { fetchFavoriteLots, fetchParkingZones, fetchCities } =
+    useParkingLots();
+  const { fetchVehicleTypes } = useVehicles();
 
   useEffect(() => {
     const token = cookies.get("token");
@@ -27,7 +30,10 @@ const Routes = () => {
       if (decodedToken.Role === "User") {
         setUserVehicles();
         fetchFavoriteLots();
+        fetchVehicleTypes();
       }
+      fetchCities();
+      fetchParkingZones();
       setUserInfo(decodedToken.Id);
     }
   }, []);

@@ -3,16 +3,52 @@ import axios from "../api/axios";
 import Cookies from "universal-cookie";
 import { ParkingContext } from "../../context/parkingProvider";
 import { AuthContext } from "../../context/authProvider";
+import { FilterContext } from "../../context/filterContext";
 
 const useParkingLots = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
+  const filterContext = useContext(FilterContext);
   const parkingContext = useContext(ParkingContext);
 
   const token =
     cookies.get("token") === undefined
       ? null
       : `Bearer ${cookies.get("token")}`;
+
+  const fetchCities = async () => {
+    const fetchCitiesResult = await axios
+      .get("/api/City/GetAll", {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        filterContext.setCities(res.data.cities);
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    return fetchCitiesResult;
+  };
+
+  const fetchParkingZones = async () => {
+    const fetchParkingZonesResult = await axios
+      .get("/api/Zone/GetAll", {
+        headers: {
+          Authorization: `Bearer ${cookies.get("token")}`,
+        },
+      })
+      .then((res) => {
+        filterContext.setZones(res.data.zones);
+      })
+      .catch((err) => {
+        throw err;
+      });
+
+    return fetchParkingZonesResult;
+  };
 
   const fetchParkingLots = async (pageNumber, pageSize, status) => {
     const fetchParkingLotsResult = await axios
@@ -255,6 +291,8 @@ const useParkingLots = () => {
   };
 
   return {
+    fetchCities,
+    fetchParkingZones,
     fetchParkingLots,
     fetchParkingLot,
     fetchRequests,

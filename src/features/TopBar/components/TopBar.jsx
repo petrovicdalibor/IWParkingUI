@@ -33,7 +33,7 @@ const LogoBox = styled(Box)(() => ({
   left: 0,
   right: 0,
   margin: "auto",
-  marginTop: "45px",
+  marginTop: "30px",
   zIndex: 9999,
 }));
 

@@ -8,7 +8,8 @@ import {
   styled,
   useMediaQuery,
 } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { FilterContext } from "../../../../context/filterContext";
 
 const SearchGrid = styled(Grid)(({ theme }) => ({
   padding: "0 !important",
@@ -23,9 +24,7 @@ const SearchGrid = styled(Grid)(({ theme }) => ({
     paddingRight: "10px !important",
   },
   [theme.breakpoints.up("md")]: {
-    width: "400px !important",
-    minWidth: "400px !important",
-    maxWidth: "400px !important",
+    width: "560px !important",
   },
 }));
 
@@ -38,11 +37,17 @@ const SearchGridItem = styled(Grid)(({ theme }) => ({
 const SearchInput = () => {
   const [searchCondition, setSearchCondition] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [selectedZone, setSelectedZone] = useState("");
+
+  const filterContext = useContext(FilterContext);
 
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
-  const handleSelectChange = (e) => {
+  const handleCitySelect = (e) => {
     setSelectedCity(e.target.value);
+  };
+  const handleZoneSelect = (e) => {
+    setSelectedZone(e.target.value);
   };
 
   const handleSearchConditionChange = (e) => {
@@ -54,9 +59,9 @@ const SearchInput = () => {
       <SearchGrid
         container
         sx={{ width: "100%", marginLeft: 0 }}
-        direction="row"
+        direction={isXs ? "column" : "row"}
       >
-        <SearchGridItem item xs={8} sx={{ paddingLeft: "0 !important" }}>
+        <SearchGridItem item xs={6} sm={6} sx={{ paddingLeft: "0 !important" }}>
           <TextField
             label="Search"
             onChange={handleSearchConditionChange}
@@ -68,32 +73,64 @@ const SearchInput = () => {
             fullWidth
           />
         </SearchGridItem>
-        <SearchGridItem item xs={4} pl={1}>
-          <FormControl
-            variant="filled"
-            size={isXs ? "small" : "normal"}
-            fullWidth
-          >
-            <InputLabel id="city-select-label">City</InputLabel>
-            <Select
-              labelId="city-select-label"
-              id="city-select"
+        <Grid item xs={6} sm={6} display={"flex"} mt={isXs ? 1 : 0}>
+          <SearchGridItem item xs={4} sm={6} pl={isXs ? 0 : 1}>
+            <FormControl
               variant="filled"
               size={isXs ? "small" : "normal"}
-              disableUnderline={true}
-              value={selectedCity}
-              onChange={handleSelectChange}
-              label="City"
+              fullWidth
             >
-              <MenuItem value="">
-                <em>All</em>
-              </MenuItem>
-              <MenuItem value={10}>Skopje</MenuItem>
-              <MenuItem value={20}>Bitola</MenuItem>
-              <MenuItem value={30}>Prilep</MenuItem>
-            </Select>
-          </FormControl>
-        </SearchGridItem>
+              <InputLabel id="city-select-label">City</InputLabel>
+              <Select
+                labelId="city-select-label"
+                id="city-select"
+                variant="filled"
+                size={isXs ? "small" : "normal"}
+                disableUnderline={true}
+                value={selectedCity}
+                onChange={handleCitySelect}
+                label="City"
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {filterContext.cities.map((city) => (
+                  <MenuItem value={city.name} key={city.id}>
+                    {city.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </SearchGridItem>
+          <SearchGridItem item xs={4} sm={6} pl={1}>
+            <FormControl
+              variant="filled"
+              size={isXs ? "small" : "normal"}
+              fullWidth
+            >
+              <InputLabel id="city-select-label">Zone</InputLabel>
+              <Select
+                labelId="city-select-label"
+                id="city-select"
+                variant="filled"
+                size={isXs ? "small" : "normal"}
+                disableUnderline={true}
+                value={selectedZone}
+                onChange={handleZoneSelect}
+                label="City"
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {filterContext.zones.map((zone) => (
+                  <MenuItem value={zone.name} key={zone.id}>
+                    {zone.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </SearchGridItem>
+        </Grid>
       </SearchGrid>
     </>
   );
