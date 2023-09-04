@@ -33,7 +33,7 @@ const Home = () => {
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
-    fetchParkingLots(0, 5, selectedStatus).then((res) =>
+    fetchParkingLots({ page: 1, status: selectedStatus }).then((res) =>
       setNumPages(res.numPages)
     );
   }, [userContext.role]);
@@ -52,7 +52,7 @@ const Home = () => {
       return;
     }
 
-    await fetchParkingLots(0, 5, e.target.value).then((res) => {
+    await fetchParkingLots({ page: 1, status: e.target.value }).then((res) => {
       setNumPages(res.numPages);
     });
   };
@@ -90,7 +90,7 @@ const Home = () => {
 
   const handlePageChange = (e, value) => {
     setPage(value);
-    fetchParkingLots(value, 5, selectedStatus);
+    fetchParkingLots({ page: value, status: selectedStatus });
   };
 
   return (
@@ -141,34 +141,20 @@ const Home = () => {
 
       <Grid container>
         {userContext.role === "User"
-          ? parkingContext.parkingLots.map((parking) => {
-              const isFavorite = userContext.favorites.some(
-                (fav) => fav.id === parking.id
-              );
-
-              return (
-                <ParkingLotsCard
-                  handleDeactivateParking={handleDeactivateParking}
-                  isFavorite={isFavorite}
-                  parking={parking}
-                  key={parking.id}
-                />
-              );
-            })
-          : parkings.map((parking) => {
-              const isFavorite = userContext.favorites.some(
-                (fav) => fav.id === parking.id
-              );
-
-              return (
-                <ParkingLotsCard
-                  handleDeactivateParking={handleDeactivateParking}
-                  isFavorite={isFavorite}
-                  parking={parking}
-                  key={parking.id}
-                />
-              );
-            })}
+          ? parkingContext.parkingLots.map((parking) => (
+              <ParkingLotsCard
+                handleDeactivateParking={handleDeactivateParking}
+                parking={parking}
+                key={parking.id}
+              />
+            ))
+          : parkings.map((parking) => (
+              <ParkingLotsCard
+                handleDeactivateParking={handleDeactivateParking}
+                parking={parking}
+                key={parking.id}
+              />
+            ))}
 
         <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
           <Pagination

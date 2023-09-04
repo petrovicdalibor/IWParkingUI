@@ -1,10 +1,24 @@
-import { Grid, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Grid, Pagination, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authProvider";
 import ParkingLotsCard from "../features/ParkingLots/components/ParkingLotsCard";
+import useParkingLots from "../common/hooks/useParkingLots";
 
 const Favorites = () => {
   const userContext = useContext(AuthContext);
+  const { fetchFavoriteLots } = useParkingLots();
+
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    setPage(userContext.favoritePage);
+  }, [userContext.favoritePage]);
+
+  const handlePageChange = (e, value) => {
+    setPage(value);
+    fetchFavoriteLots({ page: value });
+  };
+
   return (
     <>
       <Grid item display="flex" flexDirection="row" gap={3}>
@@ -14,19 +28,20 @@ const Favorites = () => {
       </Grid>
 
       <Grid container>
-        {userContext.favorites?.map((parking) => {
-          const isFavorite = userContext.favorites.some(
-            (fav) => fav.id === parking.id
-          );
+        {userContext.favorites?.map((parking) => (
+          <ParkingLotsCard parking={parking} key={parking.id} />
+        ))}
 
-          return (
-            <ParkingLotsCard
-              isFavorite={isFavorite}
-              parking={parking}
-              key={parking.id}
-            />
-          );
-        })}
+        <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
+          <Pagination
+            count={userContext.favoritePages}
+            color="primary"
+            // defaultPage={page}
+            page={page}
+            disabled={userContext.favoritePages === 1}
+            onChange={handlePageChange}
+          />
+        </Grid>
       </Grid>
     </>
   );
