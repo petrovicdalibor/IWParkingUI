@@ -16,7 +16,8 @@ const Routes = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const { verifyToken, setUserInfo, setUserVehicles } = useAuth();
-  const { fetchFavoriteLots } = useParkingLots();
+  const { fetchFavoriteLots, fetchParkingZones, fetchCities } =
+    useParkingLots();
   const { fetchVehicleTypes } = useVehicles();
 
   useEffect(() => {
@@ -31,6 +32,8 @@ const Routes = () => {
         fetchFavoriteLots();
         fetchVehicleTypes();
       }
+      fetchCities();
+      fetchParkingZones();
       setUserInfo(decodedToken.Id);
     }
   }, []);

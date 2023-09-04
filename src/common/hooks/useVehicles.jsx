@@ -22,8 +22,9 @@ const useVehicles = () => {
         filterContext.setVehicleTypes(res.data.vehicleTypes);
       })
       .catch((err) => {
-        console.log(err);
+        throw err;
       });
+
     return fetchVehicleTypesResult;
   };
 

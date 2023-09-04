@@ -20,12 +20,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TimeField } from "@mui/x-date-pickers/TimeField";
 import { BsPSquare } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 // import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../common/utils/toasts";
 import useParkingLots from "../../../common/hooks/useParkingLots";
+import { FilterContext } from "../../../context/filterContext";
 
 const RequestBox = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -42,6 +43,8 @@ const RequestForm = ({ parkingLot }) => {
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const navigate = useNavigate();
+
+  const filterContext = useContext(FilterContext);
 
   const { addParkingLot, editParkingLot } = useParkingLots();
 
@@ -274,10 +277,11 @@ const RequestForm = ({ parkingLot }) => {
                   <MenuItem value="">
                     <em>&#8205;</em>
                   </MenuItem>
-                  <MenuItem value="Skopje">Skopje</MenuItem>
-                  <MenuItem value="Bitola">Bitola</MenuItem>
-                  <MenuItem value="Prilep">Prilep</MenuItem>
-                  <MenuItem value="Kumanovo">Kumanovo</MenuItem>
+                  {filterContext.cities.map((city) => (
+                    <MenuItem value={city.name} key={city.id}>
+                      {city.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -299,12 +303,11 @@ const RequestForm = ({ parkingLot }) => {
                   <MenuItem value="">
                     <em>&#8205;</em>
                   </MenuItem>
-                  <MenuItem value="A1">A1</MenuItem>
-                  <MenuItem value="A2">A2</MenuItem>
-                  <MenuItem value="A3">A3</MenuItem>
-                  <MenuItem value="B1">B1</MenuItem>
-                  <MenuItem value="B2">B2</MenuItem>
-                  <MenuItem value="B3">B3</MenuItem>
+                  {filterContext.zones.map((zone) => (
+                    <MenuItem value={zone.name} key={zone.id}>
+                      {zone.name}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Grid>
