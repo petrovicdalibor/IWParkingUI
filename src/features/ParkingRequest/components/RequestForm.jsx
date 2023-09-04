@@ -22,7 +22,6 @@ import { TimeField } from "@mui/x-date-pickers/TimeField";
 import { BsPSquare } from "react-icons/bs";
 import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-// import Cookies from "universal-cookie";
 import { useNavigate } from "react-router-dom";
 import { toastError, toastSuccess } from "../../../common/utils/toasts";
 import useParkingLots from "../../../common/hooks/useParkingLots";
