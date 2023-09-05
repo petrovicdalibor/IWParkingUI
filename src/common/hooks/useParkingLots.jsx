@@ -141,12 +141,11 @@ const useParkingLots = () => {
   };
 
   const addFavorite = async (parkingLotId) => {
-    const favoritesArray = parkingContext.parkingLots.filter((parking) => {
+    const parkingLot = parkingContext.parkingLots.find((parking) => {
       return parking.id === parkingLotId;
     });
 
-    const plIndex = parkingContext.parkingLots.indexOf(favoritesArray[0]);
-    parkingContext.parkingLots[plIndex].isFavourite = true;
+    parkingLot.isFavourite = true;
 
     const addFavoriteResult = await axios
       .post(
