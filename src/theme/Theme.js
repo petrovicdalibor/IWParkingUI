@@ -9,15 +9,6 @@ let theme = createTheme({
     },
   },
 
-  input: {
-    borderRadius: "10px",
-    background: "#FFF",
-    boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
-    width: "332px",
-    height: "45px",
-    flexShrink: 0,
-  },
-
   palette: {
     background: {
       default: "#FFFFFF",
@@ -78,9 +69,9 @@ theme = createTheme(theme, {
         root: {
           boxShadow: "0px 0px 15px 0px rgba(157, 157, 157, 0.25)",
           borderRadius: "10px !important",
-          border: "1px solid #ECECEC",
+          border: "1px solid #ECECEC !important",
           "&:hover": {
-            border: "1px solid #C5C5C5",
+            border: "1px solid #C5C5C5 !important",
           },
           transition: theme.transitions.create("border", {
             duration: theme.transitions.duration.shorter,
@@ -115,6 +106,14 @@ theme = createTheme(theme, {
           "&:focus": {
             backgroundColor: "transparent",
           },
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {},
+        notchedOutline: {
+          border: "0 !important",
         },
       },
     },
