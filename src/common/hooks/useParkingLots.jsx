@@ -50,10 +50,15 @@ const useParkingLots = () => {
     return fetchParkingZonesResult;
   };
 
-  const fetchParkingLots = async (pageNumber, pageSize, status) => {
+  const fetchParkingLots = async ({ page, pageSize = 5, status = "" }) => {
+    if (page) {
+      parkingContext.setPageNumber(page);
+    }
     const fetchParkingLotsResult = await axios
       .post(
-        `/api/ParkingLot/GetAll?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        `/api/ParkingLot/GetAll?pageNumber=${
+          page || parkingContext.pageNumber
+        }&pageSize=${pageSize}`,
         {
           status: status,
         },
@@ -106,10 +111,16 @@ const useParkingLots = () => {
     return fetchParkingLotsResult;
   };
 
-  const fetchFavoriteLots = async () => {
+  const fetchFavoriteLots = async ({ page, pageSize = 5 }) => {
+    if (page) {
+      userContext.setFavoritePage(page);
+    }
+
     const addToFavoritesResult = await axios
       .get(
-        `/api/ParkingLot/GetUserFavouriteParkingLots`,
+        `/api/ParkingLot/GetUserFavouriteParkingLots?pageNumber=${
+          page || userContext.favoritePage
+        }&pageSize=${pageSize}`,
 
         {
           headers: {
@@ -119,6 +130,8 @@ const useParkingLots = () => {
       )
       .then((res) => {
         userContext.setFavorites(res.data.parkingLots);
+        userContext.setFavoritePages(res.data.numPages);
+        userContext.setFavoritePage(page);
         return res.data.parkingLots;
       })
       .catch((err) => {
@@ -128,6 +141,12 @@ const useParkingLots = () => {
   };
 
   const addFavorite = async (parkingLotId) => {
+    const parkingLot = parkingContext.parkingLots.find((parking) => {
+      return parking.id === parkingLotId;
+    });
+
+    parkingLot.isFavourite = true;
+
     const addFavoriteResult = await axios
       .post(
         `/api/ParkingLot/MakeParkingLotFavourite/${parkingLotId}`,
@@ -139,10 +158,8 @@ const useParkingLots = () => {
         }
       )
       .then((res) => {
-        userContext.setFavorites([
-          ...userContext.favorites,
-          res.data.parkingLot,
-        ]);
+        fetchParkingLots({ page: parkingContext.pageNumber });
+        fetchFavoriteLots({ page: 1 });
 
         return res.data.message;
       })
@@ -153,6 +170,21 @@ const useParkingLots = () => {
   };
 
   const removeFavorite = async (parkingLotId) => {
+    const parkingLot = parkingContext.parkingLots?.find((parking) => {
+      return parking.id === parkingLotId;
+    });
+
+    let pageNum = userContext.favoritePage;
+
+    if (parkingLot) {
+      parkingLot.isFavourite = false;
+    }
+
+    if (userContext.favorites.length === 1) {
+      pageNum -= 1;
+      userContext.setFavoritePage(pageNum);
+    }
+
     const removeFavoriteResult = await axios
       .delete(`/api/ParkingLot/RemoveParkingLotFavourite/${parkingLotId}`, {
         headers: {
@@ -160,16 +192,16 @@ const useParkingLots = () => {
         },
       })
       .then((res) => {
-        const favoritesArray = userContext.favorites.filter((favorite) => {
-          return favorite.id !== parkingLotId;
-        });
-        userContext.setFavorites(favoritesArray);
+        fetchParkingLots({ page: parkingContext.pageNumber });
+
+        fetchFavoriteLots({ page: pageNum });
 
         return res.data.message;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+
     return removeFavoriteResult;
   };
 

@@ -231,9 +231,9 @@ const useAuth = () => {
     }
   };
 
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = async ({ page, pageSize = 10 }) => {
     const fetchAllUsersResult = await axios
-      .get(`/api/User/GetAll`, {
+      .get(`/api/User/GetAll?pageNumber=${page}&pageSize=${pageSize}`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
