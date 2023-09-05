@@ -71,12 +71,7 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = ({
-  parking,
-  request,
-  isFavorite,
-  handleDeactivateParking,
-}) => {
+const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
@@ -88,7 +83,7 @@ const ParkingLotsCard = ({
   const [openDetails, setOpenDetails] = useState(false);
 
   const handleAddToFavorites = async () => {
-    if (isFavorite) {
+    if (parking.isFavourite) {
       await removeFavorite(parking.id)
         .then(() => {
           const toastId = `remove-favorite-${parking.id}`;
@@ -387,7 +382,7 @@ const ParkingLotsCard = ({
                   onClick={handleAddToFavorites}
                   fullWidth
                 >
-                  {isFavorite ? (
+                  {parking.isFavourite ? (
                     <BsStarFill
                       size={17}
                       style={{
@@ -531,7 +526,6 @@ const ParkingLotsCard = ({
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
   request: PropTypes.object,
-  isFavorite: PropTypes.bool,
   handleDeactivateParking: PropTypes.func,
 };
 

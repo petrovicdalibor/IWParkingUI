@@ -29,7 +29,7 @@ const Routes = () => {
       userContext.setRole(decodedToken.Role);
       if (decodedToken.Role === "User") {
         setUserVehicles();
-        fetchFavoriteLots();
+        fetchFavoriteLots({ page: 1 });
         fetchVehicleTypes();
       }
       fetchCities();

@@ -5,6 +5,8 @@ const AuthContext = createContext({
   user: {},
   vehicles: [],
   favorites: [],
+  favoritePage: 1,
+  favoritePages: 1,
   role: "",
   isLoggedIn: false,
   // eslint-disable-next-line no-unused-vars
@@ -13,6 +15,10 @@ const AuthContext = createContext({
   setVehicles: (vehicles) => {},
   // eslint-disable-next-line no-unused-vars
   setFavorites: (parkingLot) => {},
+  // eslint-disable-next-line no-unused-vars
+  setFavoritePage: (favoritePage) => {},
+  // eslint-disable-next-line no-unused-vars
+  setFavoritePages: (favoritePages) => {},
   // eslint-disable-next-line no-unused-vars
   setRole: (role) => {},
   // eslint-disable-next-line no-unused-vars
@@ -23,6 +29,8 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [role, setRole] = useState("");
   const [favorites, setFavorites] = useState([]);
+  const [favoritePage, setFavoritePage] = useState(1);
+  const [favoritePages, setFavoritePages] = useState(1);
   const [vehicles, setVehicles] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -32,11 +40,15 @@ const AuthProvider = ({ children }) => {
         user,
         role,
         favorites,
+        favoritePage,
+        favoritePages,
         vehicles,
         isLoggedIn,
         setUser,
         setRole,
         setFavorites,
+        setFavoritePage,
+        setFavoritePages,
         setVehicles,
         setIsLoggedIn,
       }}
