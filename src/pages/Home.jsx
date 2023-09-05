@@ -63,14 +63,10 @@ const Home = () => {
     );
 
     if (confirmDialog) {
-      const parkingLotIndex = parkingContext.parkingLots.indexOf(parking);
-      const array = [...parkingContext.parkingLots];
-
-      array[parkingLotIndex] = {
-        ...array[parkingLotIndex],
-        isDeactivated: true,
-      };
-      parkingContext.setParkingLots(array);
+      const parkingLot = parkingContext.parkingLots.find((p) => {
+        return p === parking;
+      });
+      parkingLot.isDeactivated = true;
 
       await deactivateParkingLot(parking.id)
         .then((res) => {

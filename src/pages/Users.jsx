@@ -14,7 +14,7 @@ const Users = () => {
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const fetchUsers = () => {
-    fetchAllUsers().then((res) => {
+    fetchAllUsers({ page: 0 }).then((res) => {
       setUsers(res.data.users);
       setIsLoading(false);
     });
@@ -30,14 +30,19 @@ const Users = () => {
     );
 
     if (confirmDialog) {
-      const userIndex = users.indexOf(user);
-      const array = [...users];
+      // const userIndex = users.indexOf(user);
+      // const array = [...users];
 
-      array[userIndex] = {
-        ...array[userIndex],
-        isDeactivated: true,
-      };
-      setUsers(array);
+      // array[userIndex] = {
+      //   ...array[userIndex],
+      //   isDeactivated: true,
+      // };
+      // setUsers(array);
+
+      const usr = users.find((u) => {
+        return u === user;
+      });
+      usr.isDeactivated = true;
 
       await deactivateUserById(user.id)
         .then((res) => {
