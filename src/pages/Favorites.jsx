@@ -28,20 +28,34 @@ const Favorites = () => {
       </Grid>
 
       <Grid container>
-        {userContext.favorites?.map((parking) => (
-          <ParkingLotsCard parking={parking} key={parking.id} />
-        ))}
+        {userContext.favorites.length > 0 ? (
+          <>
+            {userContext.favorites?.map((parking) => (
+              <ParkingLotsCard parking={parking} key={parking.id} />
+            ))}
 
-        <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
-          <Pagination
-            count={userContext.favoritePages}
-            color="primary"
-            // defaultPage={page}
-            page={page}
-            disabled={userContext.favoritePages === 1}
-            onChange={handlePageChange}
-          />
-        </Grid>
+            <Grid
+              item
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              mt={2}
+            >
+              <Pagination
+                count={userContext.favoritePages}
+                color="primary"
+                defaultPage={page}
+                page={page}
+                disabled={userContext.favoritePages === 1}
+                onChange={handlePageChange}
+              />
+            </Grid>
+          </>
+        ) : (
+          <Typography variant="body1" mt={3}>
+            No favorite parking lots found.
+          </Typography>
+        )}
       </Grid>
     </>
   );

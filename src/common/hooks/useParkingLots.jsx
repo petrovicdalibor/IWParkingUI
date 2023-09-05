@@ -132,7 +132,6 @@ const useParkingLots = () => {
         userContext.setFavorites(res.data.parkingLots);
         userContext.setFavoritePages(res.data.numPages);
         userContext.setFavoritePage(page);
-        console.log(res);
         return res.data.parkingLots;
       })
       .catch((err) => {
@@ -163,11 +162,6 @@ const useParkingLots = () => {
         fetchParkingLots({ page: parkingContext.pageNumber });
         fetchFavoriteLots({ page: 1 });
 
-        // userContext.setFavorites([
-        //   ...userContext.favorites,
-        //   res.data.parkingLot,
-        // ]);
-
         return res.data.message;
       })
       .catch((err) => {
@@ -177,20 +171,21 @@ const useParkingLots = () => {
   };
 
   const removeFavorite = async (parkingLotId) => {
-    console.log("MARKO1", parkingContext.parkingLots);
     const parkingLot = parkingContext.parkingLots?.find((parking) => {
       return parking.id === parkingLotId;
     });
 
+    let pageNum = userContext.favoritePage;
+
     if (parkingLot) {
       parkingLot.isFavourite = false;
     }
-    console.log("MARKO2");
 
-    // const plIndex = parkingContext.parkingLots.find(favoritesArray[0]);
-    console.log("MARKO3", parkingContext.parkingLots);
-    // parkingContext.parkingLots[plIndex].isFavourite = false;
-    console.log("MARKO");
+    if (userContext.favorites.length === 1) {
+      pageNum -= 1;
+      userContext.setFavoritePage(pageNum);
+    }
+
     const removeFavoriteResult = await axios
       .delete(`/api/ParkingLot/RemoveParkingLotFavourite/${parkingLotId}`, {
         headers: {
@@ -199,22 +194,15 @@ const useParkingLots = () => {
       })
       .then((res) => {
         fetchParkingLots({ page: parkingContext.pageNumber });
-        console.log("HEY REMOVE");
-        fetchFavoriteLots().then((res) => {
-          console.log("removeres");
-          if (userContext.favoritePage > res.data.numPages) {
-            userContext.setFavoritePage(res.data.numPages);
-          }
-        });
-        const favoritesArray = userContext.favorites.filter((favorite) => {
-          return favorite.id !== parkingLotId;
-        });
-        userContext.setFavorites(favoritesArray);
+
+        fetchFavoriteLots({ page: pageNum });
+
         return res.data.message;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+
     return removeFavoriteResult;
   };
 
