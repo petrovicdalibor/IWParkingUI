@@ -1,30 +1,38 @@
-import { CircularProgress, Grid, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { CircularProgress, Grid, Pagination, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import useParkingLots from "../common/hooks/useParkingLots";
 import ParkingLotsCard from "../features/ParkingLots/components/ParkingLotsCard";
 import { toastError } from "../common/utils/toasts";
+import { RequestsContext } from "../context/requestsProvider";
 
 const Requests = () => {
+  const requestsContext = useContext(RequestsContext);
+
   const { fetchRequests } = useParkingLots();
 
-  const [requests, setRequests] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(requestsContext.requestsPage);
 
-  const handleFetchRequests = async () => {
-    await fetchRequests()
-      .then((res) => {
-        setRequests(res);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        const toastId = "fetchRequest-error";
-        toastError(err, { toastId });
-      });
+  const handleFetchRequests = async (page) => {
+    await fetchRequests({ page }).catch((err) => {
+      const toastId = "fetchRequest-error";
+      toastError(err, { toastId });
+    });
+  };
+
+  const handleChangePage = (e, value) => {
+    setCurrentPage(value);
+    handleFetchRequests(value);
   };
 
   useEffect(() => {
-    handleFetchRequests();
+    handleFetchRequests(currentPage);
+    setCurrentPage(requestsContext.requestsPage);
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(requestsContext.requestsPage);
+  }, [requestsContext.requestsPage]);
+
   return (
     <>
       <Grid item display="flex" flexDirection="row" gap={3}>
@@ -36,11 +44,11 @@ const Requests = () => {
       <Grid
         container
         display={"flex"}
-        justifyContent={isLoading && "center"}
-        alignItems={isLoading && "center"}
-        height={isLoading && "60vh"}
+        justifyContent={requestsContext.isLoading && "center"}
+        alignItems={requestsContext.isLoading && "center"}
+        height={requestsContext.isLoading && "60vh"}
       >
-        {isLoading && (
+        {requestsContext.isLoading ? (
           <Grid
             item
             alignContent={"center"}
@@ -50,16 +58,34 @@ const Requests = () => {
           >
             <CircularProgress />
           </Grid>
+        ) : (
+          <>
+            {requestsContext.requests.map((request) => {
+              return (
+                <ParkingLotsCard
+                  parking={request.parkingLot}
+                  request={request}
+                  key={request.id}
+                />
+              );
+            })}
+            <Grid
+              item
+              width="100%"
+              display="flex"
+              justifyContent="center"
+              mt={2}
+            >
+              <Pagination
+                count={requestsContext.requestsPages}
+                disabled={requestsContext.requestsPages === 1}
+                color="primary"
+                page={currentPage}
+                onChange={handleChangePage}
+              />
+            </Grid>
+          </>
         )}
-        {requests.map((request) => {
-          return (
-            <ParkingLotsCard
-              parking={request.parkingLot}
-              request={request}
-              key={request.id}
-            />
-          );
-        })}
       </Grid>
     </>
   );

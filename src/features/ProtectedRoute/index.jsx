@@ -16,7 +16,7 @@ const Routes = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const { verifyToken, setUserInfo, setUserVehicles } = useAuth();
-  const { fetchFavoriteLots, fetchParkingZones, fetchCities } =
+  const { fetchFavoriteLots, fetchParkingZones, fetchCities, fetchRequests } =
     useParkingLots();
   const { fetchVehicleTypes } = useVehicles();
 
@@ -31,6 +31,9 @@ const Routes = () => {
         setUserVehicles();
         fetchFavoriteLots({ page: 1 });
         fetchVehicleTypes();
+      }
+      if (decodedToken.Role === "SuperAdmin" || decodedToken.Role === "Owner") {
+        fetchRequests({ page: 1 });
       }
       fetchCities();
       fetchParkingZones();

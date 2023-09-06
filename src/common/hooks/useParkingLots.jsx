@@ -4,12 +4,14 @@ import Cookies from "universal-cookie";
 import { ParkingContext } from "../../context/parkingProvider";
 import { AuthContext } from "../../context/authProvider";
 import { FilterContext } from "../../context/filterContext";
+import { RequestsContext } from "../../context/requestsProvider";
 
 const useParkingLots = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const filterContext = useContext(FilterContext);
   const parkingContext = useContext(ParkingContext);
+  const requestsContext = useContext(RequestsContext);
 
   const token =
     cookies.get("token") === undefined
@@ -95,15 +97,19 @@ const useParkingLots = () => {
     return fetchParkingLotResult;
   };
 
-  const fetchRequests = async () => {
+  const fetchRequests = async ({ page, pageSize = 2 }) => {
     const fetchParkingLotsResult = await axios
-      .get("/api/Request/GetAll", {
+      .get(`/api/Request/GetAll?pageNumber=${page}&pageSize=${pageSize}`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
       })
       .then((res) => {
-        return res.data.requests;
+        requestsContext.setRequests(res.data.requests);
+        requestsContext.setRequestsPages(res.data.numPages);
+        requestsContext.setRequestsPage(page);
+        requestsContext.setIsLoading(false);
+        return res;
       })
       .catch((err) => {
         throw err.response.data.errors[0];
@@ -206,6 +212,12 @@ const useParkingLots = () => {
   };
 
   const modifyRequest = async (id, action) => {
+    let pageNum = requestsContext.requestsPage;
+    if (requestsContext.requests.length === 1) {
+      pageNum -= 1;
+      requestsContext.setRequestsPage(pageNum);
+    }
+
     const modifyRequestResult = await axios
       .put(
         `/api/Request/Modify/${id}`,
@@ -217,6 +229,8 @@ const useParkingLots = () => {
         }
       )
       .then((res) => {
+        fetchRequests({ page: pageNum });
+
         return res.data.message;
       })
       .catch((err) => {
