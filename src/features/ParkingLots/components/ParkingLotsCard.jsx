@@ -143,8 +143,6 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
           const toastId = "modify-request";
 
           toastSuccess(res, { toastId });
-
-          // navigate("/");
         })
         .catch((err) => {
           const toastId = "modify-request";
