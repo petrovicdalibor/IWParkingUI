@@ -16,7 +16,7 @@ const Users = () => {
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const fetchUsers = (page) => {
-    fetchAllUsers({ page: page }).then((res) => {
+    fetchAllUsers({ page }).then((res) => {
       setUsers(res.data.users);
       setIsLoading(false);
       setNumPages(res.data.numPages);
