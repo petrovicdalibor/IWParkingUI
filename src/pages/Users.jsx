@@ -9,19 +9,27 @@ import ConfirmDialog from "../features/ConfirmDialog/components/ConfirmDialog";
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [numPages, setNumPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { fetchAllUsers, deactivateUserById } = useAuth();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
-  const fetchUsers = () => {
-    fetchAllUsers({ page: 0 }).then((res) => {
+  const fetchUsers = (page) => {
+    fetchAllUsers({ page: page }).then((res) => {
       setUsers(res.data.users);
       setIsLoading(false);
+      setNumPages(res.data.numPages);
     });
   };
 
+  const handleChangePage = (e, value) => {
+    setCurrentPage(value);
+    fetchUsers(value);
+  };
+
   useEffect(() => {
-    fetchUsers();
+    fetchUsers(currentPage);
   }, []);
 
   const handleDeactivateUser = async (user) => {
@@ -30,15 +38,6 @@ const Users = () => {
     );
 
     if (confirmDialog) {
-      // const userIndex = users.indexOf(user);
-      // const array = [...users];
-
-      // array[userIndex] = {
-      //   ...array[userIndex],
-      //   isDeactivated: true,
-      // };
-      // setUsers(array);
-
       const usr = users.find((u) => {
         return u === user;
       });
@@ -93,7 +92,11 @@ const Users = () => {
           </Grid>
         ) : (
           <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
-            <Pagination count={10} color="primary" />
+            <Pagination
+              count={numPages}
+              color="primary"
+              onChange={handleChangePage}
+            />
           </Grid>
         )}
       </Grid>

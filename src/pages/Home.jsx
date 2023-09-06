@@ -46,9 +46,13 @@ const Home = () => {
     setSelectedStatus(e.target.value);
     setPage(1);
     if (e.target.value === "" || userContext.role === "User") {
-      await fetchParkingLots(0, 5, "").then((res) => {
-        setNumPages(res.numPages);
-      });
+      await fetchParkingLots({ page: 1 })
+        .then((res) => {
+          setNumPages(res.numPages);
+        })
+        .catch((err) => {
+          toastError(err, { toastId: "fetch-parking-lots-error" });
+        });
       return;
     }
 

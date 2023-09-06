@@ -74,7 +74,7 @@ const useParkingLots = () => {
         return res.data;
       })
       .catch((err) => {
-        throw err.response.data.errors[0];
+        throw err.response.data.Errors[0];
       });
     return fetchParkingLotsResult;
   };
