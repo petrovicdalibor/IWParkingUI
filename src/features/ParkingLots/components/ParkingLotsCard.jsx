@@ -27,7 +27,7 @@ import useParkingLots from "../../../common/hooks/useParkingLots";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../../context/authProvider";
 import theme from "../../../theme/Theme";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   toastError,
   toastInfo,
@@ -75,7 +75,6 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
-  const navigate = useNavigate();
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
@@ -125,8 +124,6 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
           const toastId = "modify-request";
 
           toastSuccess(res, { toastId });
-
-          navigate("/");
         })
         .catch((err) => {
           const toastId = "modify-request";
@@ -147,7 +144,7 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
 
           toastSuccess(res, { toastId });
 
-          navigate("/");
+          // navigate("/");
         })
         .catch((err) => {
           const toastId = "modify-request";
