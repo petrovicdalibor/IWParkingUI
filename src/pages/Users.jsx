@@ -39,7 +39,7 @@ const Users = () => {
 
     if (confirmDialog) {
       const usr = users.find((u) => {
-        return u === user;
+        return u.id === user.id;
       });
       usr.isDeactivated = true;
 

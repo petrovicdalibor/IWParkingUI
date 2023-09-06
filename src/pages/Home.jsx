@@ -68,7 +68,7 @@ const Home = () => {
 
     if (confirmDialog) {
       const parkingLot = parkingContext.parkingLots.find((p) => {
-        return p === parking;
+        return p.id === parking.id;
       });
       parkingLot.isDeactivated = true;
 
