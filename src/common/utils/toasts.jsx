@@ -3,7 +3,7 @@ import { Slide, toast } from "react-toastify";
 const toastError = (
   message,
   {
-    position = toast.POSITION.TOP_RIGHT,
+    position = toast.POSITION.BOTTOM_LEFT,
     autoClose = 3000, //3 seconds
     hideProgressBar = false,
     closeOnClick = true,
@@ -28,7 +28,7 @@ const toastError = (
 const toastWarning = (
   message,
   {
-    position = toast.POSITION.TOP_RIGHT,
+    position = toast.POSITION.BOTTOM_LEFT,
     autoClose = 3000, //3 seconds
     hideProgressBar = false,
     closeOnClick = true,
@@ -53,7 +53,7 @@ const toastWarning = (
 const toastInfo = (
   message,
   {
-    position = toast.POSITION.TOP_RIGHT,
+    position = toast.POSITION.BOTTOM_LEFT,
     autoClose = 3000, //3 seconds
     hideProgressBar = false,
     closeOnClick = true,
@@ -78,7 +78,7 @@ const toastInfo = (
 const toastSuccess = (
   message,
   {
-    position = toast.POSITION.TOP_RIGHT,
+    position = toast.POSITION.BOTTOM_LEFT,
     autoClose = 3000, //3 seconds
     hideProgressBar = false,
     closeOnClick = true,
