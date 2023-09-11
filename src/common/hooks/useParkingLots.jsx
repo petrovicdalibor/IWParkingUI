@@ -83,6 +83,7 @@ const useParkingLots = () => {
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
         parkingContext.setIsLoading(false);
+        parkingContext.setNumPages(res.data.numPages);
 
         return res.data;
       })

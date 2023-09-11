@@ -32,7 +32,6 @@ const Home = () => {
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const [selectedStatus, setSelectedStatus] = useState("");
-  const [numPages, setNumPages] = useState(0);
   const [page, setPage] = useState(1);
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
@@ -43,7 +42,7 @@ const Home = () => {
       name: filterContext.searchCondition,
       zone: filterContext.searchZone,
       status: selectedStatus,
-    }).then((res) => setNumPages(res.numPages));
+    });
   }, [userContext.role]);
 
   useEffect(() => {
@@ -54,19 +53,13 @@ const Home = () => {
     setSelectedStatus(e.target.value);
     setPage(1);
     if (e.target.value === "" || userContext.role === "User") {
-      await fetchParkingLots({ page: 1 })
-        .then((res) => {
-          setNumPages(res.numPages);
-        })
-        .catch((err) => {
-          toastError(err, { toastId: "fetch-parking-lots-error" });
-        });
+      await fetchParkingLots({ page: 1 }).catch((err) => {
+        toastError(err, { toastId: "fetch-parking-lots-error" });
+      });
       return;
     }
 
-    await fetchParkingLots({ page: 1, status: e.target.value }).then((res) => {
-      setNumPages(res.numPages);
-    });
+    await fetchParkingLots({ page: 1, status: e.target.value });
   };
 
   const handleDeactivateParking = async (parking) => {
@@ -198,11 +191,11 @@ const Home = () => {
         {parkingContext.parkingLots.length !== 0 && (
           <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
             <Pagination
-              count={numPages}
+              count={parkingContext.numPages}
               color="primary"
               defaultPage={page}
               page={page}
-              disabled={numPages === 1}
+              disabled={parkingContext.numPages === 1}
               onChange={handlePageChange}
             />
           </Grid>
