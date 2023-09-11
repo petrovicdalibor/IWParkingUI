@@ -52,7 +52,14 @@ const useParkingLots = () => {
     return fetchParkingZonesResult;
   };
 
-  const fetchParkingLots = async ({ page, pageSize = 5, status = "" }) => {
+  const fetchParkingLots = async ({
+    page,
+    pageSize = 5,
+    name = "",
+    status = "",
+    city = "",
+    zone = "",
+  }) => {
     if (page) {
       parkingContext.setPageNumber(page);
     }
@@ -62,7 +69,10 @@ const useParkingLots = () => {
           page || parkingContext.pageNumber
         }&pageSize=${pageSize}`,
         {
-          status: status,
+          name,
+          city,
+          zone,
+          status,
         },
         {
           headers: {
@@ -72,6 +82,7 @@ const useParkingLots = () => {
       )
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
+        parkingContext.setIsLoading(false);
 
         return res.data;
       })

@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -18,12 +19,15 @@ import { Link } from "react-router-dom";
 import { toastError, toastSuccess } from "../common/utils/toasts";
 import useConfirm from "../common/hooks/useConfirm";
 import ConfirmDialog from "../features/ConfirmDialog/components/ConfirmDialog";
+import { FilterContext } from "../context/filterContext";
 
 const Home = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
   const userContext = useContext(AuthContext);
   const parkingContext = useContext(ParkingContext);
+  const filterContext = useContext(FilterContext);
+
   const { fetchParkingLots, deactivateParkingLot } = useParkingLots();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
@@ -33,9 +37,13 @@ const Home = () => {
   const [parkings, setParkings] = useState(parkingContext.parkingLots);
 
   useEffect(() => {
-    fetchParkingLots({ page: 1, status: selectedStatus }).then((res) =>
-      setNumPages(res.numPages)
-    );
+    fetchParkingLots({
+      page: 0,
+      city: filterContext.searchCity,
+      name: filterContext.searchCondition,
+      zone: filterContext.searchZone,
+      status: selectedStatus,
+    }).then((res) => setNumPages(res.numPages));
   }, [userContext.role]);
 
   useEffect(() => {
@@ -90,8 +98,31 @@ const Home = () => {
 
   const handlePageChange = (e, value) => {
     setPage(value);
-    fetchParkingLots({ page: value, status: selectedStatus });
+    fetchParkingLots({
+      page: value,
+      city: filterContext.searchCity,
+      name: filterContext.searchCondition,
+      zone: filterContext.searchZone,
+      status: selectedStatus,
+    });
   };
+
+  let content =
+    userContext.role === "User"
+      ? parkingContext.parkingLots.map((parking) => (
+          <ParkingLotsCard
+            handleDeactivateParking={handleDeactivateParking}
+            parking={parking}
+            key={parking.id}
+          />
+        ))
+      : parkings.map((parking) => (
+          <ParkingLotsCard
+            handleDeactivateParking={handleDeactivateParking}
+            parking={parking}
+            key={parking.id}
+          />
+        ));
 
   return (
     <>
@@ -111,6 +142,7 @@ const Home = () => {
           ""
         )}
       </Grid>
+
       {userContext.role === "SuperAdmin" || userContext.role === "Owner" ? (
         <Grid item mt={1} sx={{ minWidth: "150px", maxWidth: "180px" }}>
           <FormControl
@@ -139,33 +171,42 @@ const Home = () => {
         ""
       )}
 
-      <Grid container>
-        {userContext.role === "User"
-          ? parkingContext.parkingLots.map((parking) => (
-              <ParkingLotsCard
-                handleDeactivateParking={handleDeactivateParking}
-                parking={parking}
-                key={parking.id}
-              />
-            ))
-          : parkings.map((parking) => (
-              <ParkingLotsCard
-                handleDeactivateParking={handleDeactivateParking}
-                parking={parking}
-                key={parking.id}
-              />
-            ))}
+      <Grid
+        container
+        justifyContent={parkingContext.isLoading && "center"}
+        alignItems={parkingContext.isLoading && "center"}
+        height={parkingContext.isLoading && "60vh"}
+      >
+        {parkingContext.isLoading ? (
+          <Grid
+            item
+            alignContent={"center"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            alignSelf={"center"}
+          >
+            <CircularProgress />
+          </Grid>
+        ) : parkingContext.parkingLots.length === 0 ? (
+          <Typography variant="body1" mt={3}>
+            No parking lots found.
+          </Typography>
+        ) : (
+          content
+        )}
 
-        <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
-          <Pagination
-            count={numPages}
-            color="primary"
-            defaultPage={page}
-            page={page}
-            disabled={numPages === 1}
-            onChange={handlePageChange}
-          />
-        </Grid>
+        {parkingContext.parkingLots.length !== 0 && (
+          <Grid item width="100%" display="flex" justifyContent="center" mt={2}>
+            <Pagination
+              count={numPages}
+              color="primary"
+              defaultPage={page}
+              page={page}
+              disabled={numPages === 1}
+              onChange={handlePageChange}
+            />
+          </Grid>
+        )}
       </Grid>
       <ConfirmDialogModal />
     </>
