@@ -13,6 +13,7 @@ import { FilterContext } from "../../../../context/filterContext";
 import useParkingLots from "../../../hooks/useParkingLots";
 import useDebounce from "../../../hooks/useDebounce";
 import { ParkingContext } from "../../../../context/parkingProvider";
+import { useLocation } from "react-router-dom";
 
 const SearchGrid = styled(Grid)(({ theme }) => ({
   padding: "0 !important",
@@ -44,6 +45,8 @@ const SearchInput = () => {
 
   const filterContext = useContext(FilterContext);
   const parkingContext = useContext(ParkingContext);
+
+  const location = useLocation();
 
   const { fetchParkingLots } = useParkingLots();
 
@@ -85,6 +88,11 @@ const SearchInput = () => {
     });
   }, [searchQuery]);
 
+  // if url pathname is not / do not render search input
+  if (location.pathname !== "/") {
+    return <></>;
+  }
+
   return (
     <>
       <SearchGrid
@@ -97,7 +105,6 @@ const SearchInput = () => {
             label="Search"
             onChange={(e) => {
               setSearchCondition(e.target.value);
-              // handleSearchConditionChange(e.target.value);
             }}
             variant="filled"
             size={isXs ? "small" : "normal"}
