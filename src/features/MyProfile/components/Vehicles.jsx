@@ -139,7 +139,7 @@ const Vehicles = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   label="Registration Plate"
-                  onChange={(e) => setPlate(e.target.value)}
+                  onChange={(e) => setPlate(e.target.value.toUpperCase())}
                   color="secondary"
                   variant="filled"
                   size={isXs ? "small" : "normal"}
