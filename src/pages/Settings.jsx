@@ -1,12 +1,7 @@
 import {
   Box,
-  Button,
-  Divider,
   Grid,
-  IconButton,
   List,
-  ListItem,
-  ListItemText,
   TextField,
   Typography,
   useMediaQuery,
@@ -14,18 +9,63 @@ import {
 import { useContext, useState } from "react";
 import { FilterContext } from "../context/filterContext";
 
-import DeleteIcon from "@mui/icons-material/Delete";
-
-import { BsPlusCircleFill } from "react-icons/bs";
+import { BsPlusLg } from "react-icons/bs";
+import useParkingLots from "../common/hooks/useParkingLots";
+import { toastError, toastSuccess } from "../common/utils/toasts";
+import SettingsListItem from "../features/Settings/components/SettingsListItem";
 
 const Settings = () => {
   const filterContext = useContext(FilterContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
-  const [dense, setDense] = useState(false);
+  const { addCity, deleteCity, addZone, deleteZone } = useParkingLots();
+
+  const [dense] = useState(false);
 
   const [city, setCity] = useState("");
   const [zone, setZone] = useState("");
+
+  const handleAddCity = async () => {
+    await addCity(city)
+      .then((res) => {
+        toastSuccess(res, { toastId: "addCitySuccess" });
+        setCity("");
+      })
+      .catch((err) => {
+        toastError(err, { toastId: "addCityError" });
+      });
+  };
+
+  const handleDeleteCity = async (cityId) => {
+    await deleteCity(cityId)
+      .then((res) => {
+        toastSuccess(res, { toastId: "addCitySuccess" });
+      })
+      .catch((err) => {
+        toastError(err, { toastId: "addCityError" });
+      });
+  };
+
+  const handleAddZone = async () => {
+    await addZone(zone)
+      .then((res) => {
+        toastSuccess(res, { toastId: "addZoneSuccess" });
+        setZone("");
+      })
+      .catch((err) => {
+        toastError(err, { toastId: "addZoneError" });
+      });
+  };
+
+  const handleDeleteZone = async (zoneId) => {
+    await deleteZone(zoneId)
+      .then((res) => {
+        toastSuccess(res, { toastId: "addZoneSuccess" });
+      })
+      .catch((err) => {
+        toastError(err, { toastId: "addZoneError" });
+      });
+  };
 
   return (
     <>
@@ -47,29 +87,15 @@ const Settings = () => {
             }
           >
             {filterContext.cities.map((city) => (
-              <>
-                <ListItem
-                  sx={{
-                    borderRadius: "10px",
-                    ":hover": {
-                      background: "#F1F1F1",
-                    },
-                  }}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                  key={city.id}
-                >
-                  <ListItemText primary={city.name} />
-                </ListItem>
-                <Divider></Divider>
-              </>
+              <SettingsListItem
+                item={city}
+                handleDeleteItem={handleDeleteCity}
+                key={city.id}
+              />
             ))}
             <Box sx={{ mt: 2 }} gap={2} component="form">
-              <Grid container direction={isXs ? "column" : "row"} gap={2}>
-                <Grid item xs={6}>
+              <Grid container direction="row">
+                <Grid item xs={9} display="flex" alignItems="center">
                   <TextField
                     label="New City"
                     onChange={(e) => {
@@ -80,13 +106,12 @@ const Settings = () => {
                     InputProps={{ disableUnderline: true }}
                     type="text"
                     value={city}
-                    // fullWidth
                   />
-                </Grid>
-                <Grid item xs={6}>
-                  <Button variant="contained" sx={{ height: "56px" }}>
-                    <BsPlusCircleFill size={18} />
-                  </Button>
+                  <BsPlusLg
+                    size={22}
+                    style={{ marginLeft: "10px", flexShrink: 0 }}
+                    onClick={handleAddCity}
+                  />
                 </Grid>
               </Grid>
             </Box>
@@ -103,29 +128,15 @@ const Settings = () => {
             }
           >
             {filterContext.zones.map((zone) => (
-              <>
-                <ListItem
-                  sx={{
-                    borderRadius: "10px",
-                    ":hover": {
-                      background: "#F1F1F1",
-                    },
-                  }}
-                  secondaryAction={
-                    <IconButton edge="end" aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                  key={zone.id}
-                >
-                  <ListItemText primary={zone.name} />
-                </ListItem>
-                <Divider></Divider>
-              </>
+              <SettingsListItem
+                item={zone}
+                handleDeleteItem={handleDeleteZone}
+                key={zone.id}
+              />
             ))}
             <Box sx={{ mt: 2 }} gap={2} component="form">
-              <Grid container direction={isXs ? "column" : "row"} gap={2}>
-                <Grid item xs={10}>
+              <Grid container direction={isXs ? "column" : "row"}>
+                <Grid item xs={9} display="flex" alignItems="center">
                   <TextField
                     label="New Zone"
                     onChange={(e) => {
@@ -136,13 +147,12 @@ const Settings = () => {
                     InputProps={{ disableUnderline: true }}
                     type="text"
                     value={zone}
-                    fullWidth
                   />
-                </Grid>
-                <Grid item xs={1}>
-                  <Button variant="contained" sx={{ height: "56px" }}>
-                    <BsPlusCircleFill size={18} />
-                  </Button>
+                  <BsPlusLg
+                    size={22}
+                    style={{ marginLeft: "10px", flexShrink: 0 }}
+                    onClick={handleAddZone}
+                  />
                 </Grid>
               </Grid>
             </Box>

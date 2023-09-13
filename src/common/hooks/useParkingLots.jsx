@@ -35,6 +35,54 @@ const useParkingLots = () => {
     return fetchCitiesResult;
   };
 
+  const addCity = async (name) => {
+    const addCityResult = await axios
+      .post(
+        "/api/City/Create",
+        { name },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        fetchCities();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return addCityResult;
+  };
+
+  const deleteCity = async (cityId) => {
+    const deleteCityResult = await axios
+      .delete(`/api/City/Delete/${cityId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        fetchCities();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return deleteCityResult;
+  };
+
   const fetchParkingZones = async () => {
     const fetchParkingZonesResult = await axios
       .get("/api/Zone/GetAll", {
@@ -91,6 +139,54 @@ const useParkingLots = () => {
         throw err.response.data.Errors[0];
       });
     return fetchParkingLotsResult;
+  };
+
+  const addZone = async (name) => {
+    const addZoneResult = await axios
+      .post(
+        "/api/Zone/Create",
+        { name },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        fetchParkingZones();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return addZoneResult;
+  };
+
+  const deleteZone = async (zoneId) => {
+    const deleteCityResult = await axios
+      .delete(`/api/Zone/Delete/${zoneId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        fetchParkingZones();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return deleteCityResult;
   };
 
   const fetchParkingLot = async (id) => {
@@ -350,7 +446,11 @@ const useParkingLots = () => {
 
   return {
     fetchCities,
+    addCity,
+    deleteCity,
     fetchParkingZones,
+    addZone,
+    deleteZone,
     fetchParkingLots,
     fetchParkingLot,
     fetchRequests,
