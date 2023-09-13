@@ -4,12 +4,14 @@ import Cookies from "universal-cookie";
 import { ParkingContext } from "../../context/parkingProvider";
 import { AuthContext } from "../../context/authProvider";
 import { FilterContext } from "../../context/filterContext";
+import { RequestsContext } from "../../context/requestsProvider";
 
 const useParkingLots = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const filterContext = useContext(FilterContext);
   const parkingContext = useContext(ParkingContext);
+  const requestsContext = useContext(RequestsContext);
 
   const token =
     cookies.get("token") === undefined
@@ -33,6 +35,54 @@ const useParkingLots = () => {
     return fetchCitiesResult;
   };
 
+  const addCity = async (name) => {
+    const addCityResult = await axios
+      .post(
+        "/api/City/Create",
+        { name },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        fetchCities();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return addCityResult;
+  };
+
+  const deleteCity = async (cityId) => {
+    const deleteCityResult = await axios
+      .delete(`/api/City/Delete/${cityId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        fetchCities();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return deleteCityResult;
+  };
+
   const fetchParkingZones = async () => {
     const fetchParkingZonesResult = await axios
       .get("/api/Zone/GetAll", {
@@ -50,7 +100,14 @@ const useParkingLots = () => {
     return fetchParkingZonesResult;
   };
 
-  const fetchParkingLots = async ({ page, pageSize = 5, status = "" }) => {
+  const fetchParkingLots = async ({
+    page,
+    pageSize = 5,
+    name = "",
+    status = "",
+    city = "",
+    zone = "",
+  }) => {
     if (page) {
       parkingContext.setPageNumber(page);
     }
@@ -60,7 +117,10 @@ const useParkingLots = () => {
           page || parkingContext.pageNumber
         }&pageSize=${pageSize}`,
         {
-          status: status,
+          name,
+          city,
+          zone,
+          status,
         },
         {
           headers: {
@@ -70,13 +130,63 @@ const useParkingLots = () => {
       )
       .then((res) => {
         parkingContext.setParkingLots(res.data.parkingLots);
+        parkingContext.setIsLoading(false);
+        parkingContext.setNumPages(res.data.numPages);
 
         return res.data;
       })
       .catch((err) => {
-        throw err.response.data.errors[0];
+        throw err.response.data.Errors[0];
       });
     return fetchParkingLotsResult;
+  };
+
+  const addZone = async (name) => {
+    const addZoneResult = await axios
+      .post(
+        "/api/Zone/Create",
+        { name },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      )
+      .then((res) => {
+        fetchParkingZones();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return addZoneResult;
+  };
+
+  const deleteZone = async (zoneId) => {
+    const deleteCityResult = await axios
+      .delete(`/api/Zone/Delete/${zoneId}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        fetchParkingZones();
+
+        return res.data.message;
+      })
+      .catch((err) => {
+        if (err.response.data.errors) {
+          throw err.response.data.errors[0];
+        } else {
+          throw err.response.data.Errors[0];
+        }
+      });
+    return deleteCityResult;
   };
 
   const fetchParkingLot = async (id) => {
@@ -95,15 +205,19 @@ const useParkingLots = () => {
     return fetchParkingLotResult;
   };
 
-  const fetchRequests = async () => {
+  const fetchRequests = async ({ page, pageSize = 2 }) => {
     const fetchParkingLotsResult = await axios
-      .get("/api/Request/GetAll", {
+      .get(`/api/Request/GetAll?pageNumber=${page}&pageSize=${pageSize}`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
       })
       .then((res) => {
-        return res.data.requests;
+        requestsContext.setRequests(res.data.requests);
+        requestsContext.setRequestsPages(res.data.numPages);
+        requestsContext.setRequestsPage(page);
+        requestsContext.setIsLoading(false);
+        return res;
       })
       .catch((err) => {
         throw err.response.data.errors[0];
@@ -206,6 +320,12 @@ const useParkingLots = () => {
   };
 
   const modifyRequest = async (id, action) => {
+    let pageNum = requestsContext.requestsPage;
+    if (requestsContext.requests.length === 1) {
+      pageNum -= 1;
+      requestsContext.setRequestsPage(pageNum);
+    }
+
     const modifyRequestResult = await axios
       .put(
         `/api/Request/Modify/${id}`,
@@ -217,6 +337,8 @@ const useParkingLots = () => {
         }
       )
       .then((res) => {
+        fetchRequests({ page: pageNum });
+
         return res.data.message;
       })
       .catch((err) => {
@@ -324,7 +446,11 @@ const useParkingLots = () => {
 
   return {
     fetchCities,
+    addCity,
+    deleteCity,
     fetchParkingZones,
+    addZone,
+    deleteZone,
     fetchParkingLots,
     fetchParkingLot,
     fetchRequests,

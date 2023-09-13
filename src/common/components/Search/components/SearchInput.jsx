@@ -8,8 +8,12 @@ import {
   styled,
   useMediaQuery,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FilterContext } from "../../../../context/filterContext";
+import useParkingLots from "../../../hooks/useParkingLots";
+import useDebounce from "../../../hooks/useDebounce";
+import { ParkingContext } from "../../../../context/parkingProvider";
+import { useLocation } from "react-router-dom";
 
 const SearchGrid = styled(Grid)(({ theme }) => ({
   padding: "0 !important",
@@ -40,19 +44,54 @@ const SearchInput = () => {
   const [selectedZone, setSelectedZone] = useState("");
 
   const filterContext = useContext(FilterContext);
+  const parkingContext = useContext(ParkingContext);
+
+  const location = useLocation();
+
+  const { fetchParkingLots } = useParkingLots();
 
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
 
+  const searchQuery = useDebounce(searchCondition, 750);
+
   const handleCitySelect = (e) => {
     setSelectedCity(e.target.value);
+    filterContext.setSearchCity(e.target.value);
+    parkingContext.setPageNumber(0);
+
+    fetchParkingLots({
+      page: 0,
+      city: e.target.value,
+      name: filterContext.searchCondition,
+      zone: filterContext.searchZone,
+    });
   };
   const handleZoneSelect = (e) => {
     setSelectedZone(e.target.value);
+    filterContext.setSearchZone(e.target.value);
+    parkingContext.setPageNumber(0);
+
+    fetchParkingLots({
+      page: 0,
+      city: filterContext.searchCity,
+      name: filterContext.searchCondition,
+      zone: e.target.value,
+    });
   };
 
-  const handleSearchConditionChange = (e) => {
-    setSearchCondition(e.target.value);
-  };
+  useEffect(() => {
+    fetchParkingLots({
+      page: 0,
+      city: filterContext.searchCity,
+      name: searchQuery,
+      zone: filterContext.searchZone,
+    });
+  }, [searchQuery]);
+
+  // if url pathname is not / do not render search input
+  if (location.pathname !== "/") {
+    return <></>;
+  }
 
   return (
     <>
@@ -64,7 +103,9 @@ const SearchInput = () => {
         <SearchGridItem item xs={6} sm={6} sx={{ paddingLeft: "0 !important" }}>
           <TextField
             label="Search"
-            onChange={handleSearchConditionChange}
+            onChange={(e) => {
+              setSearchCondition(e.target.value);
+            }}
             variant="filled"
             size={isXs ? "small" : "normal"}
             InputProps={{ disableUnderline: true }}

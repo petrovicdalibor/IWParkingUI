@@ -14,6 +14,7 @@ import AdminsOnlyRoute from "../../features/ProtectedRoute/AdminsOnlyRoute";
 import Users from "../../pages/Users";
 import AdminsAndOwnersOnlyRoute from "../../features/ProtectedRoute/AdminsAndOwnersOnlyRoute";
 import NewReservation from "../../pages/NewReservation";
+import Settings from "../../pages/Settings";
 
 // routes accessible to all users
 export const routesForPublic = [
@@ -80,8 +81,8 @@ const routesForAdminsOnly = [
         element: <Users />,
       },
       {
-        path: "/favorites",
-        element: <Favorites />,
+        path: "/settings",
+        element: <Settings />,
       },
     ],
   },

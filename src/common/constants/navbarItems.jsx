@@ -4,6 +4,7 @@ import {
   BsStar,
   BsCardText,
   BsPersonGear,
+  BsGear,
 } from "react-icons/bs";
 
 export const userItems = [
@@ -39,6 +40,11 @@ export const adminItems = [
     title: "Users",
     path: "/users",
     icon: <BsPersonGear size={23} />,
+  },
+  {
+    title: "Settings",
+    path: "/settings",
+    icon: <BsGear size={23} />,
   },
 ];
 

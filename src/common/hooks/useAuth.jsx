@@ -231,7 +231,7 @@ const useAuth = () => {
     }
   };
 
-  const fetchAllUsers = async ({ page, pageSize = 10 }) => {
+  const fetchAllUsers = async ({ page, pageSize = 5 }) => {
     const fetchAllUsersResult = await axios
       .get(`/api/User/GetAll?pageNumber=${page}&pageSize=${pageSize}`, {
         headers: {

@@ -7,19 +7,22 @@ import Routes from "./features/ProtectedRoute";
 import { ParkingProvider } from "./context/parkingProvider";
 import { ToastContainer } from "react-toastify";
 import { FilterProvider } from "./context/filterContext";
+import { RequestsProvider } from "./context/requestsProvider";
 
 function App() {
   return (
     <AuthProvider>
       <ParkingProvider>
-        <FilterProvider>
-          <ThemeProvider theme={Theme}>
-            <div className="toast-container">
-              <ToastContainer style={{ zIndex: 100000 }} limit={2} />
-            </div>
-            <Routes />
-          </ThemeProvider>
-        </FilterProvider>
+        <RequestsProvider>
+          <FilterProvider>
+            <ThemeProvider theme={Theme}>
+              <div className="toast-container">
+                <ToastContainer style={{ zIndex: 100000 }} limit={2} />
+              </div>
+              <Routes />
+            </ThemeProvider>
+          </FilterProvider>
+        </RequestsProvider>
       </ParkingProvider>
     </AuthProvider>
   );

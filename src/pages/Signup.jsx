@@ -25,8 +25,6 @@ import SignupImage from "../assets/signup-illustration.svg";
 import Cookies from "universal-cookie";
 import useAuth from "../common/hooks/useAuth";
 
-// import AuthVerify from "../common/utils/AuthVerify";
-
 import CloseIcon from "@mui/icons-material/Close";
 import {
   confirmPasswordValidator,
