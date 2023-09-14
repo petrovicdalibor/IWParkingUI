@@ -18,6 +18,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { BsGeoAltFill, BsClock, BsPlusCircleFill } from "react-icons/bs";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authProvider";
+import { useParams } from "react-router-dom";
+import useParkingLots from "../common/hooks/useParkingLots";
+import useReservations from "../common/hooks/useReservations";
 
 const BoxContainer = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -57,13 +60,66 @@ const NewReservation = () => {
 
   const userContext = useContext(AuthContext);
 
+  const { id } = useParams();
+  const { fetchParkingLot } = useParkingLots();
+  const { makeReservation } = useReservations();
+
+  const [parking, setParking] = useState({});
   const [vehicle, setVehicle] = useState("");
+
+  const [fromDate, setFromDate] = useState(dayjs());
+  const [toDate, setToDate] = useState(dayjs());
 
   useEffect(() => {
     setVehicle(
       userContext.vehicles?.find((vehicle) => vehicle.isPrimary)?.id || ""
     );
   }, [userContext.vehicles]);
+
+  useEffect(() => {
+    fetchParkingLot(id).then((res) => {
+      setParking(res);
+    });
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const fromTimeParse = fromDate
+      .tz("Europe/Belgrade")
+      .toDate()
+      .toString()
+      .split(" ")[4];
+    const toTimeParse = toDate
+      .tz("Europe/Belgrade")
+      .toDate()
+      .toString()
+      .split(" ")[4];
+
+    const toDateString = toDate
+      .format("YYYY-MM-DDTHH:mm:ss.SSS")
+      .toString()
+      .slice(0, 10);
+    const fromDateString = fromDate
+      .format("YYYY-MM-DDTHH:mm:ss.SSS")
+      .toString()
+      .slice(0, 10);
+
+    makeReservation(
+      fromDateString,
+      fromTimeParse,
+      toDateString,
+      toTimeParse,
+      parking?.id,
+      vehicle.plateNumber
+    )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <>
@@ -83,7 +139,7 @@ const NewReservation = () => {
                 columnGap={2}
               >
                 <ParkingName variant="h6" fontSize="1.25rem">
-                  Parking Lot 1
+                  {parking?.name}
                 </ParkingName>
                 <Typography
                   variant="subtitle2"
@@ -91,7 +147,7 @@ const NewReservation = () => {
                   sx={{ background: "#E6E6E6", borderRadius: "5px" }}
                   px={1.5}
                 >
-                  3&euro;/hr
+                  {parking?.price}&euro;/hr
                 </Typography>
               </Grid>
 
@@ -111,7 +167,8 @@ const NewReservation = () => {
                     style={{ marginRight: "6px" }}
                     color="#CF0018"
                   />
-                  Orce Nikolov 32 {bull} Skopje {bull} A1
+                  {parking?.address} {bull} {parking?.city} {bull}{" "}
+                  {parking?.zone}
                 </ParkingInfo>
                 <ParkingInfo
                   variant="body2"
@@ -123,7 +180,8 @@ const NewReservation = () => {
                     style={{ marginRight: "6px" }}
                     color="#CF0018"
                   />
-                  10:00 - 22:00
+                  {parking?.workingHourFrom?.slice(0, -3)} -{" "}
+                  {parking?.workingHourTo?.slice(0, -3)}
                 </ParkingInfo>
               </Grid>
             </Grid>
@@ -137,12 +195,20 @@ const NewReservation = () => {
               mt={mdDown ? 3 : 0}
             >
               <Typography variant="subtitle2" sx={{ color: "#B3B3B3" }}>
-                <b style={{ color: "#424343" }}>16</b> out of 150
+                <b style={{ color: "#424343" }}>{parking?.capacityCar}</b> out
+                of {parking?.capacityCar}
               </Typography>
             </Grid>
           </Grid>
 
-          <Grid container mt={3} gap={2} direction="column">
+          <Grid
+            container
+            mt={3}
+            gap={2}
+            direction="column"
+            component="form"
+            onSubmit={handleSubmit}
+          >
             <Grid
               item
               display={"flex"}
@@ -164,7 +230,14 @@ const NewReservation = () => {
                   </Grid>
                 </Hidden>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker defaultValue={dayjs()} />
+                  <DateTimePicker
+                    timezone="Europe/Belgrade"
+                    reduceAnimations={true}
+                    value={fromDate}
+                    ampm={false}
+                    disablePast
+                    onChange={(val) => setFromDate(val.tz("Europe/Belgrade"))}
+                  />
                 </LocalizationProvider>
               </Grid>
               <Hidden smDown>
@@ -196,7 +269,10 @@ const NewReservation = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateTimePicker
                     reduceAnimations={true}
-                    defaultValue={dayjs()}
+                    value={toDate}
+                    ampm={false}
+                    disablePast
+                    onChange={(val) => setToDate(val)}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -213,7 +289,7 @@ const NewReservation = () => {
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   disableUnderline={true}
-                  value={vehicle}
+                  value={vehicle.id}
                   onChange={(e) => setVehicle(e.target.value)}
                 >
                   {userContext.vehicles.map((vehicle) => (
@@ -229,8 +305,8 @@ const NewReservation = () => {
                 variant="contained"
                 color="secondary"
                 size="large"
+                onClick={handleSubmit}
                 disableElevation
-                // fullWidth
               >
                 <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
                 Add new reservation

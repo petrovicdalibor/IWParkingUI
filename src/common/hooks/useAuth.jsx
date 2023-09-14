@@ -14,6 +14,7 @@ const useAuth = () => {
       await fetchUser().then((res) => {
         userContext.setUser(res);
         userContext.setIsLoggedIn(true);
+        userContext.setIsFetchingUser(false);
       });
     } catch (err) {
       return err;
@@ -62,11 +63,10 @@ const useAuth = () => {
 
         if (decodedToken.Role === "User") {
           setUserVehicles(decodedToken.Id);
-          fetchFavoriteLots(decodedToken.Id);
+          fetchFavoriteLots({ page: 1 });
         }
         setUserInfo(decodedToken.Id);
         userContext.setRole(decodedToken.Role);
-        userContext.setIsLoggedIn(true);
         return res;
       })
       .catch((err) => {

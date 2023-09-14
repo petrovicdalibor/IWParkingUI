@@ -23,6 +23,10 @@ const Routes = () => {
   useEffect(() => {
     const token = cookies.get("token");
 
+    if (token === undefined) {
+      userContext.setIsFetchingUser(false);
+    }
+
     if (verifyToken(token)) {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
@@ -37,7 +41,9 @@ const Routes = () => {
       }
       fetchCities();
       fetchParkingZones();
-      setUserInfo(decodedToken.Id);
+      setUserInfo(decodedToken.Id).then(() => {
+        userContext.setIsFetchingUser(false);
+      });
     }
   }, []);
 

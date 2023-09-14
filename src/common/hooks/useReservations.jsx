@@ -16,24 +16,24 @@ const useReservations = () => {
       .post(
         `/api/Reservation/Make`,
         {
-          headers: {
-            Authorization: `Bearer ${cookies.get("token")}`,
-          },
-        },
-        {
           startDate,
           startTime,
           endDate,
           endTime,
           parkingLotId,
           plateNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
         }
       )
       .then((res) => {
         console.log(res);
       })
       .catch((err) => {
-        console.log(err);
+        throw err.response.data.errors[0];
       });
     return makeReservationResult;
   };

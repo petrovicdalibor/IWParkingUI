@@ -224,16 +224,16 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
                         ? "Deactivated"
                         : parking.status === 1 || request
                         ? "Pending"
-                        : parking.status === 2
+                        : !parking.isDeactivated
                         ? "Active"
                         : "Declined"
                     }
                     color={
                       parking.isDeactivated
                         ? "primary"
-                        : parking.status === 1 || request
+                        : request
                         ? "warning"
-                        : parking.status === 2
+                        : !parking.isDeactivated
                         ? "success"
                         : "primary"
                     }
@@ -353,16 +353,21 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
             {userContext.role !== "SuperAdmin" &&
             userContext.role !== "Owner" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
-                <Button
-                  variant="contained"
-                  color="success"
-                  size="large"
-                  disableElevation
-                  fullWidth
-                >
-                  <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
-                  Reserve
-                </Button>
+                <Link to={`/reservations/${parking?.id}/new`}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    disableElevation
+                    fullWidth
+                  >
+                    <BsPlusCircleFill
+                      size={17}
+                      style={{ marginRight: "6px" }}
+                    />
+                    Reserve
+                  </Button>
+                </Link>
               </Grid>
             ) : (
               ""

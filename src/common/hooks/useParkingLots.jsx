@@ -200,7 +200,7 @@ const useParkingLots = () => {
         return res.data.parkingLot;
       })
       .catch((err) => {
-        throw err.response.data.errors[0];
+        throw err.response.data.message;
       });
     return fetchParkingLotResult;
   };
