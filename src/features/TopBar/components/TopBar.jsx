@@ -23,8 +23,11 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/authProvider";
 import useAuth from "../../../common/hooks/useAuth";
 
-const CustomGrid = styled(Grid)(() => ({
+const CustomGrid = styled(Grid)(({ theme }) => ({
   paddingTop: "30px !important",
+  [theme.breakpoints.only("xs")]: {
+    paddingTop: "0 !important",
+  },
 }));
 
 const LogoBox = styled(Box)(() => ({
@@ -33,7 +36,7 @@ const LogoBox = styled(Box)(() => ({
   left: 0,
   right: 0,
   margin: "auto",
-  marginTop: "30px",
+  marginTop: "10px",
   zIndex: 9999,
 }));
 
