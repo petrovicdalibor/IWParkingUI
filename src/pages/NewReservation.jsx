@@ -15,10 +15,12 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
+import { toastError, toastSuccess } from "../common/utils/toasts";
+
 import { BsGeoAltFill, BsClock, BsPlusCircleFill } from "react-icons/bs";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authProvider";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useParkingLots from "../common/hooks/useParkingLots";
 import useReservations from "../common/hooks/useReservations";
 
@@ -58,6 +60,8 @@ const NewReservation = () => {
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
+  const navigate = useNavigate();
+
   const userContext = useContext(AuthContext);
 
   const { id } = useParams();
@@ -72,7 +76,8 @@ const NewReservation = () => {
 
   useEffect(() => {
     setVehicle(
-      userContext.vehicles?.find((vehicle) => vehicle.isPrimary)?.id || ""
+      userContext.vehicles?.find((vehicle) => vehicle.isPrimary)?.plateNumber ||
+        ""
     );
   }, [userContext.vehicles]);
 
@@ -111,13 +116,14 @@ const NewReservation = () => {
       toDateString,
       toTimeParse,
       parking?.id,
-      vehicle.plateNumber
+      vehicle
     )
       .then((res) => {
-        console.log(res);
+        toastSuccess(res, { toastId: "makeReservation" });
+        navigate("/reservations", { replace: true });
       })
       .catch((err) => {
-        console.log(err);
+        toastError(err, { toastId: "makeReservation" });
       });
   };
 
@@ -236,7 +242,12 @@ const NewReservation = () => {
                     value={fromDate}
                     ampm={false}
                     disablePast
-                    onChange={(val) => setFromDate(val.tz("Europe/Belgrade"))}
+                    onChange={(val) => {
+                      setFromDate(val.tz("Europe/Belgrade"));
+                      if (val.tz("Europe/Belgrade") > fromDate) {
+                        setToDate(val.tz("Europe/Belgrade"));
+                      }
+                    }}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -272,6 +283,7 @@ const NewReservation = () => {
                     value={toDate}
                     ampm={false}
                     disablePast
+                    minDate={fromDate}
                     onChange={(val) => setToDate(val)}
                   />
                 </LocalizationProvider>
@@ -289,11 +301,11 @@ const NewReservation = () => {
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
                   disableUnderline={true}
-                  value={vehicle.id}
+                  value={vehicle}
                   onChange={(e) => setVehicle(e.target.value)}
                 >
                   {userContext.vehicles.map((vehicle) => (
-                    <MenuItem value={vehicle.id} key={vehicle.id}>
+                    <MenuItem value={vehicle.plateNumber} key={vehicle.id}>
                       {vehicle.plateNumber} - {vehicle.type}
                     </MenuItem>
                   ))}

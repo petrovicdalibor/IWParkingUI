@@ -194,7 +194,7 @@ const Home = () => {
               count={parkingContext.numPages}
               color="primary"
               defaultPage={page}
-              page={page}
+              page={parkingContext.pageNumber}
               disabled={parkingContext.numPages === 1}
               onChange={handlePageChange}
             />

@@ -8,6 +8,7 @@ import { ParkingProvider } from "./context/parkingProvider";
 import { ToastContainer } from "react-toastify";
 import { FilterProvider } from "./context/filterContext";
 import { RequestsProvider } from "./context/requestsProvider";
+import { ReservationsProvider } from "./context/reservationsProvider";
 
 function App() {
   return (
@@ -15,12 +16,14 @@ function App() {
       <ParkingProvider>
         <RequestsProvider>
           <FilterProvider>
-            <ThemeProvider theme={Theme}>
-              <div className="toast-container">
-                <ToastContainer style={{ zIndex: 100000 }} limit={2} />
-              </div>
-              <Routes />
-            </ThemeProvider>
+            <ReservationsProvider>
+              <ThemeProvider theme={Theme}>
+                <div className="toast-container">
+                  <ToastContainer style={{ zIndex: 100000 }} limit={2} />
+                </div>
+                <Routes />
+              </ThemeProvider>
+            </ReservationsProvider>
           </FilterProvider>
         </RequestsProvider>
       </ParkingProvider>

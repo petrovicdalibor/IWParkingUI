@@ -34,8 +34,11 @@ import {
   toastSuccess,
 } from "../../../common/utils/toasts";
 import useConfirm from "../../../common/hooks/useConfirm";
+import useReservations from "../../../common/hooks/useReservations";
 import ConfirmDialog from "../../ConfirmDialog/components/ConfirmDialog";
 import RequestDetails from "../../RequestDetails/components/RequestDetails";
+
+import dayjs from "dayjs";
 
 const FreeSpots = styled(Typography)(({ theme }) => ({
   fontSize: "2rem",
@@ -71,12 +74,18 @@ const bull = (
   </Box>
 );
 
-const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
+const ParkingLotsCard = ({
+  parking,
+  request,
+  reservation,
+  handleDeactivateParking,
+}) => {
   const userContext = useContext(AuthContext);
   const isXs = useMediaQuery((theme) => theme.breakpoints.only("xs"));
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
+  const { cancelReservation } = useReservations();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const [openDetails, setOpenDetails] = useState(false);
@@ -111,6 +120,16 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
 
   const deactivateParkingHandler = () => {
     handleDeactivateParking(parking);
+  };
+
+  const cancelReservationHandler = async () => {
+    await cancelReservation(reservation?.id)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const approveParkingHandler = async () => {
@@ -170,12 +189,12 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
         <Grid
           container
           sx={{ display: "flex" }}
-          p={isXs ? 2 : 4}
+          p={isXs ? 2 : 4.5}
           width="100%"
           justifyContent="space-between"
         >
           <Grid item display="flex" gap={5} alignItems={"center"}>
-            {userContext.role !== "SuperAdmin" ? (
+            {!reservation && userContext.role !== "SuperAdmin" ? (
               <Grid
                 item
                 display={"flex"}
@@ -213,7 +232,8 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
                   sx={{ background: "#E6E6E6", borderRadius: "5px" }}
                   px={1.5}
                 >
-                  {parking?.price}&euro;/hr
+                  {reservation?.amount || parking?.price}&euro;
+                  {!reservation ? "/hr" : ""}
                 </Typography>
 
                 {userContext.role === "Owner" ||
@@ -258,6 +278,7 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
                   display="flex"
                   flexDirection="column"
                   justifyContent={"center"}
+                  gap={0.1}
                 >
                   <ParkingInfo
                     variant="body2"
@@ -270,7 +291,8 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
                       color="#CF0018"
                     />
                     {parking?.address} {bull} {parking?.city} {bull}{" "}
-                    {parking?.zone}
+                    {parking?.zone} {reservation && bull}
+                    {reservation ? ` ${reservation?.vehicle?.plateNumber}` : ""}
                   </ParkingInfo>
                   <ParkingInfo
                     variant="body2"
@@ -282,8 +304,17 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
                       style={{ marginRight: "6px" }}
                       color="#CF0018"
                     />
-                    {parking?.workingHourFrom?.slice(0, -3)} -{" "}
-                    {parking?.workingHourTo?.slice(0, -3)}
+                    {reservation
+                      ? dayjs(reservation?.startDate).format("DD/MM/YYYY") +
+                        " " +
+                        reservation?.startTime.slice(0, -3)
+                      : parking?.workingHourFrom?.slice(0, -3)}{" "}
+                    -{" "}
+                    {reservation
+                      ? dayjs(reservation?.endDate).format("DD/MM/YYYY") +
+                        " " +
+                        reservation?.endTime.slice(0, -3)
+                      : parking?.workingHourTo?.slice(0, -3)}
                   </ParkingInfo>
                   {userContext.role === "SuperAdmin" && request?.user ? (
                     <ParkingInfo
@@ -350,7 +381,8 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
             justifyItems={"center"}
             mt={mdDown ? 3 : 0}
           >
-            {userContext.role !== "SuperAdmin" &&
+            {!reservation &&
+            userContext.role !== "SuperAdmin" &&
             userContext.role !== "Owner" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Link to={`/reservations/${parking?.id}/new`}>
@@ -372,7 +404,8 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
             ) : (
               ""
             )}
-            {userContext.role !== "SuperAdmin" &&
+            {!reservation &&
+            userContext.role !== "SuperAdmin" &&
             userContext.role !== "Owner" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
@@ -439,6 +472,38 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
               </Grid>
             ) : (
               ""
+            )}
+
+            {reservation ? (
+              <>
+                <Grid item width={mdDown ? "100%" : "auto"}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                    disableElevation
+                    fullWidth
+                  >
+                    <BsPencilSquare size={17} style={{ marginRight: "6px" }} />
+                    Extend
+                  </Button>
+                </Grid>
+                <Grid item width={mdDown ? "100%" : "auto"}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disableElevation
+                    onClick={cancelReservationHandler}
+                    fullWidth
+                  >
+                    <BsTrashFill size={17} style={{ marginRight: "6px" }} />
+                    Cancel
+                  </Button>
+                </Grid>
+              </>
+            ) : (
+              <></>
             )}
 
             {userContext.role === "Owner" && !request ? (
@@ -526,6 +591,7 @@ const ParkingLotsCard = ({ parking, request, handleDeactivateParking }) => {
 ParkingLotsCard.propTypes = {
   parking: PropTypes.object,
   request: PropTypes.object,
+  reservation: PropTypes.object,
   handleDeactivateParking: PropTypes.func,
 };
 
