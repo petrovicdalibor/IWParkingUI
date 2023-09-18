@@ -22,8 +22,8 @@ const useReservations = () => {
       )
       .then((res) => {
         reservationsContext.setReservations(res.data.reservations);
-        reservationsContext.setReservationsPages(res.data.numPages);
         reservationsContext.setReservationsPage(page);
+        reservationsContext.setReservationsPages(res.data.numPages);
         return res.data.reservations;
       })
       .catch((err) => {
@@ -77,8 +77,6 @@ const useReservations = () => {
 
     reservation.type = "Cancelled";
 
-    console.log(reservations);
-
     reservationsContext.setReservations(reservations);
 
     const cancelReservationResult = await axios
@@ -99,10 +97,47 @@ const useReservations = () => {
     return cancelReservationResult;
   };
 
+  const extendReservation = async (reservationId, endDate, endTime) => {
+    const reservations = [...reservationsContext.reservations];
+
+    const reservation = reservations.find((r) => {
+      return r.id === reservationId;
+    });
+
+    reservation.endTime = endTime;
+
+    reservationsContext.setReservations(reservations);
+
+    const extendReservationResult = await axios
+      .put(
+        `/api/Reservation/Extend/${reservationId}`,
+        {
+          endDate,
+          endTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${cookies.get("token")}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data.message;
+      })
+      .catch((err) => {
+        return err.response.data.Errors[0];
+      });
+
+    fetchReservations({ page: reservationsContext.reservationsPage });
+
+    return extendReservationResult;
+  };
+
   return {
     fetchReservations,
     makeReservation,
     cancelReservation,
+    extendReservation,
   };
 };
 

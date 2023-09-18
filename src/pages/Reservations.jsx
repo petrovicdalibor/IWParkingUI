@@ -11,7 +11,7 @@ const Reservations = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetchReservations({ page: 0 });
+    fetchReservations({ page: page });
   }, []);
 
   const handlePageChange = (e, value) => {

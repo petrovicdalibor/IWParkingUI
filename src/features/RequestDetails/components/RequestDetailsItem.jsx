@@ -18,7 +18,6 @@ const RequestDetailsItem = ({ label, oldValue, newValue }) => {
         oldValue !== `undefined - undefined` ? (
           <>
             <Typography sx={oldStyle} p>
-              {console.log(oldValue)}
               {oldValue}
             </Typography>
             <Typography sx={newStyle} p>

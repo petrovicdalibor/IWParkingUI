@@ -37,6 +37,7 @@ import useConfirm from "../../../common/hooks/useConfirm";
 import useReservations from "../../../common/hooks/useReservations";
 import ConfirmDialog from "../../ConfirmDialog/components/ConfirmDialog";
 import RequestDetails from "../../RequestDetails/components/RequestDetails";
+import ExtendReservation from "../../ExtendReservation/components/ExtendReservation";
 
 import dayjs from "dayjs";
 
@@ -85,10 +86,11 @@ const ParkingLotsCard = ({
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
   const { addFavorite, removeFavorite, modifyRequest } = useParkingLots();
-  const { cancelReservation } = useReservations();
+  const { cancelReservation, extendReservation } = useReservations();
   const [ConfirmDialogModal, open] = useConfirm(ConfirmDialog);
 
   const [openDetails, setOpenDetails] = useState(false);
+  const [openExtendReservation, setOpenExtendReservation] = useState(false);
 
   const handleAddToFavorites = async () => {
     if (parking.isFavourite) {
@@ -171,8 +173,28 @@ const ParkingLotsCard = ({
     }
   };
 
+  const handleExtendReservation = async (toDate) => {
+    const splitDateTime = dayjs(toDate)
+      .add(2, "hours")
+      .toISOString()
+      .split("T");
+
+    const endDate = splitDateTime[0];
+
+    const endTime = splitDateTime[1].slice(0, 8);
+
+    await extendReservation(reservation.id, endDate, endTime)
+      .then((res) => {
+        toastSuccess(res, "extend-reservation");
+      })
+      .catch((err) => {
+        toastError(err, "extend-reservation");
+      });
+  };
+
   const handleClose = () => {
     setOpenDetails(false);
+    setOpenExtendReservation(false);
   };
 
   return (
@@ -500,6 +522,9 @@ const ParkingLotsCard = ({
                     variant="contained"
                     color="secondary"
                     size="large"
+                    onClick={() => {
+                      setOpenExtendReservation(true);
+                    }}
                     disabled={reservation.type === "Cancelled" ? true : false}
                     disableElevation
                     fullWidth
@@ -603,6 +628,14 @@ const ParkingLotsCard = ({
           handleClose={handleClose}
           handleApprove={approveParkingHandler}
           handleDecline={declineParkingHandler}
+        />
+      )}
+      {reservation && (
+        <ExtendReservation
+          open={openExtendReservation}
+          reservation={reservation}
+          handleClose={handleClose}
+          handleExtend={handleExtendReservation}
         />
       )}
     </>
