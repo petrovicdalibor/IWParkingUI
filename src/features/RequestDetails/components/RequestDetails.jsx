@@ -99,7 +99,7 @@ const RequestDetails = ({
           />
 
           <RequestDetailsItem
-            label="City"
+            label="Owner"
             oldValue={request.user.name}
             newValue={request.user.name}
           />

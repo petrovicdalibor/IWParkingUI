@@ -36,11 +36,11 @@ const VehicleCard = ({ vehicle, isPrimary }) => {
   const handleVehicleDelete = async () => {
     await deleteVehicle(vehicle.id)
       .then(() => {
-        const toastId = `delete-vehicle-${vehicle.id}`;
+        const toastId = `vehicle-delete-${vehicle.id}`;
         toastSuccess("Vehicle deleted", { toastId });
       })
       .catch((err) => {
-        const toastId = `delete-vehicle-${vehicle.id}`;
+        const toastId = `vehicle-delete-${vehicle.id}`;
         toastError(err, { toastId });
       });
   };
@@ -49,14 +49,14 @@ const VehicleCard = ({ vehicle, isPrimary }) => {
     if (!vehicle.isPrimary) {
       await makePrimaryVehicle(vehicle.id)
         .then(() => {
-          const toastId = `make-primary-${vehicle.id}`;
+          const toastId = `vehicle-primary-${vehicle.id}`;
 
           toastInfo(`${vehicle.plateNumber} is now your primary vehicle.`, {
             toastId,
           });
         })
         .catch((err) => {
-          const toastId = `make-primary-${vehicle.id}`;
+          const toastId = `vehicle-primary-${vehicle.id}`;
 
           toastError(err, { toastId });
         });

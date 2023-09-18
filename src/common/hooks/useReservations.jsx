@@ -59,29 +59,42 @@ const useReservations = () => {
         }
       )
       .then((res) => {
-        fetchReservations({ page: reservationsContext.reservationsPage });
-
         return res.data.message;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+    await fetchReservations({ page: reservationsContext.reservationsPage });
     return makeReservationResult;
   };
 
   const cancelReservation = async (reservationId) => {
+    const reservations = [...reservationsContext.reservations];
+
+    const reservation = reservations.find((r) => {
+      return r.id === reservationId;
+    });
+
+    reservation.type = "Cancelled";
+
+    console.log(reservations);
+
+    reservationsContext.setReservations(reservations);
+
     const cancelReservationResult = await axios
-      .get(`/api/Reservation/Cancel/${reservationId}`, {
+      .delete(`/api/Reservation/Cancel/${reservationId}`, {
         headers: {
           Authorization: `Bearer ${cookies.get("token")}`,
         },
       })
       .then((res) => {
-        console.log(res);
+        return res.data.message;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+
+    await fetchReservations({ page: reservationsContext.reservationsPage });
 
     return cancelReservationResult;
   };

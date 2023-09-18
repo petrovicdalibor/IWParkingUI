@@ -87,7 +87,7 @@ const NewReservation = () => {
     });
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const fromTimeParse = fromDate
@@ -110,7 +110,7 @@ const NewReservation = () => {
       .toString()
       .slice(0, 10);
 
-    makeReservation(
+    await makeReservation(
       fromDateString,
       fromTimeParse,
       toDateString,

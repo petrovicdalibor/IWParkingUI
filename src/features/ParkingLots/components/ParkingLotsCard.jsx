@@ -125,10 +125,10 @@ const ParkingLotsCard = ({
   const cancelReservationHandler = async () => {
     await cancelReservation(reservation?.id)
       .then((res) => {
-        console.log(res);
+        toastSuccess(res, { toastId: "cancelReservation" });
       })
       .catch((err) => {
-        console.log(err);
+        toastError(err, { toastId: "cancelReservation" });
       });
   };
 
@@ -240,7 +240,9 @@ const ParkingLotsCard = ({
                 userContext.role === "SuperAdmin" ? (
                   <Badge
                     badgeContent={
-                      parking.isDeactivated
+                      reservation?.type === "Cancelled"
+                        ? "Cancelled"
+                        : parking.isDeactivated
                         ? "Deactivated"
                         : parking.status === 1 || request
                         ? "Pending"
@@ -257,6 +259,23 @@ const ParkingLotsCard = ({
                         ? "success"
                         : "primary"
                     }
+                    componentsProps={{
+                      badge: {
+                        style: {
+                          position: "relative",
+                          transform: "none",
+                          WebkitTransform: "none",
+                        },
+                      },
+                    }}
+                  />
+                ) : (
+                  ""
+                )}
+                {reservation?.type == "Cancelled" ? (
+                  <Badge
+                    badgeContent={"Cancelled"}
+                    color={"primary"}
                     componentsProps={{
                       badge: {
                         style: {
@@ -481,6 +500,7 @@ const ParkingLotsCard = ({
                     variant="contained"
                     color="secondary"
                     size="large"
+                    disabled={reservation.type === "Cancelled" ? true : false}
                     disableElevation
                     fullWidth
                   >
@@ -494,6 +514,7 @@ const ParkingLotsCard = ({
                     color="primary"
                     size="large"
                     disableElevation
+                    disabled={reservation.type === "Cancelled" ? true : false}
                     onClick={cancelReservationHandler}
                     fullWidth
                   >

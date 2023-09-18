@@ -11,6 +11,7 @@ import {
   routesForAuthenticatedOnly,
 } from "../../common/constants/routes";
 import useVehicles from "../../common/hooks/useVehicles";
+import useReservations from "../../common/hooks/useReservations";
 
 const Routes = () => {
   const cookies = new Cookies();
@@ -19,6 +20,7 @@ const Routes = () => {
   const { fetchFavoriteLots, fetchParkingZones, fetchCities, fetchRequests } =
     useParkingLots();
   const { fetchVehicleTypes } = useVehicles();
+  const { fetchReservations } = useReservations();
 
   useEffect(() => {
     const token = cookies.get("token");
@@ -35,6 +37,7 @@ const Routes = () => {
         setUserVehicles();
         fetchFavoriteLots({ page: 1 });
         fetchVehicleTypes();
+        fetchReservations({ page: 1 });
       }
       if (decodedToken.Role === "SuperAdmin" || decodedToken.Role === "Owner") {
         fetchRequests({ page: 1 });
