@@ -24,16 +24,6 @@ const useAuth = () => {
     }
   };
 
-  // const setUserVehicles = async (id) => {
-  //   try {
-  //     await fetchUserVehicles(id).then((res) => {
-  //       userContext.setVehicles(res);
-  //     });
-  //   } catch (err) {
-  //     return err;
-  //   }
-  // };
-
   const fetchUserVehicles = async () => {
     const fetchUserVehiclesResult = await axios
       .get(`/api/Vehicle/GetByUserId`, {
