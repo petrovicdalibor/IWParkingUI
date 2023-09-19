@@ -16,7 +16,7 @@ import useReservations from "../../common/hooks/useReservations";
 const Routes = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
-  const { verifyToken, setUserInfo, setUserVehicles } = useAuth();
+  const { verifyToken, setUserInfo, fetchUserVehicles } = useAuth();
   const { fetchFavoriteLots, fetchParkingZones, fetchCities, fetchRequests } =
     useParkingLots();
   const { fetchVehicleTypes } = useVehicles();
@@ -34,7 +34,7 @@ const Routes = () => {
 
       userContext.setRole(decodedToken.Role);
       if (decodedToken.Role === "User") {
-        setUserVehicles();
+        fetchUserVehicles(decodedToken.Id);
         fetchFavoriteLots({ page: 1 });
         fetchVehicleTypes();
         fetchReservations({ page: 1 });
@@ -42,12 +42,12 @@ const Routes = () => {
       if (decodedToken.Role === "SuperAdmin" || decodedToken.Role === "Owner") {
         fetchRequests({ page: 1 });
       }
-      fetchCities();
-      fetchParkingZones();
       setUserInfo(decodedToken.Id).then(() => {
         userContext.setIsFetchingUser(false);
       });
     }
+    fetchCities();
+    fetchParkingZones();
   }, []);
 
   // Combine and conditionally include routes based on authentication status

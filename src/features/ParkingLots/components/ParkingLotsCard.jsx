@@ -224,13 +224,15 @@ const ParkingLotsCard = ({
                 textAlign={"center"}
                 justifyContent={"center"}
               >
-                <FreeSpots variant="h5">150</FreeSpots>
+                <FreeSpots variant="h5">
+                  {parking?.capacityCar + parking?.capacityAdaptedCar}
+                </FreeSpots>
                 <Typography
                   variant="subtitle2"
                   minWidth={"69px"}
                   sx={{ color: "#424343" }}
                 >
-                  out of {parking?.capacityCar}
+                  out of {parking?.capacityCar + parking?.capacityAdaptedCar}
                 </Typography>
               </Grid>
             ) : (

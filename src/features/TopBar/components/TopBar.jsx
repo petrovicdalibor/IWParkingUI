@@ -197,22 +197,24 @@ const TopBar = ({ onHamburgerClick, open }) => {
                 </Menu>
               </Box>
             ) : (
-              <Grid item gap={1} display="flex">
-                <Link to="/signup">
-                  <Grid item>
-                    <Button variant="outlined" color="secondary">
-                      Sign up
-                    </Button>
-                  </Grid>
-                </Link>
-                <Grid item>
-                  <Link to="/login">
-                    <Button variant="contained" disableElevation>
-                      Login
-                    </Button>
+              <Hidden mdDown>
+                <Grid item gap={1} display="flex">
+                  <Link to="/signup">
+                    <Grid item>
+                      <Button variant="outlined" color="secondary">
+                        Sign up
+                      </Button>
+                    </Grid>
                   </Link>
+                  <Grid item>
+                    <Link to="/login">
+                      <Button variant="contained" disableElevation>
+                        Login
+                      </Button>
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
+              </Hidden>
             )
           ) : (
             <></>

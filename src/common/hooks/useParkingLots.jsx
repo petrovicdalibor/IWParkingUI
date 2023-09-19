@@ -284,13 +284,12 @@ const useParkingLots = () => {
         }
       )
       .then((res) => {
-        fetchParkingLots({ page: parkingContext.pageNumber });
-
         return res.data.message;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+    await fetchParkingLots({ page: parkingContext.pageNumber });
     await fetchFavoriteLots({ page: userContext.favoritePage });
 
     return addFavoriteResult;

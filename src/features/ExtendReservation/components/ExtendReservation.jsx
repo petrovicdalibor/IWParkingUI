@@ -8,6 +8,7 @@ import {
   Grid,
   IconButton,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { BsPencilSquare, BsXCircle } from "react-icons/bs";
@@ -30,6 +31,8 @@ const ExtendReservation = ({
   handleClose,
   handleExtend,
 }) => {
+  const mdDown = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
   const [fromDate, setFromDate] = useState(dayjs());
   const [toDate, setToDate] = useState(dayjs());
   const [initialToDate, setInitialToDate] = useState(dayjs());
@@ -67,7 +70,7 @@ const ExtendReservation = ({
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
-      PaperProps={{ sx: { maxWidth: "none" } }}
+      PaperProps={{ sx: { maxWidth: "none", pt: mdDown ? 3 : 0 } }}
     >
       <DialogTitle id="alert-dialog-title">
         Extend Reservation #{reservation.id}
@@ -88,7 +91,12 @@ const ExtendReservation = ({
         <CloseIcon />
       </IconButton>
       <DialogContent>
-        <Grid container direction="row" gap={2} alignItems="center">
+        <Grid
+          container
+          direction={mdDown ? "column" : "row"}
+          gap={2}
+          alignItems="center"
+        >
           <Grid item>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker

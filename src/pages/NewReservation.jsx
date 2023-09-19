@@ -201,8 +201,10 @@ const NewReservation = () => {
               mt={mdDown ? 3 : 0}
             >
               <Typography variant="subtitle2" sx={{ color: "#B3B3B3" }}>
-                <b style={{ color: "#424343" }}>{parking?.capacityCar}</b> out
-                of {parking?.capacityCar}
+                <b style={{ color: "#424343" }}>
+                  {parking?.capacityCar + parking?.capacityAdaptedCar}
+                </b>{" "}
+                out of {parking?.capacityCar + parking?.capacityAdaptedCar}
               </Typography>
             </Grid>
           </Grid>

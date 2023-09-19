@@ -2,14 +2,12 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
-import useAuth from "../hooks/useAuth";
 import { FilterContext } from "../../context/filterContext";
 
 const useVehicles = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const filterContext = useContext(FilterContext);
-  const { setUserVehicles } = useAuth();
 
   const fetchVehicleTypes = async () => {
     const fetchVehicleTypesResult = await axios
@@ -56,7 +54,7 @@ const useVehicles = () => {
         return res.data.message;
       })
       .catch((err) => {
-        throw err.response.data.errors[0];
+        throw err.response.data.Errors[0];
       });
     return addVehicleResult;
   };
@@ -93,7 +91,7 @@ const useVehicles = () => {
         throw err.response.data.Errors[0];
       });
 
-    await setUserVehicles(userContext.user.id);
+    // await setUserVehicles(userContext.user.id);
 
     return deleteVehicleResult;
   };

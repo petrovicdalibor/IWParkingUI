@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { ReservationsContext } from "../context/reservationsProvider";
 import useReservations from "../common/hooks/useReservations";
 import { Grid, Pagination, Typography } from "@mui/material";
@@ -8,14 +8,13 @@ const Reservations = () => {
   const reservationsContext = useContext(ReservationsContext);
   const { fetchReservations } = useReservations();
 
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
 
   useEffect(() => {
     fetchReservations({ page: reservationsContext.reservationsPage });
   }, []);
 
   const handlePageChange = (e, value) => {
-    setPage(value);
     fetchReservations({ page: value });
   };
 
@@ -48,7 +47,6 @@ const Reservations = () => {
               <Pagination
                 count={reservationsContext.reservationsPages}
                 color="primary"
-                // defaultPage={page}
                 page={reservationsContext.reservationsPage}
                 disabled={reservationsContext.reservationsPages === 1}
                 onChange={handlePageChange}
