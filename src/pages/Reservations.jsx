@@ -11,7 +11,7 @@ const Reservations = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetchReservations({ page: page });
+    fetchReservations({ page: reservationsContext.reservationsPage });
   }, []);
 
   const handlePageChange = (e, value) => {
@@ -48,8 +48,8 @@ const Reservations = () => {
               <Pagination
                 count={reservationsContext.reservationsPages}
                 color="primary"
-                defaultPage={page}
-                page={page}
+                // defaultPage={page}
+                page={reservationsContext.reservationsPage}
                 disabled={reservationsContext.reservationsPages === 1}
                 onChange={handlePageChange}
               />

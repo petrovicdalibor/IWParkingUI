@@ -25,7 +25,9 @@ const Settings = () => {
   const [city, setCity] = useState("");
   const [zone, setZone] = useState("");
 
-  const handleAddCity = async () => {
+  const handleAddCity = async (e) => {
+    e.preventDefault();
+
     await addCity(city)
       .then((res) => {
         toastSuccess(res, { toastId: "addCitySuccess" });
@@ -46,7 +48,9 @@ const Settings = () => {
       });
   };
 
-  const handleAddZone = async () => {
+  const handleAddZone = async (e) => {
+    e.preventDefault();
+
     await addZone(zone)
       .then((res) => {
         toastSuccess(res, { toastId: "addZoneSuccess" });
@@ -93,7 +97,12 @@ const Settings = () => {
                 key={city.id}
               />
             ))}
-            <Box sx={{ mt: 2 }} gap={2} component="form">
+            <Box
+              sx={{ mt: 2 }}
+              gap={2}
+              component="form"
+              onSubmit={handleAddCity}
+            >
               <Grid container direction="row">
                 <Grid item xs={9} display="flex" alignItems="center">
                   <TextField
@@ -134,7 +143,12 @@ const Settings = () => {
                 key={zone.id}
               />
             ))}
-            <Box sx={{ mt: 2 }} gap={2} component="form">
+            <Box
+              sx={{ mt: 2 }}
+              gap={2}
+              component="form"
+              onSubmit={handleAddZone}
+            >
               <Grid container direction={isXs ? "column" : "row"}>
                 <Grid item xs={9} display="flex" alignItems="center">
                   <TextField

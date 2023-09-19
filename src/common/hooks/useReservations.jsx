@@ -125,7 +125,7 @@ const useReservations = () => {
         return res.data.message;
       })
       .catch((err) => {
-        return err.response.data.Errors[0];
+        throw err.response.data.Errors[0];
       });
 
     fetchReservations({ page: reservationsContext.reservationsPage });
