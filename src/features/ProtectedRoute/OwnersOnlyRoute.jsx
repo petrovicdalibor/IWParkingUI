@@ -8,7 +8,7 @@ const OwnersOnlyRoute = () => {
   const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
   if (decodedToken.Role !== "Owner") {
-    return <Navigate to="/" replace="/" />;
+    return <Navigate to="/" />;
   }
 
   return (
