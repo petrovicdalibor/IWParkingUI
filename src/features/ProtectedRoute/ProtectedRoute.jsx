@@ -10,7 +10,7 @@ const ProtectedRoute = () => {
   const { verifyToken } = useAuth();
 
   if (!verifyToken(token)) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace={true} />;
   }
   return (
     <>
