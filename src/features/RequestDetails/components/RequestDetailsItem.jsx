@@ -13,7 +13,9 @@ const RequestDetailsItem = ({ label, oldValue, newValue }) => {
         <Typography p>{label}</Typography>
       </Grid>
       <Grid item xs={6} minWidth="272px" sx={{ color: "#121212" }}>
-        {oldValue !== newValue ? (
+        {oldValue !== newValue &&
+        oldValue !== undefined &&
+        oldValue !== `undefined - undefined` ? (
           <>
             <Typography sx={oldStyle} p>
               {oldValue}

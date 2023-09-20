@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+
 import { useContext, useState } from "react";
 
 import SearchInput from "../../../common/components/Search/components/SearchInput";
@@ -23,8 +24,11 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../../context/authProvider";
 import useAuth from "../../../common/hooks/useAuth";
 
-const CustomGrid = styled(Grid)(() => ({
+const CustomGrid = styled(Grid)(({ theme }) => ({
   paddingTop: "30px !important",
+  [theme.breakpoints.only("xs")]: {
+    paddingTop: "0 !important",
+  },
 }));
 
 const LogoBox = styled(Box)(() => ({
@@ -33,7 +37,7 @@ const LogoBox = styled(Box)(() => ({
   left: 0,
   right: 0,
   margin: "auto",
-  marginTop: "30px",
+  marginTop: "10px",
   zIndex: 9999,
 }));
 
@@ -110,104 +114,110 @@ const TopBar = ({ onHamburgerClick, open }) => {
           </Grid>
         </Hidden>
         <Grid item xs={"auto"}>
-          {userContext.isLoggedIn ? (
-            <Box>
-              <IconButton
-                sx={{
-                  height: "58px",
-                  padding: 0,
-                  fontSize: "0",
-                  textAlign: "left",
-                }}
-                onClick={handleOpenUserMenu}
-              >
-                <UserInfoBox>
-                  <UserAvatar
-                    {...stringAvatar(
-                      `${userContext.user.name} ${userContext.user.surname}`
-                    )}
-                  />
-                  <Hidden mdDown>
-                    <Box>
-                      <Typography
-                        px
-                        py={0}
-                        color={"#424343"}
-                        variant="subtitle2"
-                        lineHeight={"14px"}
-                      >
-                        {`${userContext.user.name} ${userContext.user.surname}`}
-                      </Typography>
-                      <Typography px variant="caption" lineHeight={"14px"}>
-                        {userContext.user.email}
-                      </Typography>
-                    </Box>
-                  </Hidden>
-                  <Box ml={1}>
-                    <BsChevronDown size={20} />
-                  </Box>
-                </UserInfoBox>
-              </IconButton>
-              <Menu
-                sx={{ mt: "60px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <MenuItem
-                  component={Link}
-                  to="/profile"
-                  onClick={handleCloseUserMenu}
-                >
-                  <Box>
-                    <BsPersonGear size={20} />
-                  </Box>
-                  <Typography px={2} textAlign="center">
-                    Profile
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleCloseUserMenu();
-                    logout();
+          {userContext.isFetchingUser === false ? (
+            userContext.isLoggedIn === true ? (
+              <Box>
+                <IconButton
+                  sx={{
+                    height: "58px",
+                    padding: 0,
+                    fontSize: "0",
+                    textAlign: "left",
                   }}
+                  onClick={handleOpenUserMenu}
                 >
-                  <Box>
-                    <LuLogOut size={20} />
-                  </Box>
-                  <Typography px={2} textAlign="center">
-                    Logout
-                  </Typography>
-                </MenuItem>
-              </Menu>
-            </Box>
-          ) : (
-            <Grid item gap={1} display="flex">
-              <Link to="/signup">
-                <Grid item>
-                  <Button variant="outlined" color="secondary">
-                    Sign up
-                  </Button>
+                  <UserInfoBox>
+                    <UserAvatar
+                      {...stringAvatar(
+                        `${userContext.user.name} ${userContext.user.surname}`
+                      )}
+                    />
+                    <Hidden mdDown>
+                      <Box>
+                        <Typography
+                          px
+                          py={0}
+                          color={"#424343"}
+                          variant="subtitle2"
+                          lineHeight={"14px"}
+                        >
+                          {`${userContext.user.name} ${userContext.user.surname}`}
+                        </Typography>
+                        <Typography px variant="caption" lineHeight={"14px"}>
+                          {userContext.user.email}
+                        </Typography>
+                      </Box>
+                    </Hidden>
+                    <Box ml={1}>
+                      <BsChevronDown size={20} />
+                    </Box>
+                  </UserInfoBox>
+                </IconButton>
+                <Menu
+                  sx={{ mt: "60px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem
+                    component={Link}
+                    to="/profile"
+                    onClick={handleCloseUserMenu}
+                  >
+                    <Box>
+                      <BsPersonGear size={20} />
+                    </Box>
+                    <Typography px={2} textAlign="center">
+                      Profile
+                    </Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseUserMenu();
+                      logout();
+                    }}
+                  >
+                    <Box>
+                      <LuLogOut size={20} />
+                    </Box>
+                    <Typography px={2} textAlign="center">
+                      Logout
+                    </Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
+            ) : (
+              <Hidden mdDown>
+                <Grid item gap={1} display="flex">
+                  <Link to="/signup">
+                    <Grid item>
+                      <Button variant="outlined" color="secondary">
+                        Sign up
+                      </Button>
+                    </Grid>
+                  </Link>
+                  <Grid item>
+                    <Link to="/login">
+                      <Button variant="contained" disableElevation>
+                        Login
+                      </Button>
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Link>
-              <Grid item>
-                <Link to="/login">
-                  <Button variant="contained" disableElevation>
-                    Login
-                  </Button>
-                </Link>
-              </Grid>
-            </Grid>
+              </Hidden>
+            )
+          ) : (
+            <></>
           )}
         </Grid>
       </CustomGrid>

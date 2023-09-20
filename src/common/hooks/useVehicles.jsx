@@ -2,14 +2,12 @@ import { useContext } from "react";
 import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
-import useAuth from "../hooks/useAuth";
 import { FilterContext } from "../../context/filterContext";
 
 const useVehicles = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
   const filterContext = useContext(FilterContext);
-  const { setUserVehicles } = useAuth();
 
   const fetchVehicleTypes = async () => {
     const fetchVehicleTypesResult = await axios
@@ -56,12 +54,30 @@ const useVehicles = () => {
         return res.data.message;
       })
       .catch((err) => {
-        throw err.response.data.errors[0];
+        throw err.response.data.Errors[0];
       });
     return addVehicleResult;
   };
 
   const deleteVehicle = async (id) => {
+    const vehicles = [...userContext.vehicles];
+
+    const vehicle = vehicles.find((v) => {
+      return v.id === id;
+    });
+
+    const vehicleId = vehicles.indexOf((v) => {
+      return v.id === id;
+    });
+
+    if (vehicle.isPrimary === true && vehicles[0] !== undefined) {
+      vehicles[0].isPrimary = true;
+    }
+
+    vehicles.splice(vehicleId, 1);
+
+    userContext.setVehicles(vehicles);
+
     const deleteVehicleResult = await axios
       .delete(`/api/Vehicle/Delete/${id}`, {
         headers: {
@@ -69,23 +85,33 @@ const useVehicles = () => {
         },
       })
       .then((res) => {
-        const vehicleArray = userContext.vehicles.filter((vehicle) => {
-          return vehicle.id !== id;
-        });
-        userContext.setVehicles(vehicleArray);
-
-        setUserVehicles(userContext.user.id);
-
         return res.data.vehicles;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+
+    // await setUserVehicles(userContext.user.id);
+
     return deleteVehicleResult;
   };
 
   const makePrimaryVehicle = async (vehicleId) => {
-    const addVehicleResult = await axios
+    const vehicles = [...userContext.vehicles];
+    const vehicle = vehicles.find((v) => {
+      return v.id === vehicleId;
+    });
+
+    const primaryVehicle = vehicles.find((v) => {
+      return v.isPrimary === true;
+    });
+
+    primaryVehicle.isPrimary = false;
+    vehicle.isPrimary = true;
+
+    userContext.setVehicles(vehicles);
+
+    const makePrimaryVehicleResult = await axios
       .post(
         `/api/Vehicle/MakePrimary/${vehicleId}`,
         {
@@ -118,7 +144,7 @@ const useVehicles = () => {
       .catch((err) => {
         throw err;
       });
-    return addVehicleResult;
+    return makePrimaryVehicleResult;
   };
 
   return {

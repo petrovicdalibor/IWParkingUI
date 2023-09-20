@@ -13,6 +13,7 @@ import OwnersOnlyRoute from "../../features/ProtectedRoute/OwnersOnlyRoute";
 import AdminsOnlyRoute from "../../features/ProtectedRoute/AdminsOnlyRoute";
 import Users from "../../pages/Users";
 import AdminsAndOwnersOnlyRoute from "../../features/ProtectedRoute/AdminsAndOwnersOnlyRoute";
+import NewReservation from "../../pages/NewReservation";
 import Settings from "../../pages/Settings";
 
 // routes accessible to all users
@@ -38,6 +39,10 @@ const routesForUsersOnly = [
       {
         path: "/reservations",
         element: <Reservations />,
+      },
+      {
+        path: "/reservations/:id/new",
+        element: <NewReservation />,
       },
       {
         path: "/favorites",

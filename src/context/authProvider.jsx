@@ -9,6 +9,7 @@ const AuthContext = createContext({
   favoritePages: 1,
   role: "",
   isLoggedIn: false,
+  isFetchingUser: true,
   // eslint-disable-next-line no-unused-vars
   setUser: (user) => {},
   // eslint-disable-next-line no-unused-vars
@@ -23,6 +24,8 @@ const AuthContext = createContext({
   setRole: (role) => {},
   // eslint-disable-next-line no-unused-vars
   setIsLoggedIn: (bool) => {},
+  // eslint-disable-next-line no-unused-vars
+  setIsFetchingUser: (bool) => {},
 });
 
 const AuthProvider = ({ children }) => {
@@ -33,6 +36,7 @@ const AuthProvider = ({ children }) => {
   const [favoritePages, setFavoritePages] = useState(1);
   const [vehicles, setVehicles] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isFetchingUser, setIsFetchingUser] = useState(true);
 
   return (
     <AuthContext.Provider
@@ -44,6 +48,7 @@ const AuthProvider = ({ children }) => {
         favoritePages,
         vehicles,
         isLoggedIn,
+        isFetchingUser,
         setUser,
         setRole,
         setFavorites,
@@ -51,6 +56,7 @@ const AuthProvider = ({ children }) => {
         setFavoritePages,
         setVehicles,
         setIsLoggedIn,
+        setIsFetchingUser,
       }}
     >
       {children}

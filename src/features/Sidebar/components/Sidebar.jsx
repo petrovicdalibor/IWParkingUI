@@ -1,7 +1,9 @@
 import PropTypes from "prop-types";
 import {
   Box,
+  Button,
   Drawer,
+  Grid,
   Hidden,
   IconButton,
   Stack,
@@ -12,6 +14,7 @@ import { SidebarItem } from "./SidebarItem";
 
 import { LuAlignJustify } from "react-icons/lu";
 import { GrClose } from "react-icons/gr";
+import { BsBoxArrowRight, BsFillPersonPlusFill } from "react-icons/bs";
 import { useContext } from "react";
 import { AuthContext } from "../../../context/authProvider";
 
@@ -20,6 +23,7 @@ import {
   adminItems,
   ownerItems,
 } from "../../../common/constants/navbarItems";
+import { Link } from "react-router-dom";
 
 const LogoImage = styled("img")(() => ({
   height: "32px",
@@ -167,6 +171,40 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
             <></>
           )}
         </Stack>
+        {userContext.isLoggedIn === false ? (
+          <Hidden mdUp>
+            <Grid
+              item
+              gap={1}
+              mt={4}
+              display="flex"
+              flexDirection={open ? "row" : "column"}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Link to="/signup">
+                <Grid item>
+                  <Button variant="outlined" color="secondary">
+                    {open ? (
+                      <span>Sign up</span>
+                    ) : (
+                      <BsFillPersonPlusFill size={24} />
+                    )}
+                  </Button>
+                </Grid>
+              </Link>
+              <Grid item>
+                <Link to="/login">
+                  <Button variant="contained" disableElevation>
+                    {open ? <span>Login</span> : <BsBoxArrowRight size={24} />}
+                  </Button>
+                </Link>
+              </Grid>
+            </Grid>
+          </Hidden>
+        ) : (
+          <></>
+        )}
       </Box>
     </Box>
   );

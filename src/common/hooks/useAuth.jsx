@@ -3,27 +3,21 @@ import axios from "../api/axios";
 import { AuthContext } from "../../context/authProvider";
 import Cookies from "universal-cookie";
 import useParkingLots from "./useParkingLots";
+import useVehicles from "./useVehicles";
 
 const useAuth = () => {
   const cookies = new Cookies();
   const userContext = useContext(AuthContext);
-  const { fetchFavoriteLots } = useParkingLots();
+  const { fetchVehicleTypes } = useVehicles();
+  const { fetchFavoriteLots, fetchCities, fetchParkingZones } =
+    useParkingLots();
 
   const setUserInfo = async () => {
     try {
       await fetchUser().then((res) => {
         userContext.setUser(res);
         userContext.setIsLoggedIn(true);
-      });
-    } catch (err) {
-      return err;
-    }
-  };
-
-  const setUserVehicles = async (id) => {
-    try {
-      await fetchUserVehicles(id).then((res) => {
-        userContext.setVehicles(res);
+        userContext.setIsFetchingUser(false);
       });
     } catch (err) {
       return err;
@@ -38,6 +32,8 @@ const useAuth = () => {
         },
       })
       .then((res) => {
+        userContext.setVehicles(res.data.vehicles);
+
         return res.data.vehicles;
       })
       .catch((err) => {
@@ -61,17 +57,22 @@ const useAuth = () => {
         });
 
         if (decodedToken.Role === "User") {
-          setUserVehicles(decodedToken.Id);
-          fetchFavoriteLots(decodedToken.Id);
+          fetchUserVehicles(decodedToken.Id);
+          fetchFavoriteLots({ page: 1 });
         }
+
         setUserInfo(decodedToken.Id);
         userContext.setRole(decodedToken.Role);
-        userContext.setIsLoggedIn(true);
+
         return res;
       })
       .catch((err) => {
         throw err.response.data.Errors[0];
       });
+
+    await fetchVehicleTypes().catch((err) => console.log(err));
+    await fetchParkingZones();
+    await fetchCities();
 
     return loginResult;
   };
@@ -269,7 +270,6 @@ const useAuth = () => {
     updateUserInfo,
     changePassword,
     setUserInfo,
-    setUserVehicles,
     verifyToken,
   };
 };
