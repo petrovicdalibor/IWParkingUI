@@ -476,6 +476,44 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
+
+            {!request && userContext.role === "Owner" ? (
+              <Grid item width={mdDown ? "100%" : "auto"}>
+                {parking.isDeactivated ? (
+                  <Button
+                    variant="outlined"
+                    color="favorite"
+                    size="large"
+                    disableElevation
+                    disabled={parking.isDeactivated ? true : false}
+                    fullWidth
+                  >
+                    <BsPencilSquare size={17} style={{ marginRight: "6px" }} />
+                    Edit
+                  </Button>
+                ) : (
+                  <Link to={`/parkinglot/${parking.id}/edit`}>
+                    <Button
+                      variant="outlined"
+                      color="favorite"
+                      size="large"
+                      disableElevation
+                      disabled={parking.isDeactivated ? true : false}
+                      fullWidth
+                    >
+                      <BsPencilSquare
+                        size={17}
+                        style={{ marginRight: "6px" }}
+                      />
+                      Edit
+                    </Button>
+                  </Link>
+                )}
+              </Grid>
+            ) : (
+              ""
+            )}
+
             {!request && userContext.role === "SuperAdmin" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
