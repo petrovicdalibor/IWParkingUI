@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ThemeProvider } from "@emotion/react";
+
+import Theme from "./theme/Theme";
+
+import { AuthProvider } from "./context/authProvider";
+import Routes from "./features/ProtectedRoute";
+import { ParkingProvider } from "./context/parkingProvider";
+import { ToastContainer } from "react-toastify";
+import { FilterProvider } from "./context/filterContext";
+import { RequestsProvider } from "./context/requestsProvider";
+import { ReservationsProvider } from "./context/reservationsProvider";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AuthProvider>
+      <ParkingProvider>
+        <RequestsProvider>
+          <FilterProvider>
+            <ReservationsProvider>
+              <ThemeProvider theme={Theme}>
+                <div className="toast-container">
+                  <ToastContainer style={{ zIndex: 100000 }} limit={2} />
+                </div>
+                <Routes />
+              </ThemeProvider>
+            </ReservationsProvider>
+          </FilterProvider>
+        </RequestsProvider>
+      </ParkingProvider>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
