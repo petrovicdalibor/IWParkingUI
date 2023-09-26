@@ -564,7 +564,12 @@ const ParkingLotsCard = ({
                     onClick={() => {
                       setOpenExtendReservation(true);
                     }}
-                    disabled={reservation.type === "Cancelled" ? true : false}
+                    disabled={
+                      reservation.type === "Cancelled" ||
+                      dayjs(reservation.endDate) < dayjs()
+                        ? true
+                        : false
+                    }
                     disableElevation
                     fullWidth
                   >
@@ -578,7 +583,12 @@ const ParkingLotsCard = ({
                     color="primary"
                     size="large"
                     disableElevation
-                    disabled={reservation.type === "Cancelled" ? true : false}
+                    disabled={
+                      reservation.type === "Cancelled" ||
+                      dayjs(reservation.endDate) < dayjs()
+                        ? true
+                        : false
+                    }
                     onClick={cancelReservationHandler}
                     fullWidth
                   >
