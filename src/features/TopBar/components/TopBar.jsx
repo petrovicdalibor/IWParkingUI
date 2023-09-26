@@ -28,6 +28,7 @@ const CustomGrid = styled(Grid)(({ theme }) => ({
   paddingTop: "30px !important",
   [theme.breakpoints.only("xs")]: {
     paddingTop: "0 !important",
+    height: "58px",
   },
 }));
 
