@@ -20,11 +20,7 @@ const useParkingLots = () => {
 
   const fetchCities = async () => {
     const fetchCitiesResult = await axios
-      .get("/api/City/GetAll", {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .get("/api/City/GetAll")
       .then((res) => {
         filterContext.setCities(res.data.cities);
       })
@@ -85,11 +81,7 @@ const useParkingLots = () => {
 
   const fetchParkingZones = async () => {
     const fetchParkingZonesResult = await axios
-      .get("/api/Zone/GetAll", {
-        headers: {
-          Authorization: `Bearer ${cookies.get("token")}`,
-        },
-      })
+      .get("/api/Zone/GetAll")
       .then((res) => {
         filterContext.setZones(res.data.zones);
       })

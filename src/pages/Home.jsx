@@ -37,7 +37,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchParkingLots({
-      page: 0,
+      page: 1,
       city: filterContext.searchCity,
       name: filterContext.searchCondition,
       zone: filterContext.searchZone,
@@ -193,7 +193,7 @@ const Home = () => {
             <Pagination
               count={parkingContext.numPages}
               color="primary"
-              defaultPage={page}
+              defaultPage={parkingContext.pageNumber}
               page={parkingContext.pageNumber}
               disabled={parkingContext.numPages === 1}
               onChange={handlePageChange}

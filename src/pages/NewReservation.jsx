@@ -202,7 +202,8 @@ const NewReservation = () => {
             >
               <Typography variant="subtitle2" sx={{ color: "#B3B3B3" }}>
                 <b style={{ color: "#424343" }}>
-                  {parking?.capacityCar + parking?.capacityAdaptedCar}
+                  {parking?.availableCapacityCar +
+                    parking?.availableCapacityAdaptedCar}
                 </b>{" "}
                 out of {parking?.capacityCar + parking?.capacityAdaptedCar}
               </Typography>

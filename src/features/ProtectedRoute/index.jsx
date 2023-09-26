@@ -4,6 +4,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import useAuth from "../../common/hooks/useAuth";
 import Cookies from "universal-cookie";
 import useParkingLots from "../../common/hooks/useParkingLots";
+import { toastWarning } from "../../common/utils/toasts";
 
 import {
   routesForPublic,
@@ -12,6 +13,11 @@ import {
 } from "../../common/constants/routes";
 import useVehicles from "../../common/hooks/useVehicles";
 import useReservations from "../../common/hooks/useReservations";
+import {
+  HubConnectionBuilder,
+  HubConnectionState,
+  LogLevel,
+} from "@microsoft/signalr";
 
 const Routes = () => {
   const cookies = new Cookies();
@@ -49,6 +55,45 @@ const Routes = () => {
     fetchCities();
     fetchParkingZones();
   }, []);
+
+  const startSignalRConnection = async (connection) => {
+    try {
+      await connection.start();
+    } catch (err) {
+      console.assert(connection.state === HubConnectionState.Disconnected);
+      console.error("SignalR Connection Error: ", err);
+      setTimeout(() => startSignalRConnection(connection), 5000);
+    }
+  };
+
+  useEffect(() => {
+    const token = cookies.get("token");
+
+    if (userContext.isLoggedIn) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+
+      const connect = new HubConnectionBuilder()
+        .withUrl("http://localhost:7113/api")
+        .withAutomaticReconnect()
+        .configureLogging(LogLevel.None)
+        .build();
+
+      startSignalRConnection(connect);
+
+      connect.on("reservations", (message) => {
+        const filteredMessages = message.filter(
+          (m) => m.UserId === parseInt(decodedToken.Id)
+        );
+
+        let i = 0;
+
+        filteredMessages.forEach((m) => {
+          toastWarning(m.Message, { autoClose: 7500, toastId: `expire-${i}` });
+          i++;
+        });
+      });
+    }
+  }, [userContext.isLoggedIn]);
 
   // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([

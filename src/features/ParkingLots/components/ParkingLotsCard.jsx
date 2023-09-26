@@ -225,7 +225,8 @@ const ParkingLotsCard = ({
                 justifyContent={"center"}
               >
                 <FreeSpots variant="h5">
-                  {parking?.capacityCar + parking?.capacityAdaptedCar}
+                  {parking?.availableCapacityCar +
+                    parking?.availableCapacityAdaptedCar}
                 </FreeSpots>
                 <Typography
                   variant="subtitle2"

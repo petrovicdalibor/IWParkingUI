@@ -70,7 +70,7 @@ const useAuth = () => {
         throw err.response.data.Errors[0];
       });
 
-    await fetchVehicleTypes().catch((err) => console.log(err));
+    await fetchVehicleTypes();
     await fetchParkingZones();
     await fetchCities();
 
