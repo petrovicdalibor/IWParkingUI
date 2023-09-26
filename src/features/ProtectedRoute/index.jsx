@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/authProvider";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import useAuth from "../../common/hooks/useAuth";
@@ -27,6 +27,14 @@ const Routes = () => {
     useParkingLots();
   const { fetchVehicleTypes } = useVehicles();
   const { fetchReservations } = useReservations();
+
+  const [connection, setConnection] = useState(
+    new HubConnectionBuilder()
+      .withUrl("http://localhost:7113/api")
+      .withAutomaticReconnect()
+      .configureLogging(LogLevel.None)
+      .build()
+  );
 
   useEffect(() => {
     const token = cookies.get("token");
@@ -58,6 +66,7 @@ const Routes = () => {
 
   const startSignalRConnection = async (connection) => {
     try {
+      await connection.stop();
       await connection.start();
     } catch (err) {
       console.assert(connection.state === HubConnectionState.Disconnected);
@@ -72,26 +81,39 @@ const Routes = () => {
     if (userContext.isLoggedIn) {
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
 
-      const connect = new HubConnectionBuilder()
-        .withUrl("http://localhost:7113/api")
-        .withAutomaticReconnect()
-        .configureLogging(LogLevel.None)
-        .build();
+      startSignalRConnection(connection);
 
-      startSignalRConnection(connect);
+      if (userContext.role === "User") {
+        connection.on("reservations", (message) => {
+          const filteredMessages = message.filter(
+            (m) => m.UserId === parseInt(decodedToken.Id)
+          );
 
-      connect.on("reservations", (message) => {
-        const filteredMessages = message.filter(
-          (m) => m.UserId === parseInt(decodedToken.Id)
-        );
+          let i = 0;
 
-        let i = 0;
-
-        filteredMessages.forEach((m) => {
-          toastWarning(m.Message, { autoClose: 7500, toastId: `expire-${i}` });
-          i++;
+          filteredMessages.forEach((m) => {
+            toastWarning(m.Message, {
+              autoClose: 7500,
+              toastId: `expire-${i}`,
+            });
+            i++;
+          });
         });
-      });
+      }
+
+      if (userContext.role === "SuperAdmin") {
+        connection.on("NewRequest", (message) => {
+          toastWarning(message, {
+            autoClose: 7500,
+            toastId: "admin-notification",
+          });
+        });
+      }
+    } else {
+      connection.off("reservations", null);
+      connection.off("NewRequest", null);
+
+      connection.stop();
     }
   }, [userContext.isLoggedIn]);
 
