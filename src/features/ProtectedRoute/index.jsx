@@ -30,7 +30,9 @@ const Routes = () => {
 
   const [connection, setConnection] = useState(
     new HubConnectionBuilder()
-      .withUrl("http://localhost:7113/api")
+      .withUrl(
+        "https://functionapp123456789020230922141714.azurewebsites.net/api"
+      )
       .withAutomaticReconnect()
       .configureLogging(LogLevel.None)
       .build()

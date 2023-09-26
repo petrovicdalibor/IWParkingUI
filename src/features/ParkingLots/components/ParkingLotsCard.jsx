@@ -216,7 +216,7 @@ const ParkingLotsCard = ({
           justifyContent="space-between"
         >
           <Grid item display="flex" gap={5} alignItems={"center"}>
-            {!reservation && userContext.role !== "SuperAdmin" ? (
+            {!reservation && !request && userContext.role !== "SuperAdmin" ? (
               <Grid
                 item
                 display={"flex"}
@@ -476,9 +476,7 @@ const ParkingLotsCard = ({
             ) : (
               ""
             )}
-            {!request &&
-            userContext.role === "SuperAdmin" &&
-            parking.status === 2 ? (
+            {!request && userContext.role === "SuperAdmin" ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
@@ -555,45 +553,7 @@ const ParkingLotsCard = ({
               <></>
             )}
 
-            {userContext.role === "Owner" && !request ? (
-              <Grid item width={mdDown ? "100%" : "auto"}>
-                {parking?.isDeactivated ? (
-                  <Button
-                    variant="outlined"
-                    color="favorite"
-                    size="large"
-                    disableElevation
-                    disabled={parking?.isDeactivated ? true : false}
-                    fullWidth
-                  >
-                    <BsPencilSquare size={17} style={{ marginRight: "6px" }} />
-                    Edit
-                  </Button>
-                ) : (
-                  <Link to={`/parkinglot/${parking?.id}/edit`}>
-                    <Button
-                      variant="outlined"
-                      color="favorite"
-                      size="large"
-                      disableElevation
-                      disabled={parking?.isDeactivated ? true : false}
-                      fullWidth
-                    >
-                      <BsPencilSquare
-                        size={17}
-                        style={{ marginRight: "6px" }}
-                      />
-                      Edit
-                    </Button>
-                  </Link>
-                )}
-              </Grid>
-            ) : (
-              ""
-            )}
-            {userContext.role === "Owner" &&
-            parking?.status === 2 &&
-            !request?.type ? (
+            {userContext.role === "Owner" && !request?.type ? (
               <Grid item width={mdDown ? "100%" : "auto"}>
                 <Button
                   variant="contained"
