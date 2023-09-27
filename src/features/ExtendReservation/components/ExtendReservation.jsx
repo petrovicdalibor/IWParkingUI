@@ -11,7 +11,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { BsPencilSquare, BsXCircle } from "react-icons/bs";
+import { BsPencilSquare, BsXCircle, BsClock } from "react-icons/bs";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 
 import dayjs from "dayjs";
@@ -90,7 +90,15 @@ const ExtendReservation = ({
       >
         <CloseIcon />
       </IconButton>
-      <DialogContent>
+      <DialogContent sx={{ pt: 0.8 }}>
+        <Typography variant="body2" mb={0.5}>
+          Working Hours
+        </Typography>
+        <Typography variant="body2" mb={1}>
+          <BsClock size={17} style={{ marginRight: "6px" }} color="#CF0018" />
+          {reservation?.parkingLot.workingHourFrom?.slice(0, -3)} -{" "}
+          {reservation?.parkingLot.workingHourTo?.slice(0, -3)}
+        </Typography>
         <Grid
           container
           direction={mdDown ? "column" : "row"}
