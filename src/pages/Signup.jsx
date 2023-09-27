@@ -18,9 +18,12 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Tooltip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import SignupImage from "../assets/signup-illustration.svg";
+
+import { BsInfoCircle } from "react-icons/bs";
 
 import Cookies from "universal-cookie";
 import useAuth from "../common/hooks/useAuth";
@@ -209,16 +212,21 @@ function Signup() {
                 onChange={(e) => setRole(e.target.value)}
                 value={role}
               >
-                <FormControlLabel
-                  value="User"
-                  control={<Radio size="small" />}
-                  label="User"
-                />
-                <FormControlLabel
-                  value="Owner"
-                  control={<Radio size="small" />}
-                  label="Owner"
-                />
+                <Tooltip title="Register as a user to make new reservations.">
+                  <FormControlLabel
+                    value="User"
+                    control={<Radio size="small" />}
+                    label="User"
+                    aria-details={<BsInfoCircle />}
+                  />
+                </Tooltip>
+                <Tooltip title="Register as a parking owner to add your parking lot/s.">
+                  <FormControlLabel
+                    value="Owner"
+                    control={<Radio size="small" />}
+                    label="Owner"
+                  />
+                </Tooltip>
               </RadioGroup>
             </FormControl>
             <Box display={mdDown ? "block" : "flex"} gap={2}>
