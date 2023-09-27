@@ -23,8 +23,6 @@ import {
 import { styled } from "@mui/material/styles";
 import SignupImage from "../assets/signup-illustration.svg";
 
-import { BsInfoCircle } from "react-icons/bs";
-
 import Cookies from "universal-cookie";
 import useAuth from "../common/hooks/useAuth";
 
@@ -207,6 +205,7 @@ function Signup() {
               </FormLabel>
               <RadioGroup
                 row
+                sx={{ justifyContent: "center", alignItems: "center" }}
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="role"
                 onChange={(e) => setRole(e.target.value)}
@@ -217,14 +216,13 @@ function Signup() {
                     value="User"
                     control={<Radio size="small" />}
                     label="User"
-                    aria-details={<BsInfoCircle />}
                   />
                 </Tooltip>
                 <Tooltip title="Register as a parking owner to add your parking lot/s.">
                   <FormControlLabel
                     value="Owner"
                     control={<Radio size="small" />}
-                    label="Owner"
+                    label="Parking Owner"
                   />
                 </Tooltip>
               </RadioGroup>
