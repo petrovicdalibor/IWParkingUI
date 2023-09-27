@@ -72,9 +72,9 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
                 alt=""
                 sx={{
                   opacity:
-                    smUp === true && lgDown === true && open === false
+                    smUp && lgDown && !open
                       ? 0
-                      : open === false && smUp === true && lgDown === true
+                      : !open && smUp && lgDown
                       ? 1
                       : 1,
                   transition: (theme) =>
@@ -91,8 +91,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
               display: "block",
               position: "absolute",
               right: "16px",
-              visibility:
-                smUp === true && lgDown === true ? "visible" : "hidden",
+              visibility: smUp && lgDown ? "visible" : "hidden",
             }}
             onClick={onHamburgerClick}
           >
@@ -173,7 +172,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
             <></>
           )}
         </Stack>
-        {userContext.isLoggedIn === false ? (
+        {!userContext.isLoggedIn ? (
           <Hidden mdUp>
             <Grid
               item
