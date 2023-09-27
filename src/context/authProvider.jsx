@@ -10,6 +10,7 @@ const AuthContext = createContext({
   role: "",
   isLoggedIn: false,
   isFetchingUser: true,
+  isFetchingFavorites: true,
   // eslint-disable-next-line no-unused-vars
   setUser: (user) => {},
   // eslint-disable-next-line no-unused-vars
@@ -26,6 +27,8 @@ const AuthContext = createContext({
   setIsLoggedIn: (bool) => {},
   // eslint-disable-next-line no-unused-vars
   setIsFetchingUser: (bool) => {},
+  // eslint-disable-next-line no-unused-vars
+  setIsFetchingFavorites: (bool) => {},
 });
 
 const AuthProvider = ({ children }) => {
@@ -37,6 +40,7 @@ const AuthProvider = ({ children }) => {
   const [vehicles, setVehicles] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isFetchingUser, setIsFetchingUser] = useState(true);
+  const [isFetchingFavorites, setIsFetchingFavorites] = useState(true);
 
   return (
     <AuthContext.Provider
@@ -49,6 +53,7 @@ const AuthProvider = ({ children }) => {
         vehicles,
         isLoggedIn,
         isFetchingUser,
+        isFetchingFavorites,
         setUser,
         setRole,
         setFavorites,
@@ -57,6 +62,7 @@ const AuthProvider = ({ children }) => {
         setVehicles,
         setIsLoggedIn,
         setIsFetchingUser,
+        setIsFetchingFavorites,
       }}
     >
       {children}

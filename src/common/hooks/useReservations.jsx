@@ -24,6 +24,7 @@ const useReservations = () => {
         reservationsContext.setReservations(res.data.reservations);
         reservationsContext.setReservationsPage(page);
         reservationsContext.setReservationsPages(res.data.numPages);
+        reservationsContext.setIsLoading(false);
         return res.data.reservations;
       })
       .catch((err) => {
