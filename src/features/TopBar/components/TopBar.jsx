@@ -92,7 +92,9 @@ const TopBar = ({ onHamburgerClick, open }) => {
     <>
       <Hidden smUp>
         <LogoBox>
-          <LogoImage src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png" />
+          <Link to="/">
+            <LogoImage src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png" />
+          </Link>
         </LogoBox>
       </Hidden>
       <CustomGrid
