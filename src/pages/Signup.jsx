@@ -143,11 +143,20 @@ function Signup() {
       {/* HEADER */}
       <Container container justifyContent={mdDown ? "center" : "start"}>
         <Grid item display="flex" alignItems="baseline" justifyContent="center">
-          <Logo
-            src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
-            alt="IWCLogo"
-          />
-          <Typography variant="h6">Parking</Typography>
+          <RouterLink to="/">
+            <Logo
+              src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
+              alt="IWCLogo"
+            />
+          </RouterLink>
+          <Typography
+            variant="h6"
+            component={RouterLink}
+            to="/"
+            sx={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.87)" }}
+          >
+            Parking
+          </Typography>
         </Grid>
       </Container>
 

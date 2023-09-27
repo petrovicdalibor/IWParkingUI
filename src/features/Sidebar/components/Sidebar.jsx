@@ -66,22 +66,24 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
           }}
         >
           <Hidden smDown>
-            <LogoImage
-              src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
-              alt=""
-              sx={{
-                opacity:
-                  smUp === true && lgDown === true && open === false
-                    ? 0
-                    : open === false && smUp === true && lgDown === true
-                    ? 1
-                    : 1,
-                transition: (theme) =>
-                  theme.transitions.create("opacity", {
-                    duration: theme.transitions.duration.short,
-                  }),
-              }}
-            />
+            <Link to="/">
+              <LogoImage
+                src="https://iwconnect.com/wp-content/uploads/2020/12/Logo-final-with-connect50px.png"
+                alt=""
+                sx={{
+                  opacity:
+                    smUp && lgDown && !open
+                      ? 0
+                      : !open && smUp && lgDown
+                      ? 1
+                      : 1,
+                  transition: (theme) =>
+                    theme.transitions.create("opacity", {
+                      duration: theme.transitions.duration.short,
+                    }),
+                }}
+              />
+            </Link>
           </Hidden>
 
           <IconButton
@@ -89,8 +91,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
               display: "block",
               position: "absolute",
               right: "16px",
-              visibility:
-                smUp === true && lgDown === true ? "visible" : "hidden",
+              visibility: smUp && lgDown ? "visible" : "hidden",
             }}
             onClick={onHamburgerClick}
           >
@@ -171,7 +172,7 @@ export const Sidebar = ({ onClose, onHamburgerClick, open }) => {
             <></>
           )}
         </Stack>
-        {userContext.isLoggedIn === false ? (
+        {!userContext.isLoggedIn ? (
           <Hidden mdUp>
             <Grid
               item
