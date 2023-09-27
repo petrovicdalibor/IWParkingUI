@@ -1,10 +1,12 @@
 import {
+  Alert,
   Box,
   Button,
   FormControl,
   Grid,
   Hidden,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   Typography,
@@ -20,7 +22,7 @@ import { toastError, toastSuccess } from "../common/utils/toasts";
 import { BsGeoAltFill, BsClock, BsPlusCircleFill } from "react-icons/bs";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authProvider";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import useParkingLots from "../common/hooks/useParkingLots";
 import useReservations from "../common/hooks/useReservations";
 
@@ -293,27 +295,36 @@ const NewReservation = () => {
               </Grid>
             </Grid>
             <Grid item>
-              <FormControl variant="filled" sx={{ width: "200px" }}>
-                <InputLabel
-                  id="demo-simple-select-filled-label"
-                  color="secondary"
-                >
-                  Vehicle
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  disableUnderline={true}
-                  value={vehicle}
-                  onChange={(e) => setVehicle(e.target.value)}
-                >
-                  {userContext.vehicles.map((vehicle) => (
-                    <MenuItem value={vehicle.plateNumber} key={vehicle.id}>
-                      {vehicle.plateNumber} - {vehicle.type}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              {userContext.vehicles.length > 0 ? (
+                <FormControl variant="filled" sx={{ width: "200px" }}>
+                  <InputLabel
+                    id="demo-simple-select-filled-label"
+                    color="secondary"
+                  >
+                    Vehicle
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    disableUnderline={true}
+                    value={vehicle}
+                    onChange={(e) => setVehicle(e.target.value)}
+                  >
+                    {userContext.vehicles.map((vehicle) => (
+                      <MenuItem value={vehicle.plateNumber} key={vehicle.id}>
+                        {vehicle.plateNumber} - {vehicle.type}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              ) : (
+                <Alert severity="warning">
+                  Please add a vehicle to{" "}
+                  <Link component={RouterLink} color="secondary" to="/profile">
+                    your profile
+                  </Link>
+                </Alert>
+              )}
             </Grid>
             <Grid item>
               <Button
@@ -321,6 +332,7 @@ const NewReservation = () => {
                 color="secondary"
                 size="large"
                 onClick={handleSubmit}
+                disabled={userContext.vehicles.length === 0}
                 disableElevation
               >
                 <BsPlusCircleFill size={17} style={{ marginRight: "6px" }} />
