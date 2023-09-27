@@ -10,7 +10,6 @@ const AddParking = () => {
   const [parkingLot, setParkingLot] = useState({});
 
   useEffect(() => {
-    // TODO: get parking lot by id
     if (id !== undefined) {
       fetchParkingLot(id).then((res) => {
         setParkingLot(res);
