@@ -240,6 +240,8 @@ const useParkingLots = () => {
         userContext.setFavorites(res.data.parkingLots);
         userContext.setFavoritePages(res.data.numPages);
         userContext.setFavoritePage(page);
+        userContext.setIsFetchingFavorites(false);
+
         return res.data.parkingLots;
       })
       .catch((err) => {
