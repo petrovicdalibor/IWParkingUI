@@ -567,9 +567,9 @@ const ParkingLotsCard = ({
                     disabled={
                       reservation.type === "Cancelled" ||
                       dayjs(
-                        reservation.startDate.split("T")[0] +
+                        reservation.endDate.split("T")[0] +
                           "T" +
-                          reservation.startTime
+                          reservation.endTime
                       ).tz("Europe/Belgrade") < dayjs()
                         ? true
                         : false
