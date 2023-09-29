@@ -566,7 +566,11 @@ const ParkingLotsCard = ({
                     }}
                     disabled={
                       reservation.type === "Cancelled" ||
-                      dayjs(reservation.endDate) < dayjs()
+                      dayjs(
+                        reservation.startDate.split("T")[0] +
+                          "T" +
+                          reservation.startTime
+                      ).tz("Europe/Belgrade") < dayjs()
                         ? true
                         : false
                     }
@@ -585,7 +589,11 @@ const ParkingLotsCard = ({
                     disableElevation
                     disabled={
                       reservation.type === "Cancelled" ||
-                      dayjs(reservation.endDate) < dayjs()
+                      dayjs(
+                        reservation.startDate.split("T")[0] +
+                          "T" +
+                          reservation.startTime
+                      ).tz("Europe/Belgrade") < dayjs()
                         ? true
                         : false
                     }
