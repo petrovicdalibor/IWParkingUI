@@ -199,7 +199,7 @@ const useParkingLots = () => {
     return fetchParkingLotResult;
   };
 
-  const fetchRequests = async ({ page, pageSize = 2 }) => {
+  const fetchRequests = async ({ page, pageSize = 5 }) => {
     const fetchParkingLotsResult = await axios
       .get(`/api/Request/GetAll?pageNumber=${page}&pageSize=${pageSize}`, {
         headers: {
